@@ -7,18 +7,25 @@ import java.net.Socket;
 
 public class Connection {
 
-    private BufferedReader in;
-    private BufferedReader usr;
-    private Writer out;
-    private Socket s;
+    private static BufferedReader in;
+    private static BufferedReader usr;
+    private static Writer out;
+    private static Socket s;
 
-    private Connection connection;
+    private static boolean isServer;
 
     public Connection(BufferedReader in, Writer out, BufferedReader usr, Socket s) {
         this.in = in;
         this.out = out;
         this.usr = usr;
         this.s = s;
+    }
+
+    public static void setServer(boolean bool) {
+        isServer = bool;
+    }
+    public static boolean isServer() {
+        return isServer;
     }
 
     public Socket getS() {
@@ -35,10 +42,6 @@ public class Connection {
 
     public Writer getOut() {
         return out;
-    }
-
-    public Connection getConnection() {
-        return connection;
     }
 
 }

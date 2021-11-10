@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Client {
 
-	private Connection connection;
+	private static Connection connection;
 
 	public Connection getConnection() {
 		return connection;
@@ -59,6 +59,15 @@ public class Client {
 		}
 		} catch (IOException e) {
 			System.out.println(e.getStackTrace());
+		}
+	}
+
+	public static void sendMessage(String message) {
+		try {
+			connection.getOut().write(message);
+			connection.getOut().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

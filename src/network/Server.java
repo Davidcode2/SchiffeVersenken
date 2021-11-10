@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Server {
 
-	private Connection connection;
+	private static Connection connection;
 
 	public void setConnection(Connection connection) {
 		this.connection = connection;
@@ -42,30 +42,40 @@ public class Server {
 			connection = new Connection(in, out, usr, s);
 			setConnection(connection);
 
+//		 Abwechselnd vom Socket lesen und auf den Bildschirm schreiben
+//		 bzw. vom Benutzer lesen und ins Socket schreiben.
+//		 Abbruch bei EOF vom Socket bzw. bei EOF oder Leerzeile vom Benutzer.
+			while (true) {
+				// incoming messages
+				String line = in.readLine();
+				if (line == null) break;
+				System.out.println("<<< " + line);
+
+				// outgoing messages
+				System.out.print(">>> ");
+				line = usr.readLine();
+				if (line == null || line.equals("")) break;
+				out.write(String.format("%s%n", line));
+				out.flush();
+				// flush sorgt dafür, dass der Writer garantiert alle Zeichen
+				// in den unterliegenden Ausgabestrom schreibt.
+			}
+
 		} catch (IOException e) {
 			System.out.println("error opening the Server Socket");
 		}
 	}
 
-	public void  communicationLoop() {
-		// Abwechselnd vom Socket lesen und auf den Bildschirm schreiben
-		// bzw. vom Benutzer lesen und ins Socket schreiben.
-		// Abbruch bei EOF vom Socket bzw. bei EOF oder Leerzeile vom Benutzer.
-//		while (true) {
-//			// incoming messages
-//			String line = in.readLine();
-//			if (line == null) break;
-//			System.out.println("<<< " + line);
-//
-//			// outgoing messages
-//			System.out.print(">>> ");
-//			line = usr.readLine();
-//			if (line == null || line.equals("")) break;
-//			out.write(String.format("%s%n", line));
-//			out.flush();
-//			// flush sorgt dafür, dass der Writer garantiert alle Zeichen
-//			// in den unterliegenden Ausgabestrom schreibt.
-//		}
+	public static void sendMessage(String message) {
+		try {
+			connection.getOut().write(message);
+			connection.getOut().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void  communicationLoop() throws IOException {
 	}
 	public static void stopServer(Connection connection) throws IOException {
 			// EOF ins Socket "schreiben".

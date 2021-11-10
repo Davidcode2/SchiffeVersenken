@@ -21,6 +21,7 @@ public class GUI {
 
         // Hauptfenster mit Titelbalken etc. (JFrame) erzeugen.
         // "Swing2" wird in den Titelbalken geschrieben.
+        boolean connectionType = network.Connection.isServer();
         JFrame frame = new JFrame("SchiffeVersenken");
 
         // Beim Schließen des Fensters (z. B. durch Drücken des
@@ -71,6 +72,11 @@ public class GUI {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
+                        if (network.Connection.isServer()) {
+                            network.Server.sendMessage("Neuer Eintrag");
+                        } else {
+                            network.Client.sendMessage("Neuer Eintrag");
+                        }
                     }
             );
             vbox.add(button);
