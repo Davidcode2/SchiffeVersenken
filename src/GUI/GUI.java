@@ -1,16 +1,10 @@
-package game;
-
-import network.Client;
-import network.Connection;
-import network.Server;
+package GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.text.MessageFormat;
 
 // Zweites Beispiel zur Verwendung von (AWT und) Swing.
-public class GameController {
+public class GUI {
     public static String role = "";
 
     public static String getRole() {
@@ -18,15 +12,12 @@ public class GameController {
     }
 
     public static void setRole(String role) {
-        GameController.role = role;
+        GUI.role = role;
         System.out.println(String.format("role is %s", role));
     }
 
     // Graphische Oberfläche aufbauen und anzeigen.
     public static void start () {
-
-        Server server = new Server();
-        Client client = new Client();
 
         // Hauptfenster mit Titelbalken etc. (JFrame) erzeugen.
         // "Swing2" wird in den Titelbalken geschrieben.
@@ -54,8 +45,7 @@ public class GameController {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
-                        server.startConnection(50000);
-                        setRole("host");
+
                     }
             );
             vbox.add(button);
@@ -67,8 +57,7 @@ public class GameController {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
-                        client.startConnection("127.0.0.1", 50000);
-                        setRole("client");
+
                     }
             );
             vbox.add(button);
@@ -82,25 +71,6 @@ public class GameController {
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
-                        System.out.println(role);
-                        button.setEnabled(false);
-                        Connection connection;
-                        if (getRole().equals("")) {
-                            System.out.println("no connection");
-                        }
-                        if (getRole().equals("host")) {
-                            connection = server.getConnection();
-                        } else {
-                            connection = client.getConnection();
-                        }
-                        try {
-                            String message = "neuer Eintrag";
-                            connection.getOut().write(String.format("%s%n", message));
-                            connection.getOut().flush();
-                        }
-                        catch (IOException ex) {
-                            System.out.println("write to socket failed");
-                        }
                     }
             );
             vbox.add(button);
@@ -139,15 +109,6 @@ public class GameController {
 
                 button.addActionListener(
                         (e) -> {
-                            Connection connection;
-                            if (getRole().equals("")) {
-                                System.out.println("no connection");
-                            }
-                            if (getRole().equals("host")) {
-                                connection = server.getConnection();
-                            } else {
-                                connection = client.getConnection();
-                            }
 
                         }
                 );

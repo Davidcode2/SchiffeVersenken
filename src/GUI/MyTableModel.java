@@ -1,10 +1,5 @@
-package game;
+package GUI;
 
-import network.Connection;
-import network.Server;
-import network.Client;
-
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
