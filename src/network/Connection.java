@@ -14,6 +14,8 @@ public class Connection {
     private static Socket s;
 
     private static boolean isServer;
+    private static String message;
+    private static boolean turn = true;
 
     public Connection(BufferedReader in, Writer out, BufferedWriter usr, Socket s) {
         this.in = in;
@@ -28,16 +30,30 @@ public class Connection {
         return isServer;
     }
 
-    public Socket getS() {
+    public static Socket getS() {
         return s;
     }
 
-    public BufferedReader getIn() {
+    public static BufferedReader getIn() {
         return in;
     }
 
-    public Writer getOut() {
+    public static Writer getOut() {
         return out;
     }
 
+    public static String getMessage() {
+        return message;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setTurn(boolean b) {
+        this.turn = b;
+    }
+
+    public boolean getTurn() {
+        return this.turn;
+    }
 }

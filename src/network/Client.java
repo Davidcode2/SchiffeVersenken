@@ -31,6 +31,7 @@ public class Client {
 			System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
 			System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
 
+
 			BufferedReader in =
 					new BufferedReader(new InputStreamReader(s.getInputStream()));
 			Writer out = new OutputStreamWriter(s.getOutputStream());
@@ -58,9 +59,10 @@ public class Client {
 				// in den unterliegenden Ausgabestrom schreibt.
 
 				// incoming messages
-				String line = in.readLine();
-				if (line == null) break;
-				System.out.println("<<< " + line);
+				connection.setMessage(in.readLine());
+				connection.setTurn(true);
+				if (connection.getMessage() == null) break;
+				System.out.println(connection.getMessage());
 			}
 		} catch (IOException e) {
 			System.out.println(e.getStackTrace());
@@ -69,9 +71,15 @@ public class Client {
 
 	public static void sendMessage(String message) {
 		try {
+			if (connection.getTurn() == true) {
 //			System.out.println(connection.isServer());
-			connection.getOut().write(String.format("%s%n", message));
-			connection.getOut().flush();
+				connection.getOut().write(String.format("%s%n", message));
+				connection.getOut().flush();
+				connection.setTurn(false);
+//			connection.getIn().readLine();
+			} else {
+				System.out.println("wait for other players turn");
+			}
 		} catch (IOException e) {
 			System.out.println("write to socket failed");
 			e.printStackTrace();
