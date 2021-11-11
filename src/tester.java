@@ -10,6 +10,7 @@ public class tester {
 
     public static void main(String[] args) throws IOException {
         if (args.length > 0 && args[0].equals("host")) {
+            network.Connection.setServer(true);
         } else {
         }
         SwingUtilities.invokeLater(

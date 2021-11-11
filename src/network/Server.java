@@ -26,7 +26,10 @@ public class Server {
 			// Als Resultat erhält man ein "normales" Socket.
 			System.out.println("Waiting for client connection ...");
 			Socket s = ss.accept();
-			System.out.println("Connection established.");
+			System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
+			System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
+
+			// print out the ip address to which the socket is connected
 
 			// Ein- und Ausgabestrom des Sockets ermitteln
 			// und als BufferedReader bzw. Writer verpacken
@@ -35,9 +38,9 @@ public class Server {
 					new BufferedReader(new InputStreamReader(s.getInputStream()));
 			Writer out = new OutputStreamWriter(s.getOutputStream());
 
-			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
-			BufferedReader usr =
-					new BufferedReader(new InputStreamReader(System.in));
+			// Standardausgabestrom ebenfalls als BufferedWriter verpacken.
+				BufferedWriter usr =
+						new BufferedWriter(new OutputStreamWriter(System.out));
 
 			connection = new Connection(in, out, usr, s);
 			setConnection(connection);
@@ -53,10 +56,7 @@ public class Server {
 
 				// outgoing messages
 				System.out.print(">>> ");
-				line = usr.readLine();
-				if (line == null || line.equals("")) break;
-				out.write(String.format("%s%n", line));
-				out.flush();
+				usr.write(String.format("%s%n", out));
 				// flush sorgt dafür, dass der Writer garantiert alle Zeichen
 				// in den unterliegenden Ausgabestrom schreibt.
 			}
@@ -68,9 +68,11 @@ public class Server {
 
 	public static void sendMessage(String message) {
 		try {
-			connection.getOut().write(message);
+//			System.out.println(connection.isServer());
+			connection.getOut().write(String.format("%s%n", message));
 			connection.getOut().flush();
 		} catch (IOException e) {
+			System.out.println("write to socket failed");
 			e.printStackTrace();
 		}
 	}

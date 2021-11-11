@@ -1,5 +1,6 @@
 package network;
 
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 
@@ -26,15 +27,18 @@ public class Client {
 			// über Portnummer port herstellen.
 			// Als Resultat erhält man ein Socket.
 			Socket s = new Socket(ip, port);
-			System.out.println("Connection established.");
+			System.out.println(connection.isServer());
+			System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
+			System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
 
 			BufferedReader in =
 					new BufferedReader(new InputStreamReader(s.getInputStream()));
 			Writer out = new OutputStreamWriter(s.getOutputStream());
 
-			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
-			BufferedReader usr =
-					new BufferedReader(new InputStreamReader(System.in));
+			// Standardausgabestrom ebenfalls als BufferedWriter verpacken.
+			BufferedWriter usr =
+					new BufferedWriter(new OutputStreamWriter(System.out));
+
 			connection = new Connection(in, out, usr, s);
 			setConnection(connection);
 
@@ -42,21 +46,22 @@ public class Client {
 			// bzw. vom Socket lesen und auf den Bildschirm schreiben.
 			// Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
 
-		while (true) {
-			// outgoing messages
-			System.out.print(">>> ");
-			String line = usr.readLine();
-			if (line == null || line.equals("")) break;
-			out.write(String.format("%s%n", line));
-			out.flush();
-			// flush sorgt dafür, dass der Writer garantiert alle Zeichen
-			// in den unterliegenden Ausgabestrom schreibt.
+			while (true) {
+				// outgoing messages
+				System.out.print(">>> ");
+				usr.write(String.format("%s%n", out));
+//			String line = usr.readLine();
+//			if (line == null || line.equals("")) break;
+//			out.write(String.format("%s%n", line));
+//			out.flush();
+				// flush sorgt dafür, dass der Writer garantiert alle Zeichen
+				// in den unterliegenden Ausgabestrom schreibt.
 
-			// incoming messages
-			line = in.readLine();
-			if (line == null) break;
-			System.out.println("<<< " + line);
-		}
+				// incoming messages
+				String line = in.readLine();
+				if (line == null) break;
+				System.out.println("<<< " + line);
+			}
 		} catch (IOException e) {
 			System.out.println(e.getStackTrace());
 		}
@@ -64,22 +69,24 @@ public class Client {
 
 	public static void sendMessage(String message) {
 		try {
-			connection.getOut().write(message);
+//			System.out.println(connection.isServer());
+			connection.getOut().write(String.format("%s%n", message));
 			connection.getOut().flush();
 		} catch (IOException e) {
+			System.out.println("write to socket failed");
 			e.printStackTrace();
 		}
 	}
 
 
-		// Ein- und Ausgabestrom des Sockets ermitteln
-		// und als BufferedReader bzw. Writer verpacken
-		// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+	// Ein- und Ausgabestrom des Sockets ermitteln
+	// und als BufferedReader bzw. Writer verpacken
+	// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
 
 
-		public void stopConnection(Connection connection) throws IOException {
-			// EOF ins Socket "schreiben".
-			connection.getS().shutdownOutput();
-			System.out.println("Connection closed.");
+	public static void stopConnection(Connection connection) throws IOException {
+		// EOF ins Socket "schreiben".
+		connection.getS().shutdownOutput();
+		System.out.println("Connection closed.");
 	}
 }

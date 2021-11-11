@@ -28,3 +28,7 @@ out/
 
 # meine Testdatei
 src/spiel/Test.java
+
+# uml dateien
+*eapx
+
