@@ -242,7 +242,7 @@ public class Spielgui {
 		for (int i = 0; i < fieldSize; i++) {
 			
 			for(int j = 0; j < fieldSize; j++) {
-				field[i][j] = new JButton(j+fieldSize*i + "");
+				field[i][j] = new JButton(1+j+fieldSize*i + "");
 				field[i][j].addActionListener((e) -> {
 					((JButton)e.getSource()).setBackground(new Color(0,255,0));
 				});
