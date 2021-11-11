@@ -8,7 +8,9 @@ import javax.swing.*;
 public class Spielgui {
 
 	private JFrame frame;
+	private JPanel panel;
 	private JLabel label;
+	private static int port;
 	private static int fieldSize;
 	private static JButton[][] field;
 	private static boolean[][] schiffe;
@@ -121,7 +123,7 @@ public class Spielgui {
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
 			fieldSize = Integer.parseInt(textfeld.getText());
@@ -200,27 +202,35 @@ public class Spielgui {
 		label = new JLabel("Auf welchem Port möchten sie spielen?");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
-
-		JTextField textfeld = new JTextField(30);
-		//textfeld.setSize(50, 50);
-		frame.getContentPane().add(textfeld);
+		
+		panel = new JPanel();
+		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			int port = Integer.parseInt(textfeld.getText());
-			System.out.println(port);
+			port = Integer.parseInt(textfeld.getText());
 		});
-
-		label = new JLabel("Wie groß soll das Spielfeld sein?");
+		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
+		textfeld.setColumns(10);
+		panel.add(textfeld);
+		frame.getContentPane().add(panel);
+		
+		label = new JLabel("Wie lang soll das Spielfeld sein?");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
-
-		JTextField textfeld2 = new JTextField(30);
-		// textfeld.setSize(50, 50);
-		frame.getContentPane().add(textfeld2);
+		
+		label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(label);
+		
+		panel = new JPanel();
+		JTextField textfeld2 = new JTextField();
 		textfeld2.addActionListener((e) -> {
 			fieldSize = Integer.parseInt(textfeld2.getText());
-			System.out.println(fieldSize);
 		});
-
+		textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
+		textfeld2.setColumns(10);
+		panel.add(textfeld2);
+		frame.getContentPane().add(panel);
+		
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 
@@ -243,12 +253,10 @@ public class Spielgui {
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 
-		JTextField textfeld = new JTextField(30);
-		//textfeld.setSize(50, 50);
-		frame.getContentPane().add(textfeld);
+		panel = new JPanel();
+		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			int port = Integer.parseInt(textfeld.getText());
-			System.out.println(port);
+			fieldSize = Integer.parseInt(textfeld.getText());
 		});
 
 		frame.getContentPane().add(Box.createGlue());
@@ -332,7 +340,7 @@ public class Spielgui {
 				field[i][j] = new JButton(1+j+i*fieldSize+"");
 				field[i][j].setName(i+""+j);
 				field[i][j].addActionListener((e) -> {
-					int x = Integer.parseInt(((JButton)e.getSource()).getName())/10;
+					int x = Integer.parseInt(((JButton)e.getSource()).getName())/10; //x und y müssen anders berechnet werden
 					int y = Integer.parseInt(((JButton)e.getSource()).getName())%10;
 					if(schiffe[x][y] == false){
 						((JButton)e.getSource()).setBackground(new Color(0,255,0));
