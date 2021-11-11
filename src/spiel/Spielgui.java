@@ -193,6 +193,8 @@ public class Spielgui {
 	}
 
 	private void client() {
+		
+		frame.setContentPane(Box.createVerticalBox());
 
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 		frame.getContentPane().add(Box.createGlue());
@@ -208,7 +210,7 @@ public class Spielgui {
 		frame.getContentPane().add(label);
 
 		JTextField textfeld = new JTextField(30);
-		// textfeld.setSize(50, 50);
+		textfeld.setSize(50, 50);
 		frame.getContentPane().add(textfeld);
 		textfeld.addActionListener((e) -> {
 			int port = Integer.parseInt(textfeld.getText());
