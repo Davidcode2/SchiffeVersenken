@@ -76,6 +76,13 @@ public class Spielgui {
 			frame.dispose();
 			new Spielgui(3);
 		});
+		
+		JButton button3 = new JButton("Spiel laden");
+		button3.setFocusable(false);
+		button3.setAlignmentX(Component.CENTER_ALIGNMENT);
+		button3.addActionListener((e) -> {
+			System.out.println("laden");
+		});
 
 		frame.setContentPane(Box.createVerticalBox());
 
@@ -85,8 +92,8 @@ public class Spielgui {
 		frame.getContentPane().add(label);
 
 		frame.getContentPane().add(button1);
-
 		frame.getContentPane().add(button2);
+		frame.getContentPane().add(button3);
 
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -106,11 +113,27 @@ public class Spielgui {
 
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 
-		label = new JLabel("Wie groß soll das Spielfeld sein?");
+		label = new JLabel("Wie lang soll das Spielfeld sein?");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
-
-		JTextField textfeld = new JTextField(30);
+		
+		label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(label);
+		
+		JPanel panel = new JPanel();
+		JTextField textfeld = new JTextField();
+		textfeld.addActionListener((e) -> {
+			fieldSize = Integer.parseInt(textfeld.getText());
+			frame.dispose();
+			new Spielgui(6);
+		});
+		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
+		textfeld.setColumns(10);
+		panel.add(textfeld);
+		frame.getContentPane().add(panel);
+		/*
+		textfeld = new JTextField(30);
 		// textfeld.setSize(50, 50);
 		frame.getContentPane().add(textfeld);
 		textfeld.addActionListener((e) -> {
@@ -118,10 +141,9 @@ public class Spielgui {
 			frame.dispose();
 			new Spielgui(6);
 		});
-
+		*/
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
-		// frame.pack();
 
 	}
 
@@ -180,7 +202,7 @@ public class Spielgui {
 		frame.getContentPane().add(label);
 
 		JTextField textfeld = new JTextField(30);
-		textfeld.setSize(50, 50);
+		//textfeld.setSize(50, 50);
 		frame.getContentPane().add(textfeld);
 		textfeld.addActionListener((e) -> {
 			int port = Integer.parseInt(textfeld.getText());
