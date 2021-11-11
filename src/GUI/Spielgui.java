@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.*;
+import java.util.Random;
+
 import javax.swing.*;
 
 public class Spielgui {
@@ -9,8 +11,15 @@ public class Spielgui {
 	private JLabel label;
 	private static int fieldSize;
 	private static JButton[][] field;
+	private static boolean[][] schiffe;
 	
+	public static int getfieldSize() {
+		return fieldSize;
+	}
 	
+	public static JButton[][] getfield() {
+		return field;
+	}
 	
 	public Spielgui(int zahl) {
 
@@ -34,6 +43,9 @@ public class Spielgui {
 				client();
 				break;
 			case 6:
+				schiffeplatzieren();
+				break;
+			case 7:
 				spiel();
 				break;
 			default:
@@ -183,8 +195,8 @@ public class Spielgui {
 		// textfeld.setSize(50, 50);
 		frame.getContentPane().add(textfeld2);
 		textfeld2.addActionListener((e) -> {
-			int spielfeldgroese = Integer.parseInt(textfeld2.getText());
-			System.out.println(spielfeldgroese);
+			fieldSize = Integer.parseInt(textfeld2.getText());
+			System.out.println(fieldSize);
 		});
 
 		frame.getContentPane().add(Box.createGlue());
@@ -210,7 +222,7 @@ public class Spielgui {
 		frame.getContentPane().add(label);
 
 		JTextField textfeld = new JTextField(30);
-		textfeld.setSize(50, 50);
+		//textfeld.setSize(50, 50);
 		frame.getContentPane().add(textfeld);
 		textfeld.addActionListener((e) -> {
 			int port = Integer.parseInt(textfeld.getText());
@@ -222,6 +234,59 @@ public class Spielgui {
 
 	}
 
+	private void schiffeplatzieren() {
+
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		schiffe = new boolean[fieldSize][fieldSize];
+
+		JButton speichern = new JButton("Spiel beginnen");
+		speichern.addActionListener((e) -> {
+			Random rand = new Random();
+
+	        for(int i=0;i<10;i++){
+	            int x = rand.nextInt((fieldSize - 1) + 1);
+	            int y = rand.nextInt((fieldSize - 1) + 1);
+
+	            if(schiffe[x][y] == false){
+	                schiffe[x][y] = true;
+	            } else if(schiffe[x][y] == true){
+	                i=i-1;
+	            }
+	        }
+	        frame.dispose();
+			new Spielgui(7);
+		});
+		menuBar.add(speichern);
+		/*
+		JPanel panel = new JPanel();
+
+		panel.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
+		
+		field = new JButton[fieldSize][fieldSize];
+		
+		for (i = 0; i < fieldSize; i++) {
+			
+			for(j = 0; j < fieldSize; j++) {
+				field[i][j] = new JButton(1+j+fieldSize*i + "");
+				field[i][j].addActionListener((e) -> {
+					if(schiffe[i][j] == false){
+						((JButton)e.getSource()).setBackground(new Color(255,0,0));
+		            } else {
+		            	((JButton)e.getSource()).setBackground(new Color(0,255,0));
+		            }
+					
+				});
+				
+				panel.add(field[i][j]);
+			}
+		}
+		frame.getContentPane().add(panel);
+		frame.pack();
+		*/
+	}
+	
 	private void spiel() {
 
 		JMenuBar menuBar = new JMenuBar();
@@ -242,9 +307,17 @@ public class Spielgui {
 		for (int i = 0; i < fieldSize; i++) {
 			
 			for(int j = 0; j < fieldSize; j++) {
-				field[i][j] = new JButton(1+j+fieldSize*i + "");
+				field[i][j] = new JButton(1+j+i*fieldSize+"");
+				field[i][j].setName(i+""+j);
 				field[i][j].addActionListener((e) -> {
-					((JButton)e.getSource()).setBackground(new Color(0,255,0));
+					int x = Integer.parseInt(((JButton)e.getSource()).getName())/10;
+					int y = Integer.parseInt(((JButton)e.getSource()).getName())%10;
+					if(schiffe[x][y] == false){
+						((JButton)e.getSource()).setBackground(new Color(0,255,0));
+		            } else {
+		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
+		            }
+					
 				});
 				
 				panel.add(field[i][j]);
