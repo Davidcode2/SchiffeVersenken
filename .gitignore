@@ -27,7 +27,7 @@ out/
 *.ldb
 
 # meine Testdatei
-src/spiel/Test.java
+src/GUI/Test.java
 
 # uml dateien
 *eapx
