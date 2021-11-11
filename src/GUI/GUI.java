@@ -2,19 +2,10 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 // Zweites Beispiel zur Verwendung von (AWT und) Swing.
 public class GUI {
-    public static String role = "";
-
-    public static String getRole() {
-        return role;
-    }
-
-    public static void setRole(String role) {
-        GUI.role = role;
-        System.out.println(String.format("role is %s", role));
-    }
 
     // Graphische Oberfläche aufbauen und anzeigen.
     public static void start () {
@@ -49,11 +40,15 @@ public class GUI {
         vbox.add(Box.createVerticalStrut(20));
         {
             // button um Server Socket zu eröffnen (Host)
-            JButton button = new JButton("neues Spiel eröffnen");
+            JButton button = new JButton("Feuer auf 12");
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
-
+                        if (network.Connection.isServer()) {
+                            network.Server.sendMessage("12");
+                        } else {
+                            network.Client.sendMessage("12");
+                        }
                     }
             );
             vbox.add(button);
@@ -61,10 +56,15 @@ public class GUI {
         vbox.add(Box.createVerticalStrut(20));
         {
             // neue Clientverbindung, Spiel beitreten
-            JButton button = new JButton("Spiel beitreten");
+            JButton button = new JButton("Feuer auf 32");
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
+                        if (network.Connection.isServer()) {
+                            network.Server.sendMessage("32");
+                        } else {
+                            network.Client.sendMessage("32");
+                        }
 
                     }
             );
@@ -75,16 +75,15 @@ public class GUI {
             // "Neuer Eintrag" fügt eine neue Tabellenzeile am Ende hinzu
             // und "zieht" den Scrollbar ggf. ganz nach unten,
             // damit die Zeile auch sichtbar ist.
-            JButton button = new JButton("Neuer Eintrag");
+            JButton button = new JButton("Nachricht versenden");
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
                         if (network.Connection.isServer()) {
-                            network.Server.sendMessage("Neuer Eintrag");
+                            network.Server.sendMessage("random Nachricht");
                         } else {
-                            network.Client.sendMessage("Neuer Eintrag");
+                            network.Client.sendMessage("random Nachricht");
                         }
-//                        button.setEnabled(false);
                     }
             );
             vbox.add(button);
@@ -92,11 +91,11 @@ public class GUI {
         vbox.add(Box.createVerticalStrut(20));
         {
             // "Eintrag entfernen" entfernt die selektierte Tabellenzeile.
-            JButton button = new JButton("Eintrag entfernen");
+            JButton button = new JButton("Aktuelle Nachricht lesen");
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.addActionListener(
                     (e) -> {
-
+                        System.out.println(String.format("incoming message <<< %s%n", network.Connection.getMessage()));
                     }
             );
             vbox.add(button);
@@ -123,7 +122,11 @@ public class GUI {
 
                 button.addActionListener(
                         (e) -> {
-
+                            if (network.Connection.isServer()) {
+                                network.Server.sendMessage("Button gedrückt");
+                            } else {
+                                network.Client.sendMessage("Button gedrückt");
+                            }
                         }
                 );
                 hbox.add(button);

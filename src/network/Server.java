@@ -45,14 +45,18 @@ public class Server {
 			connection = new Connection(in, out, usr, s);
 			setConnection(connection);
 
+			connection.setTurn(false);
+
 //		 Abwechselnd vom Socket lesen und auf den Bildschirm schreiben
 //		 bzw. vom Benutzer lesen und ins Socket schreiben.
 //		 Abbruch bei EOF vom Socket bzw. bei EOF oder Leerzeile vom Benutzer.
 			while (true) {
 				// incoming messages
-				String line = in.readLine();
-				if (line == null) break;
-				System.out.println("<<< " + line);
+				connection.setMessage(in.readLine());
+				connection.setTurn(true);
+//				String line = in.readLine();
+				if (connection.getMessage() == null) break;
+				System.out.println("<<< " + connection.getMessage());
 
 				// outgoing messages
 				System.out.print(">>> ");
@@ -68,9 +72,15 @@ public class Server {
 
 	public static void sendMessage(String message) {
 		try {
+			if (connection.getTurn()) {
 //			System.out.println(connection.isServer());
-			connection.getOut().write(String.format("%s%n", message));
-			connection.getOut().flush();
+				connection.getOut().write(String.format("%s%n", message));
+				connection.getOut().flush();
+				connection.setTurn(false);
+//			connection.getIn().readLine();
+			} else {
+				System.out.println("wait for other players turn");
+			}
 		} catch (IOException e) {
 			System.out.println("write to socket failed");
 			e.printStackTrace();
