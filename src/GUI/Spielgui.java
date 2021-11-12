@@ -134,16 +134,6 @@ public class Spielgui {
 		textfeld.setColumns(10);
 		panel.add(textfeld);
 		frame.getContentPane().add(panel);
-		/*
-		textfeld = new JTextField(30);
-		// textfeld.setSize(50, 50);
-		frame.getContentPane().add(textfeld);
-		textfeld.addActionListener((e) -> {
-			fieldSize = Integer.parseInt(textfeld.getText());
-			frame.dispose();
-			new Spielgui(6);
-		});
-		*/
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 
@@ -338,10 +328,11 @@ public class Spielgui {
 			
 			for(int j = 0; j < fieldSize; j++) {
 				field[i][j] = new JButton(1+j+i*fieldSize+"");
-				field[i][j].setName(i+""+j);
+				field[i][j].setName(i+" "+j);
 				field[i][j].addActionListener((e) -> {
-					int x = Integer.parseInt(((JButton)e.getSource()).getName())/10; //x und y müssen anders berechnet werden
-					int y = Integer.parseInt(((JButton)e.getSource()).getName())%10;
+					String[] s = ((JButton)e.getSource()).getName().split(" ");
+					int x = Integer.parseInt(s[0]);
+					int y = Integer.parseInt(s[1]);
 					if(schiffe[x][y] == false){
 						((JButton)e.getSource()).setBackground(new Color(0,255,0));
 		            } else {
