@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 import javax.swing.*;
@@ -54,7 +56,6 @@ public class Spielgui {
 				System.out.println("Programm startet nicht.");
 		}
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// frame.pack();
 		frame.setVisible(true);
 	}
 
@@ -126,9 +127,21 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			fieldSize = Integer.parseInt(textfeld.getText());
-			frame.dispose();
-			new Spielgui(6);
+			try{Integer. parseInt(textfeld.getText());
+			}catch(NumberFormatException ex){
+				frame.dispose();
+				new Spielgui(2);
+			}
+			int test = Integer.parseInt(textfeld.getText());
+			if(test>=5 && test<=30) {
+				fieldSize = test;
+				frame.dispose();
+				new Spielgui(6);
+			}
+			else {
+				frame.dispose();
+				new Spielgui(2);
+			}
 		});
 		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
 		textfeld.setColumns(10);
@@ -196,6 +209,11 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
+			try{Integer. parseInt(textfeld.getText());
+			}catch(NumberFormatException ex){
+				frame.dispose();
+				new Spielgui(4);
+			}
 			port = Integer.parseInt(textfeld.getText());
 		});
 		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
@@ -214,7 +232,21 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld2 = new JTextField();
 		textfeld2.addActionListener((e) -> {
-			fieldSize = Integer.parseInt(textfeld2.getText());
+			try{Integer. parseInt(textfeld.getText());
+			}catch(NumberFormatException ex){
+				frame.dispose();
+				new Spielgui(4);
+			}
+			int test = Integer.parseInt(textfeld.getText());
+			if(test>=5 && test<=30) {
+				fieldSize = test;
+				frame.dispose();
+				new Spielgui(6);
+			}
+			else {
+				frame.dispose();
+				new Spielgui(4);
+			}
 		});
 		textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
 		textfeld2.setColumns(10);
@@ -246,7 +278,12 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			fieldSize = Integer.parseInt(textfeld.getText());
+			try{Integer. parseInt(textfeld.getText());
+			}catch(NumberFormatException ex){
+				frame.dispose();
+				new Spielgui(5);
+			}
+			port = Integer.parseInt(textfeld.getText());
 		});
 
 		frame.getContentPane().add(Box.createGlue());
@@ -261,8 +298,8 @@ public class Spielgui {
 		
 		schiffe = new boolean[fieldSize][fieldSize];
 
-		JButton speichern = new JButton("Spiel beginnen");
-		speichern.addActionListener((e) -> {
+		JButton beginnen = new JButton("Spiel beginnen");
+		beginnen.addActionListener((e) -> {
 			Random rand = new Random();
 
 	        for(int i=0;i<10;i++){
@@ -278,33 +315,33 @@ public class Spielgui {
 	        frame.dispose();
 			new Spielgui(7);
 		});
-		menuBar.add(speichern);
-		/*
+		menuBar.add(beginnen);
+		
 		JPanel panel = new JPanel();
 
 		panel.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
 		
 		field = new JButton[fieldSize][fieldSize];
 		
-		for (i = 0; i < fieldSize; i++) {
-			
-			for(j = 0; j < fieldSize; j++) {
-				field[i][j] = new JButton(1+j+fieldSize*i + "");
-				field[i][j].addActionListener((e) -> {
-					if(schiffe[i][j] == false){
-						((JButton)e.getSource()).setBackground(new Color(255,0,0));
-		            } else {
-		            	((JButton)e.getSource()).setBackground(new Color(0,255,0));
-		            }
-					
+		for (int i = 0; i < fieldSize; i++) {
+			for(int j = 0; j < fieldSize; j++) {
+				field[i][j] = new JButton(1+j+i*fieldSize+"");
+				field[i][j].setName(i+" "+j);
+				field[i][j].addMouseListener(new MouseAdapter(){
+				    public void mouseClicked(MouseEvent event){
+				        if(SwingUtilities.isRightMouseButton(event)){
+				        	System.out.println("Rechtsklick");
+				        }
+				        else {
+				        	System.out.println("Linksklick");
+				        }
+				    }    
 				});
-				
 				panel.add(field[i][j]);
 			}
 		}
 		frame.getContentPane().add(panel);
 		frame.pack();
-		*/
 	}
 	
 	private void spiel() {
@@ -325,7 +362,6 @@ public class Spielgui {
 		field = new JButton[fieldSize][fieldSize];
 		
 		for (int i = 0; i < fieldSize; i++) {
-			
 			for(int j = 0; j < fieldSize; j++) {
 				field[i][j] = new JButton(1+j+i*fieldSize+"");
 				field[i][j].setName(i+" "+j);
