@@ -14,6 +14,10 @@ public class Spielgui {
 	private JLabel label;
 	private static int port;
 	private static int fieldSize;
+	private static int amount2x;
+	private static int amount3x;
+	private static int amount4x;
+	private static int amount5x;
 	private static JButton[][] field;
 	private static boolean[][] schiffe;
 	
@@ -135,6 +139,7 @@ public class Spielgui {
 			int test = Integer.parseInt(textfeld.getText());
 			if(test>=5 && test<=30) {
 				fieldSize = test;
+				shipAmount(fieldSize);
 				frame.dispose();
 				new Spielgui(6);
 			}
@@ -240,6 +245,7 @@ public class Spielgui {
 			int test = Integer.parseInt(textfeld.getText());
 			if(test>=5 && test<=30) {
 				fieldSize = test;
+				shipAmount(fieldSize);
 				frame.dispose();
 				new Spielgui(6);
 			}
@@ -329,11 +335,14 @@ public class Spielgui {
 				field[i][j].setName(i+" "+j);
 				field[i][j].addMouseListener(new MouseAdapter(){
 				    public void mouseClicked(MouseEvent event){
+						String[] s = ((JButton)event.getSource()).getName().split(" ");
+						int x = Integer.parseInt(s[0]);
+						int y = Integer.parseInt(s[1]);
 				        if(SwingUtilities.isRightMouseButton(event)){
-				        	System.out.println("Rechtsklick");
+				        	placeShipRC(x,y);
 				        }
 				        else {
-				        	System.out.println("Linksklick");
+							placeShipLC(x,y);
 				        }
 				    }    
 				});
@@ -382,6 +391,157 @@ public class Spielgui {
 		}
 		frame.getContentPane().add(panel);
 		frame.pack();
+	}
+
+	private void placeShipRC(int i, int j){
+		if(amount2x!=0){
+			schiffe[i][j] = true;
+			schiffe[i][j+1] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i][j+1].setBackground(new Color(0,255,0));
+
+			amount2x--;
+			System.out.println("2x platziert mit RC");
+		} else if (amount3x!=0){
+			schiffe[i][j] = true;
+			schiffe[i][j+1] = true;
+			schiffe[i][j+2] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i][j+1].setBackground(new Color(0,255,0));
+			field[i][j+2].setBackground(new Color(0,255,0));
+
+			amount3x--;
+			System.out.println("3x platziert mit RC");
+		} else if (amount4x!=0){
+			schiffe[i][j] = true;
+			schiffe[i][j+1] = true;
+			schiffe[i][j+2] = true;
+			schiffe[i][j+3] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i][j+1].setBackground(new Color(0,255,0));
+			field[i][j+2].setBackground(new Color(0,255,0));
+			field[i][j+3].setBackground(new Color(0,255,0));
+
+			amount4x--;
+			System.out.println("4x platziert mit RC");
+		} else if (amount5x!=0){
+			schiffe[i][j] = true;
+			schiffe[i][j+1] = true;
+			schiffe[i][j+2] = true;
+			schiffe[i][j+3] = true;
+			schiffe[i][j+4] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i][j+1].setBackground(new Color(0,255,0));
+			field[i][j+2].setBackground(new Color(0,255,0));
+			field[i][j+3].setBackground(new Color(0,255,0));
+			field[i][j+4].setBackground(new Color(0,255,0));
+
+			amount5x--;
+			System.out.println("5x platziert mit RC");
+		} else {
+			//Fehler: keine Schiffe mehr zu platzieren
+			return;
+		}
+	}
+
+	private void placeShipLC(int i, int j){
+		if(amount2x!=0){
+			schiffe[i][j] = true;
+			schiffe[i+1][j] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i+1][j].setBackground(new Color(0,255,0));
+
+			amount2x--;
+			System.out.println("2x platziert mit LC");
+		} else if (amount3x!=0){
+			schiffe[i][j] = true;
+			schiffe[i+1][j] = true;
+			schiffe[i+2][j] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i+1][j].setBackground(new Color(0,255,0));
+			field[i+2][j].setBackground(new Color(0,255,0));
+
+			amount3x--;
+			System.out.println("3x platziert mit LC");
+		} else if (amount4x!=0){
+			schiffe[i][j] = true;
+			schiffe[i+1][j] = true;
+			schiffe[i+2][j] = true;
+			schiffe[i+3][j] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i+1][j].setBackground(new Color(0,255,0));
+			field[i+2][j].setBackground(new Color(0,255,0));
+			field[i+3][j].setBackground(new Color(0,255,0));
+
+			amount4x--;
+			System.out.println("4x platziert mit LC");
+		} else if (amount5x!=0){
+			schiffe[i][j] = true;
+			schiffe[i+1][j] = true;
+			schiffe[i+2][j] = true;
+			schiffe[i+3][j] = true;
+			schiffe[i+4][j] = true;
+
+			field[i][j].setBackground(new Color(0,255,0));
+			field[i+1][j].setBackground(new Color(0,255,0));
+			field[i+2][j].setBackground(new Color(0,255,0));
+			field[i+3][j].setBackground(new Color(0,255,0));
+			field[i+4][j].setBackground(new Color(0,255,0));
+
+			amount5x--;
+			System.out.println("5x platziert mit LC");
+		} else {
+			//Fehler: keine Schiffe mehr zu platzieren
+			return;
+		}
+	}
+
+	private void shipAmount(int x){
+		int temp;
+		int rest = ((x*x)*3)/10;
+		System.out.println(rest);
+
+		do{
+			if(rest<30){
+				if(rest>13){
+					amount2x++;
+					amount3x++;
+					amount4x++;
+					amount5x++;
+					rest = rest - 14;
+				} else if (rest > 8){
+					amount2x++;
+					amount3x++;
+					amount4x++;
+					rest = rest - 9;
+				} else if (rest > 4){
+					amount2x++;
+					amount3x++;
+					rest = rest - 5;
+				} else {
+					amount2x++;
+					rest = rest - 2;
+				}
+			} else {
+				temp = rest/30;
+				rest = rest-temp*30;
+				amount2x = 4*temp;
+				amount3x = 3*temp;
+				amount4x = 2*temp;
+				amount5x = temp;
+			}
+		}while(rest != 0 && rest != 1);
+		System.out.println("2x: " + amount2x);
+		System.out.println("3x: " + amount3x);
+		System.out.println("4x: " + amount4x);
+		System.out.println("5x: " + amount5x);
 	}
 	
 	public static void main(String[] args) {
