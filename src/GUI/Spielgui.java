@@ -339,6 +339,7 @@ public class Spielgui {
 						int x = Integer.parseInt(s[0]);
 						int y = Integer.parseInt(s[1]);
 				        if(SwingUtilities.isRightMouseButton(event)){
+
 				        	placeShipRC(x,y);
 				        }
 				        else {
@@ -394,7 +395,8 @@ public class Spielgui {
 	}
 
 	private void placeShipRC(int i, int j){
-		if(amount2x!=0){
+
+		if(amount2x!=0 && checkCollisionRC(i,j,2)){
 			schiffe[i][j] = true;
 			schiffe[i][j+1] = true;
 
@@ -402,8 +404,8 @@ public class Spielgui {
 			field[i][j+1].setBackground(new Color(0,255,0));
 
 			amount2x--;
-			System.out.println("2x platziert mit RC");
-		} else if (amount3x!=0){
+
+		} else if (amount3x!=0 && checkCollisionRC(i,j,3)){
 			schiffe[i][j] = true;
 			schiffe[i][j+1] = true;
 			schiffe[i][j+2] = true;
@@ -413,8 +415,8 @@ public class Spielgui {
 			field[i][j+2].setBackground(new Color(0,255,0));
 
 			amount3x--;
-			System.out.println("3x platziert mit RC");
-		} else if (amount4x!=0){
+
+		} else if (amount4x!=0 && checkCollisionRC(i,j,4)){
 			schiffe[i][j] = true;
 			schiffe[i][j+1] = true;
 			schiffe[i][j+2] = true;
@@ -426,8 +428,8 @@ public class Spielgui {
 			field[i][j+3].setBackground(new Color(0,255,0));
 
 			amount4x--;
-			System.out.println("4x platziert mit RC");
-		} else if (amount5x!=0){
+
+		} else if (amount5x!=0 && checkCollisionRC(i,j,5)){
 			schiffe[i][j] = true;
 			schiffe[i][j+1] = true;
 			schiffe[i][j+2] = true;
@@ -441,7 +443,7 @@ public class Spielgui {
 			field[i][j+4].setBackground(new Color(0,255,0));
 
 			amount5x--;
-			System.out.println("5x platziert mit RC");
+
 		} else {
 			//Fehler: keine Schiffe mehr zu platzieren
 			return;
@@ -449,7 +451,8 @@ public class Spielgui {
 	}
 
 	private void placeShipLC(int i, int j){
-		if(amount2x!=0){
+
+		if(amount2x!=0 && checkCollisionLC(i,j,2)){
 			schiffe[i][j] = true;
 			schiffe[i+1][j] = true;
 
@@ -457,8 +460,8 @@ public class Spielgui {
 			field[i+1][j].setBackground(new Color(0,255,0));
 
 			amount2x--;
-			System.out.println("2x platziert mit LC");
-		} else if (amount3x!=0){
+
+		} else if (amount3x!=0  && checkCollisionLC(i,j,3)){
 			schiffe[i][j] = true;
 			schiffe[i+1][j] = true;
 			schiffe[i+2][j] = true;
@@ -468,8 +471,8 @@ public class Spielgui {
 			field[i+2][j].setBackground(new Color(0,255,0));
 
 			amount3x--;
-			System.out.println("3x platziert mit LC");
-		} else if (amount4x!=0){
+
+		} else if (amount4x!=0 && checkCollisionLC(i,j,4)){
 			schiffe[i][j] = true;
 			schiffe[i+1][j] = true;
 			schiffe[i+2][j] = true;
@@ -481,8 +484,8 @@ public class Spielgui {
 			field[i+3][j].setBackground(new Color(0,255,0));
 
 			amount4x--;
-			System.out.println("4x platziert mit LC");
-		} else if (amount5x!=0){
+
+		} else if (amount5x!=0 && checkCollisionLC(i,j,5)){
 			schiffe[i][j] = true;
 			schiffe[i+1][j] = true;
 			schiffe[i+2][j] = true;
@@ -496,17 +499,188 @@ public class Spielgui {
 			field[i+4][j].setBackground(new Color(0,255,0));
 
 			amount5x--;
-			System.out.println("5x platziert mit LC");
+
 		} else {
 			//Fehler: keine Schiffe mehr zu platzieren
 			return;
 		}
 	}
 
+	private boolean checkCollisionRC(int i, int j, int x){
+		int u = 0;
+		int v = 0;
+		int h = 1;
+		int h2 = x+1;
+
+		//check collision wall
+		if (j+x > fieldSize){
+			return false;
+		}
+
+		//Button Top-Left-Corner
+		if (i == 0 && j == 0){
+			u = 0;
+			v = 0;
+			h = 1;
+			h2 = x+1;
+		}
+		//Button left Edge
+		else if (i > 0 && i < fieldSize-1 && j == 0){
+			u = -1;
+			v = 0;
+			h = 1;
+			h2 = x+1;
+		}
+		//Button Bottom-Left-Corner
+		else if (i == fieldSize-1 && j == 0){
+			u = -1;
+			v = 0;
+			h = 0;
+			h2 = x+1;
+		}
+		//Button in middle of field
+		else if (i > 0 && i < fieldSize - 1 && j > 0 && j < fieldSize -1 && j+x != fieldSize){
+			u = -1;
+			v = -1;
+			h = 1;
+			h2 = x+1;
+		}
+		//Button top Edge
+		else if (i == 0 && j > 0 && j < fieldSize -1 && j+x != fieldSize){
+			u = 0;
+			v = -1;
+			h = 1;
+			h2 = x+1;
+		}
+		//Button bottom Edge
+		else if (i == fieldSize-1 && j > 0 && j < fieldSize -1 && j+x != fieldSize){
+			u = -1;
+			v = -1;
+			h = 0;
+			h2 = x+1;
+		}
+		//Button right Edge
+		else if (j+x == fieldSize && i > 0 && i < fieldSize - 1 && j > 0 && j < fieldSize -1) {
+			u = 0;
+			v = -1;
+			h = 1;
+			h2 = x;
+		}
+		//Button Top-Right-Corner
+		else if (j+x == fieldSize && i == 0 && j > 0 && j < fieldSize -1){
+			u = 0;
+			v = -1;
+			h = 1;
+			h2 = x;
+		}
+		//Button Bottom-Right-Corner
+		else if (i == fieldSize-1 && j > 0 && j < fieldSize -1 && j+x == fieldSize){
+			u = -1;
+			v = 0;
+			h = 0;
+			h2 = x;
+		}
+
+		for(int m=u; m<h+1; m++){
+			for (int n=v; n<h2; n++){
+				if (schiffe[i+m][j+n] == true){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean checkCollisionLC(int i, int j, int x){
+		int u = 0;
+		int v = 0;
+		int h = 0;
+		int h2 = 0;
+
+		//check collision wall
+		if (i+x > fieldSize){
+			return false;
+		}
+
+		//Button Top-Left-Corner
+		if (i == 0 && j == 0){
+			u = 0;
+			v = 0;
+			h = 1;
+			h2 = x+1;
+		}
+		//Button left Edge
+		else if (i > 0 && i < fieldSize-1 && j == 0){
+			u = 0;
+			v = -1;
+			h = 1;
+			h2 = x+1;
+		}
+		//TODO
+		//Button Bottom-Left-Corner
+		else if (i == fieldSize-1 && j == 0){
+			u = -1;
+			v = 0;
+			h = 0;
+			h2 = x+1;
+		}
+		//Button in middle of field
+		else if (i > 0 && i < fieldSize - 1 && j > 0 && j < fieldSize -1 && j+x != fieldSize){
+			u = -1;
+			v = -1;
+			h = 1;
+			h2 = x+1;
+		}
+		//Button top Edge
+		else if (i == 0 && j > 0 && j < fieldSize -1 && j+x != fieldSize){
+			u = -1;
+			v = 0;
+			h = 1;
+			h2 = x+1;
+		}
+		//TODO
+		//Button bottom Edge
+		else if (i == fieldSize-1 && j > 0 && j < fieldSize -1 && j+x != fieldSize){
+			u = -1;
+			v = -1;
+			h = 0;
+			h2 = x+1;
+		}
+		//Button right Edge
+		else if (j+x == fieldSize && i > 0 && i < fieldSize - 1 && j > 0 && j < fieldSize -1) {
+			u = -1;
+			v = 0;
+			h = 0;
+			h2 = x+1;
+		}
+		//Button Top-Right-Corner
+		else if (j+x == fieldSize && i == 0 && j > 0 && j < fieldSize -1){
+			u = 0;
+			v = -1;
+			h = 1;
+			h2 = x;
+		}
+		//Button Bottom-Right-Corner
+		else if (i == fieldSize-1 && j > 0 && j < fieldSize -1 && j+x == fieldSize){
+			u = -1;
+			v = 0;
+			h = x;
+			h2 = 0;
+		}
+
+		for(int m=u; m<h+1; m++){
+			for (int n=v; n<h2; n++){
+				if (schiffe[i+n][j+m] == true){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	private void shipAmount(int x){
 		int temp;
 		int rest = ((x*x)*3)/10;
-		System.out.println(rest);
 
 		do{
 			if(rest<30){
