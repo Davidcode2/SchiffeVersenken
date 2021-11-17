@@ -25,6 +25,7 @@ public class Server {
 			// Auf eine Client-Verbindung warten und diese akzeptieren.
 			// Als Resultat erhält man ein "normales" Socket.
 			System.out.println("Waiting for client connection ...");
+			System.out.println(String.format("on: %s", port));
 			Socket s = ss.accept();
 			System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
 			System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));

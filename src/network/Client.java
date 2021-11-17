@@ -20,9 +20,9 @@ public class Client {
 	// (Anstelle von "throws IOException" sollte man Ausnahmen besser
 	// gezielt mit try-catch auffangen.)
 	// Verwendete Portnummer (vgl. Server).
-	public void startConnection(String ip, int port) {
+	public void startConnection(String ip, int port) throws IOException {
 
-		try {
+//		try {
 			// Verbindung zum Server mit Name oder IP-Adresse args[0]
 			// über Portnummer port herstellen.
 			// Als Resultat erhält man ein Socket.
@@ -64,9 +64,9 @@ public class Client {
 				if (connection.getMessage() == null) break;
 				System.out.println(connection.getMessage());
 			}
-		} catch (IOException e) {
-			System.out.println(e.getStackTrace());
-		}
+//		} catch (IOException e) {
+//			System.out.println(e.getStackTrace());
+//		}
 	}
 
 	public static void sendMessage(String message) {

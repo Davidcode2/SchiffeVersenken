@@ -24,11 +24,16 @@ hs_err_pid*
 
 .idea
 out/
+bin/
 *.ldb
 
 # meine Testdatei
 src/GUI/Test.java
 
 # uml dateien
-*eapx
+*.eapx
+
+# eclipse dateien
+.classpath
+.project
 

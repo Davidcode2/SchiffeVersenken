@@ -1,8 +1,11 @@
 package GUI;
 
+import network.Connection;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Random;
 
 import javax.swing.*;
@@ -12,7 +15,8 @@ public class Spielgui {
 	private JFrame frame;
 	private JPanel panel;
 	private JLabel label;
-	private static int port;
+	public static int port;
+	public static String ip;
 	private static int fieldSize;
 	private static int amount2x;
 	private static int amount3x;
@@ -214,7 +218,7 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			try{Integer. parseInt(textfeld.getText());
+			try{Integer.parseInt(textfeld.getText());
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(4);
@@ -237,17 +241,24 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld2 = new JTextField();
 		textfeld2.addActionListener((e) -> {
-			try{Integer. parseInt(textfeld.getText());
+			try{Integer.parseInt(textfeld2.getText());
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(4);
 			}
-			int test = Integer.parseInt(textfeld.getText());
+			int test = Integer.parseInt(textfeld2.getText());
 			if(test>=5 && test<=30) {
 				fieldSize = test;
 				shipAmount(fieldSize);
 				frame.dispose();
+				network.Connection.setServer("server");
+				System.out.println(String.format("setServer is: %s", Connection.isServer()));
 				new Spielgui(6);
+
+				// open server connection
+//				network.Server server = new network.Server();
+//				server.startConnection(port);
+
 			}
 			else {
 				frame.dispose();
@@ -284,13 +295,46 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			try{Integer. parseInt(textfeld.getText());
+			try{Integer.parseInt(textfeld.getText());
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(5);
 			}
 			port = Integer.parseInt(textfeld.getText());
 		});
+		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
+		textfeld.setColumns(10);
+		panel.add(textfeld);
+		frame.getContentPane().add(panel);
+
+		label = new JLabel("Auf welcher IP möchten sie spielen?");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(label);
+
+		panel = new JPanel();
+		JTextField promptIP = new JTextField();
+		promptIP.addActionListener((e) -> {
+			try{promptIP.getText();
+			}catch(NumberFormatException ex){
+				frame.dispose();
+				new Spielgui(5);
+			}
+			ip = promptIP.getText();
+			Connection.setServer("client");
+			// start client connection
+//			network.Client client = new network.Client();
+			System.out.println(String.format("connection data %s %s", ip, port));
+//			try {
+//				client.startConnection(ip, port);
+//			} catch (IOException ex) {
+//				ex.printStackTrace();
+//			}
+			new Spielgui(6);
+		});
+		promptIP.setHorizontalAlignment(SwingConstants.CENTER);
+		promptIP.setColumns(10);
+		panel.add(promptIP);
+		frame.getContentPane().add(panel);
 
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -298,6 +342,7 @@ public class Spielgui {
 	}
 
 	private void schiffeplatzieren() {
+
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);

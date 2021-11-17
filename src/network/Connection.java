@@ -13,7 +13,7 @@ public class Connection {
     private static Writer out;
     private static Socket s;
 
-    private static boolean isServer;
+    private static String isServer = "notset";
     private static String message;
     private static boolean turn = true;
 
@@ -23,10 +23,10 @@ public class Connection {
         this.s = s;
     }
 
-    public static void setServer(boolean bool) {
+    public static void setServer(String bool) {
         isServer = bool;
     }
-    public static boolean isServer() {
+    public static String isServer() {
         return isServer;
     }
 
