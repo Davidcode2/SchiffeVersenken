@@ -9,24 +9,24 @@ import java.net.Socket;
 public class Connection {
 
     private static BufferedReader in;
-    private static BufferedReader usr;
+    private static BufferedWriter usr;
     private static Writer out;
     private static Socket s;
 
-    private static String isServer = "notset";
+    private static boolean isServer;
     private static String message;
     private static boolean turn = true;
 
-    public Connection(BufferedReader in, Writer out, BufferedWriter usr, Socket s) {
+    public Connection(BufferedReader in, Writer out, BufferedWriter usr) {
         this.in = in;
         this.out = out;
-        this.s = s;
+        this.usr = usr;
     }
 
-    public static void setServer(String bool) {
+    public static void setServer(boolean bool) {
         isServer = bool;
     }
-    public static String isServer() {
+    public static boolean isServer() {
         return isServer;
     }
 
@@ -42,6 +42,10 @@ public class Connection {
         return out;
     }
 
+    public static BufferedWriter getUsr() {
+        return usr;
+    }
+
     public static String getMessage() {
         return message;
     }
@@ -50,10 +54,10 @@ public class Connection {
     }
 
     public void setTurn(boolean b) {
-        this.turn = b;
+        turn = b;
     }
 
     public boolean getTurn() {
-        return this.turn;
+        return turn;
     }
 }

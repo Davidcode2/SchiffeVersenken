@@ -1,12 +1,15 @@
 package GUI;
 
+import network.Client;
 import network.Connection;
 import network.Server;
+import sun.security.provider.ConfigFile;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Random;
 
 import javax.swing.*;
@@ -18,6 +21,7 @@ public class Spielgui {
 	private JLabel label;
 	public static int port;
 	public static String ip;
+	public Socket s;
 	private static int fieldSize;
 	private static int amount2x;
 	private static int amount3x;
@@ -50,7 +54,6 @@ public class Spielgui {
 				mehrspieler();
 				break;
 			case 4:
-				network.Connection.setServer("server");
 				host();
 				break;
 			case 5:
@@ -253,41 +256,49 @@ public class Spielgui {
 				fieldSize = test;
 				shipAmount(fieldSize);
 				frame.dispose();
-//				network.Connection.setServer("server");
+				network.Connection.setServer(true);
 				System.out.println(String.format("setServer is: %s", Connection.isServer()));
 				network.Server server = new Server();
 
-				// open server connection
-//				network.Server server = new network.Server();
-//				server.startConnection(port);
-				// TODO:
-				// add submit button
-				// actions in textfields should only be executed when pressed
-				class ConnectionService extends SwingWorker<String, Object> {
+				class StartConnectionService extends SwingWorker<Socket, Object> {
 					@Override
-					public String doInBackground() {
-						server.startConnection(port);
-						System.out.println("end of doInBackground function");
-						return null;
+					public Socket doInBackground() {
+						s = server.startConnection(port);
+						try {
+							server.createConnection(s);
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+						return s;
 					}
 
 					@Override
 					protected void done() {
 						try {
+							s = get();
 							System.out.println("Client connected to socket!");
 						} catch (Exception ignore) {
 							System.out.println("error");
 						}
+						class StartCommunicationService extends SwingWorker<String, Object> {
+							@Override
+							public String doInBackground() {
+								server.startCommunicationLoop();
+								return null;
+							}
+						}
+						(new StartCommunicationService()).execute();
+						System.out.println("Server ready to send and receive messages...\n");
+
+						String x = String.valueOf(fieldSize);
+						System.out.println(x);
+						String y = Integer.toString(fieldSize);
+						System.out.println(y);
+						Server.sendMessage(y);
 					}
 				}
-
-				(new ConnectionService()).execute();
-				// at this point still waiting for connection
+				(new StartConnectionService()).execute();
 				new Spielgui(6);
-
-				// TODO:
-				// add back button
-
 			}
 			else {
 				frame.dispose();
@@ -301,6 +312,12 @@ public class Spielgui {
 		
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
+
+		// TODO:
+		// add submit button
+		// actions in textfields should only be executed when pressed
+		// TODO:
+		// add back button
 
 	}
 
@@ -324,12 +341,12 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			try{Integer.parseInt(textfeld.getText());
+			try{
+				port = Integer.parseInt(textfeld.getText());
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(5);
 			}
-			port = Integer.parseInt(textfeld.getText());
 		});
 		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
 		textfeld.setColumns(10);
@@ -343,37 +360,59 @@ public class Spielgui {
 		panel = new JPanel();
 		JTextField promptIP = new JTextField();
 		promptIP.addActionListener((e) -> {
-			try{promptIP.getText();
+			try{
+				ip = promptIP.getText();
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(5);
 			}
-			ip = promptIP.getText();
-			Connection.setServer("client");
-			// start client connection
+			Connection.setServer(false);
 			network.Client client = new network.Client();
 			System.out.println(String.format("connection data %s %s", ip, port));
-//			try {
-//				client.startConnection(ip, port);
-//			} catch (IOException ex) {
-//				ex.printStackTrace();
-//			}
-//			new Spielgui(6);
-			class ConnectionService extends SwingWorker<String, Object> {
+
+			class ConnectionService extends SwingWorker<Socket, Object> {
 				@Override
-				public String doInBackground() {
+				public Socket doInBackground() {
 					try {
-						client.startConnection(ip, port);
+						s = client.startConnection(ip, port);
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
-					System.out.println("end of doInBackground function");
-					return null;
+					return s;
+				}
+				@Override
+				protected void done() {
+					try {
+						System.out.println("Client connected!");
+						s = get();
+					} catch (Exception ignore) {
+						System.out.println("error starting communication loop");
+					}
+					class StartClientCommunicationService extends SwingWorker<String, Object> {
+						@Override
+						public String doInBackground() {
+							try {
+								client.startCommunicationLoop(s);
+							} catch (IOException ex) {
+								ex.printStackTrace();
+							}
+							return null;
+						}
+					}
+					(new StartClientCommunicationService()).execute();
+					System.out.print("Client ready to send and receive messages...\n");
+//					fieldSize = Integer.parseInt(Connection.getMessage());
+//					new Spielgui(6);
 				}
 			}
 			(new ConnectionService()).execute();
-			fieldSize = Integer.parseInt(Connection.getMessage());
+			new Spielgui(1);
+
+			// when connection established, get message from Server
+			// should contain fieldsize
+//			new Spielgui(6);
 		});
+
 		promptIP.setHorizontalAlignment(SwingConstants.CENTER);
 		promptIP.setColumns(10);
 		panel.add(promptIP);
@@ -428,6 +467,13 @@ public class Spielgui {
 						int y = Integer.parseInt(s[1]);
 				        if(SwingUtilities.isRightMouseButton(event)){
 
+							if (Connection.isServer()) {
+								System.out.println("some output in sendmessage from server");
+								Server.sendMessage(String.format("%s%s", x, y));
+							} else if (Connection.isServer() == false) {
+								System.out.println("some output in sendmessage from client");
+								Client.sendMessage(String.format("%s%s", x, y));
+							}
 				        	placeShipRC(x,y);
 				        }
 				        else {
