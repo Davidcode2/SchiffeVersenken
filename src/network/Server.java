@@ -1,5 +1,6 @@
 package network;
 
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 
@@ -29,6 +30,7 @@ public class Server {
 			Socket s = ss.accept();
 			System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
 			System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
+
 
 			// print out the ip address to which the socket is connected
 

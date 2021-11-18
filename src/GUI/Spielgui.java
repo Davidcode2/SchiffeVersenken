@@ -1,6 +1,7 @@
 package GUI;
 
 import network.Connection;
+import network.Server;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -49,6 +50,7 @@ public class Spielgui {
 				mehrspieler();
 				break;
 			case 4:
+				network.Connection.setServer("server");
 				host();
 				break;
 			case 5:
@@ -251,13 +253,40 @@ public class Spielgui {
 				fieldSize = test;
 				shipAmount(fieldSize);
 				frame.dispose();
-				network.Connection.setServer("server");
+//				network.Connection.setServer("server");
 				System.out.println(String.format("setServer is: %s", Connection.isServer()));
-				new Spielgui(6);
+				network.Server server = new Server();
 
 				// open server connection
 //				network.Server server = new network.Server();
 //				server.startConnection(port);
+				// TODO:
+				// add submit button
+				// actions in textfields should only be executed when pressed
+				class ConnectionService extends SwingWorker<String, Object> {
+					@Override
+					public String doInBackground() {
+						server.startConnection(port);
+						System.out.println("end of doInBackground function");
+						return null;
+					}
+
+					@Override
+					protected void done() {
+						try {
+							System.out.println("Client connected to socket!");
+						} catch (Exception ignore) {
+							System.out.println("error");
+						}
+					}
+				}
+
+				(new ConnectionService()).execute();
+				// at this point still waiting for connection
+				new Spielgui(6);
+
+				// TODO:
+				// add back button
 
 			}
 			else {
@@ -322,14 +351,28 @@ public class Spielgui {
 			ip = promptIP.getText();
 			Connection.setServer("client");
 			// start client connection
-//			network.Client client = new network.Client();
+			network.Client client = new network.Client();
 			System.out.println(String.format("connection data %s %s", ip, port));
 //			try {
 //				client.startConnection(ip, port);
 //			} catch (IOException ex) {
 //				ex.printStackTrace();
 //			}
-			new Spielgui(6);
+//			new Spielgui(6);
+			class ConnectionService extends SwingWorker<String, Object> {
+				@Override
+				public String doInBackground() {
+					try {
+						client.startConnection(ip, port);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+					System.out.println("end of doInBackground function");
+					return null;
+				}
+			}
+			(new ConnectionService()).execute();
+			fieldSize = Integer.parseInt(Connection.getMessage());
 		});
 		promptIP.setHorizontalAlignment(SwingConstants.CENTER);
 		promptIP.setColumns(10);
