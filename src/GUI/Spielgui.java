@@ -458,6 +458,13 @@ public class Spielgui {
 		});
 		menuBar.add(beginnen);
 		
+		JButton restart = new JButton("Schiffe neu setzen");
+		restart.addActionListener((e) -> {
+			frame.dispose();
+			new Spielgui(6);
+		});
+		menuBar.add(restart);
+		
 		JPanel panel = new JPanel();
 
 		panel.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
