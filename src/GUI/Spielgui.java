@@ -3,7 +3,6 @@ package GUI;
 import network.Client;
 import network.Connection;
 import network.Server;
-import sun.security.provider.ConfigFile;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -21,7 +20,7 @@ public class Spielgui {
 	private JLabel label;
 	public static int port;
 	public static String ip;
-	public Socket s;
+	public Socket socketS;
 	private static int fieldSize;
 	private static int amount2x;
 	private static int amount3x;
@@ -260,22 +259,23 @@ public class Spielgui {
 				System.out.println(String.format("setServer is: %s", Connection.isServer()));
 				network.Server server = new Server();
 
+				// Worker thread waiting for connection in background
 				class StartConnectionService extends SwingWorker<Socket, Object> {
 					@Override
 					public Socket doInBackground() {
-						s = server.startConnection(port);
+						socketS = server.startConnection(port);
 						try {
-							server.createConnection(s);
+							server.createConnection(socketS);
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
-						return s;
+						return socketS;
 					}
 
 					@Override
 					protected void done() {
 						try {
-							s = get();
+							socketS = get();
 							System.out.println("Client connected to socket!");
 						} catch (Exception ignore) {
 							System.out.println("error");
@@ -290,6 +290,13 @@ public class Spielgui {
 						(new StartCommunicationService()).execute();
 						System.out.println("Server ready to send and receive messages...\n");
 
+						/* TODO:
+						the problem is that the below code is executed before the communication loop has started
+						Console output: `5
+										 true
+										 >>>`
+						FIX
+						*/
 						String x = String.valueOf(fieldSize);
 						System.out.println(x);
 						String y = Integer.toString(fieldSize);
@@ -374,17 +381,17 @@ public class Spielgui {
 				@Override
 				public Socket doInBackground() {
 					try {
-						s = client.startConnection(ip, port);
+						socketS = client.startConnection(ip, port);
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
-					return s;
+					return socketS;
 				}
 				@Override
 				protected void done() {
 					try {
 						System.out.println("Client connected!");
-						s = get();
+						socketS = get();
 					} catch (Exception ignore) {
 						System.out.println("error starting communication loop");
 					}
@@ -392,13 +399,18 @@ public class Spielgui {
 						@Override
 						public String doInBackground() {
 							try {
-								client.startCommunicationLoop(s);
+								client.startCommunicationLoop(socketS);
 							} catch (IOException ex) {
 								ex.printStackTrace();
 							}
 							return null;
 						}
 					}
+					/* TODO:
+					the problem is that the below code is executed before the communication loop has started
+					look at Observable Pattern, Bookmark
+					move code to network package
+					 */
 					(new StartClientCommunicationService()).execute();
 					System.out.print("Client ready to send and receive messages...\n");
 //					fieldSize = Integer.parseInt(Connection.getMessage());
@@ -407,10 +419,6 @@ public class Spielgui {
 			}
 			(new ConnectionService()).execute();
 			new Spielgui(1);
-
-			// when connection established, get message from Server
-			// should contain fieldsize
-//			new Spielgui(6);
 		});
 
 		promptIP.setHorizontalAlignment(SwingConstants.CENTER);
@@ -467,6 +475,8 @@ public class Spielgui {
 						int y = Integer.parseInt(s[1]);
 				        if(SwingUtilities.isRightMouseButton(event)){
 
+							// TODO:
+							// move sendMessage() to class Connection so if else becomes superfluous
 							if (Connection.isServer()) {
 								System.out.println("some output in sendmessage from server");
 								Server.sendMessage(String.format("%s%s", x, y));
