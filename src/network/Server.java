@@ -64,15 +64,6 @@ public class Server {
 				// outgoing messages
 				System.out.print(">>> ");
 				connection.getUsr().write(String.format("%s%n", connection.getOut()));
-				// flush sorgt dafür, dass der Writer garantiert alle Zeichen
-				// in den unterliegenden Ausgabestrom schreibt.
-
-//			String line = usr.readLine();
-//			if (line == null || line.equals("")) break;
-//			out.write(String.format("%s%n", line));
-//			out.flush();
-				// flush sorgt dafür, dass der Writer garantiert alle Zeichen
-				// in den unterliegenden Ausgabestrom schreibt.
 
 				// incoming messages
 				connection.setMessage(Connection.getIn().readLine());

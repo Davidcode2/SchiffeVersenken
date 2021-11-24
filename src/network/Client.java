@@ -59,15 +59,12 @@ public class Client {
 			// incoming messages
 			connection.setMessage(Connection.getIn().readLine());
 			connection.setTurn(true);
-//				String line = in.readLine();
 			if (connection.getMessage() == null) break;
 			System.out.println("<<< " + connection.getMessage());
 
 			// outgoing messages
 			System.out.print(">>> ");
 			connection.getUsr().write(String.format("%s%n", connection.getOut()));
-			// flush sorgt dafür, dass der Writer garantiert alle Zeichen
-			// in den unterliegenden Ausgabestrom schreibt.
 
 		}
 //		} catch (IOException e) {
@@ -91,12 +88,6 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-
-
-	// Ein- und Ausgabestrom des Sockets ermitteln
-	// und als BufferedReader bzw. Writer verpacken
-	// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
-
 
 	public static void stopConnection(Connection connection) throws IOException {
 		// EOF ins Socket "schreiben".
