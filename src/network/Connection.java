@@ -60,9 +60,9 @@ public class Connection {
     public boolean getTurn() {
         return turn;
     }
-    public static void sendMessage(boolean isServer, String message) {
+    public static void sendMessage(String message) {
         // if turn == true -> Server
-        if (isServer) {
+        if (isServer()) {
             try {
                 if (Server.getConnection().getTurn()) {
 //			System.out.println(connection.isServer());

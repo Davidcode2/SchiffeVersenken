@@ -79,23 +79,6 @@ public class Client {
 		}
 	}
 
-	public static void sendMessage(String message) {
-		try {
-			if (connection.getTurn() == true) {
-//			System.out.println(connection.isServer());
-				connection.getOut().write(String.format("%s%n", message));
-				connection.getOut().flush();
-				connection.setTurn(false);
-//			connection.getIn().readLine();
-			} else {
-				System.out.println("wait for other players turn");
-			}
-		} catch (IOException e) {
-			System.out.println("write to socket failed");
-			e.printStackTrace();
-		}
-	}
-
 	public static void stopConnection(Connection connection) throws IOException {
 		// EOF ins Socket "schreiben".
 		connection.getS().shutdownOutput();

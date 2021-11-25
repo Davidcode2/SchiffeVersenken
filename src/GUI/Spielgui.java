@@ -295,7 +295,7 @@ public class Spielgui {
 						System.out.println("Server ready to send and receive messages...\n");
 
 						String x = String.valueOf(fieldSize);
-						Connection.sendMessage(Connection.isServer(), x);
+						Connection.sendMessage(x);
 					}
 				}
 				(new StartConnectionService()).execute();
@@ -411,7 +411,7 @@ public class Spielgui {
 						// wait
 					}
 					// possibly problematic: gui call from within background thread
-					Connection.sendMessage(Connection.isServer(), "done");
+					Connection.sendMessage("done");
 					new Spielgui(6);
 				}
 			}
@@ -455,7 +455,7 @@ public class Spielgui {
 	            }
 	        }
 	        //Hier soll wenn wir client sind ein "ready" an den host schicken
-			Connection.sendMessage(Connection.isServer(), "ready");
+			Connection.sendMessage("ready");
 			frame.dispose();
 			new Spielgui(7);
 		});
@@ -528,10 +528,10 @@ public class Spielgui {
 					int y = Integer.parseInt(s[1]);
 					if(schiffe[x][y] == false){
 						((JButton)e.getSource()).setBackground(new Color(0,255,0));
-						Connection.sendMessage(Connection.isServer(), String.format("shot %s %s", x, y));
+						Connection.sendMessage(String.format("shot %s %s", x, y));
 					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
-						Connection.sendMessage(Connection.isServer(), String.format("shot %s %s", x, y));
+						Connection.sendMessage(String.format("shot %s %s", x, y));
 		            }
 					
 				});
