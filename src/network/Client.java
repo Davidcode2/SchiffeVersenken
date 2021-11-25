@@ -10,7 +10,7 @@ public class Client {
 
 	private static boolean clientLoopReady;
 
-	public Connection getConnection() {
+	public static Connection getConnection() {
 		return connection;
 	}
 

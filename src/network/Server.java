@@ -12,7 +12,7 @@ public class Server {
 		this.connection = connection;
 	}
 
-	public Connection getConnection() {
+	public static Connection getConnection() {
 		return connection;
 	}
 
@@ -81,7 +81,7 @@ public class Server {
 	public static void sendMessage(String message) {
 		try {
 			if (connection.getTurn()) {
-			System.out.println(connection.isServer());
+//			System.out.println(connection.isServer());
 				connection.getOut().write(String.format("%s%n", message));
 				connection.getOut().flush();
 				connection.setTurn(false);

@@ -206,64 +206,6 @@ public class Spielgui {
 
 	}
 
-	private void host1() {
-
-		frame.setContentPane(Box.createVerticalBox());
-
-		frame.getContentPane().add(Box.createVerticalStrut(50));
-		frame.getContentPane().add(Box.createGlue());
-
-		label = new JLabel("Schiffe versenken");
-		label.setAlignmentX(Component.CENTER_ALIGNMENT);
-		frame.getContentPane().add(label);
-
-		frame.getContentPane().add(Box.createVerticalStrut(50));
-
-		label = new JLabel("Wie lang soll das Spielfeld sein?");
-		label.setAlignmentX(Component.CENTER_ALIGNMENT);
-		frame.getContentPane().add(label);
-
-		label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
-		label.setAlignmentX(Component.CENTER_ALIGNMENT);
-		frame.getContentPane().add(label);
-
-		panel = new JPanel();
-		JTextField textfeld2 = new JTextField();
-		textfeld2.addActionListener((e) -> {
-			try{Integer.parseInt(textfeld2.getText());
-			}catch(NumberFormatException ex){
-				frame.dispose();
-				new Spielgui(4);
-			}
-			int test = Integer.parseInt(textfeld2.getText());
-			if(test>=5 && test<=30) {
-				fieldSize = test;
-				shipAmount(fieldSize);
-				frame.dispose();
-				network.Connection.setServer(true);
-				System.out.println(String.format("setServer is: %s", Connection.isServer()));
-				new Spielgui(6);
-			}
-			else {
-				frame.dispose();
-				new Spielgui(4);
-			}
-		});
-		textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
-		textfeld2.setColumns(10);
-		panel.add(textfeld2);
-		frame.getContentPane().add(panel);
-
-		frame.getContentPane().add(Box.createGlue());
-		frame.getContentPane().add(Box.createVerticalStrut(50));
-
-		// TODO:
-		// add submit button
-		// actions in textfields should only be executed when pressed
-		// TODO:
-		// add back button
-
-	}
 	private void host() {
 
 		frame.setContentPane(Box.createVerticalBox());
@@ -353,7 +295,7 @@ public class Spielgui {
 						System.out.println("Server ready to send and receive messages...\n");
 
 						String x = String.valueOf(fieldSize);
-						Server.sendMessage(x);
+						Connection.sendMessage(Connection.isServer(), x);
 					}
 				}
 				(new StartConnectionService()).execute();
@@ -469,6 +411,7 @@ public class Spielgui {
 						// wait
 					}
 					// possibly problematic: gui call from within background thread
+					Connection.sendMessage(Connection.isServer(), "done");
 					new Spielgui(6);
 				}
 			}
@@ -511,10 +454,8 @@ public class Spielgui {
 	                i=i-1;
 	            }
 	        }
-	        //Hier soll wenn wir client sind ein "done" an den host schicken
-			if (Connection.isServer() == false) {
-				Client.sendMessage(String.format("done"));
-			}
+	        //Hier soll wenn wir client sind ein "ready" an den host schicken
+			Connection.sendMessage(Connection.isServer(), "ready");
 			frame.dispose();
 			new Spielgui(7);
 		});
@@ -546,16 +487,6 @@ public class Spielgui {
 						int y = Integer.parseInt(s[1]);
 						
 				        if(SwingUtilities.isRightMouseButton(event)){
-				        	/*
-							// TODO:
-							// move sendMessage() to class Connection so if else becomes superfluous
-							if (Connection.isServer()) {
-								System.out.println("some output in sendmessage from server");
-								Server.sendMessage(String.format("%s%s", x, y));
-							} else if (Connection.isServer() == false) {
-								System.out.println("some output in sendmessage from client");
-								Client.sendMessage(String.format("%s%s", x, y));
-							}*/
 				        	placeShipRC(x,y);
 				        }
 				        else {
@@ -597,22 +528,10 @@ public class Spielgui {
 					int y = Integer.parseInt(s[1]);
 					if(schiffe[x][y] == false){
 						((JButton)e.getSource()).setBackground(new Color(0,255,0));
-						if (Connection.isServer()) {
-							System.out.println("some output in sendmessage from server");
-							Server.sendMessage(String.format("%s%s", x, y));
-						} else if (Connection.isServer() == false) {
-							System.out.println("some output in sendmessage from client");
-							Client.sendMessage(String.format("%s%s", x, y));
-						}
+						Connection.sendMessage(Connection.isServer(), String.format("shot %s %s", x, y));
 					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
-						if (Connection.isServer()) {
-							System.out.println("some output in sendmessage from server");
-							Server.sendMessage(String.format("%s%s", x, y));
-						} else if (Connection.isServer() == false) {
-							System.out.println("some output in sendmessage from client");
-							Client.sendMessage(String.format("%s%s", x, y));
-						}
+						Connection.sendMessage(Connection.isServer(), String.format("shot %s %s", x, y));
 		            }
 					
 				});

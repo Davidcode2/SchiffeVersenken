@@ -60,4 +60,41 @@ public class Connection {
     public boolean getTurn() {
         return turn;
     }
+    public static void sendMessage(boolean isServer, String message) {
+        // if turn == true -> Server
+        if (isServer) {
+            try {
+                if (Server.getConnection().getTurn()) {
+//			System.out.println(connection.isServer());
+                    Server.getConnection().getOut().write(String.format("%s%n", message));
+                    Server.getConnection().getOut().flush();
+                    Server.getConnection().setTurn(false);
+//			connection.getIn().readLine();
+                } else {
+                    System.out.println("wait for other players turn");
+                }
+            } catch (IOException e) {
+                System.out.println("write to socket failed");
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                if (Client.getConnection().getTurn()) {
+//			System.out.println(connection.isServer());
+                    Client.getConnection().getOut().write(String.format("%s%n", message));
+                    Client.getConnection().getOut().flush();
+                    Client.getConnection().setTurn(false);
+//			connection.getIn().readLine();
+                } else {
+                    System.out.println("wait for other players turn");
+                }
+            } catch (IOException e) {
+                System.out.println("write to socket failed");
+                e.printStackTrace();
+            }
+
+
+        }
+
+    }
 }
