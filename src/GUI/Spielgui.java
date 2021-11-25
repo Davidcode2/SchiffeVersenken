@@ -26,8 +26,12 @@ public class Spielgui {
 	private static int amount3x;
 	private static int amount4x;
 	private static int amount5x;
+	
 	private static JButton[][] field;
 	private static boolean[][] schiffe;
+	
+	private static JButton[][] enemyfield;
+	private static boolean[][] enemyschiffe;
 	
 	public static int getfieldSize() {
 		return fieldSize;
@@ -453,6 +457,7 @@ public class Spielgui {
 	                i=i-1;
 	            }
 	        }
+	        //Hier soll wenn wir client sind ein "done" an den host schicken
 	        frame.dispose();
 			new Spielgui(7);
 		});
@@ -460,8 +465,10 @@ public class Spielgui {
 		
 		JButton restart = new JButton("Schiffe neu setzen");
 		restart.addActionListener((e) -> {
+			shipAmount(fieldSize);
 			frame.dispose();
 			new Spielgui(6);
+			
 		});
 		menuBar.add(restart);
 		
@@ -480,8 +487,9 @@ public class Spielgui {
 						String[] s = ((JButton)event.getSource()).getName().split(" ");
 						int x = Integer.parseInt(s[0]);
 						int y = Integer.parseInt(s[1]);
+						
 				        if(SwingUtilities.isRightMouseButton(event)){
-
+				        	/*
 							// TODO:
 							// move sendMessage() to class Connection so if else becomes superfluous
 							if (Connection.isServer()) {
@@ -490,7 +498,7 @@ public class Spielgui {
 							} else if (Connection.isServer() == false) {
 								System.out.println("some output in sendmessage from client");
 								Client.sendMessage(String.format("%s%s", x, y));
-							}
+							}*/
 				        	placeShipRC(x,y);
 				        }
 				        else {
@@ -830,6 +838,10 @@ public class Spielgui {
 	}
 
 	private void shipAmount(int x){
+		amount2x=0;
+		amount3x=0;
+		amount4x=0;
+		amount5x=0;
 		int temp;
 		int rest = ((x*x)*3)/10;
 
