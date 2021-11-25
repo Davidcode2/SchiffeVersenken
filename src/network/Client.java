@@ -8,8 +8,14 @@ public class Client {
 
 	private static Connection connection;
 
+	private static boolean clientLoopReady;
+
 	public Connection getConnection() {
 		return connection;
+	}
+
+	public boolean getClientLoopReady() {
+		return clientLoopReady;
 	}
 
 	public void setConnection(Connection connection) {
@@ -51,12 +57,14 @@ public class Client {
 		// bzw. vom Socket lesen und auf den Bildschirm schreiben.
 		// Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
 
-	public void startCommunicationLoop(Socket s) throws IOException {
+	public void startCommunicationLoop() {
 
+		try {
 		connection.setTurn(false);
 
 		while (true) {
 			// incoming messages
+			clientLoopReady = true;
 			connection.setMessage(Connection.getIn().readLine());
 			connection.setTurn(true);
 			if (connection.getMessage() == null) break;
@@ -65,11 +73,10 @@ public class Client {
 			// outgoing messages
 			System.out.print(">>> ");
 			connection.getUsr().write(String.format("%s%n", connection.getOut()));
-
 		}
-//		} catch (IOException e) {
-//			System.out.println(e.getStackTrace());
-//		}
+		} catch (IOException e) {
+			System.out.println(e.getStackTrace());
+		}
 	}
 
 	public static void sendMessage(String message) {

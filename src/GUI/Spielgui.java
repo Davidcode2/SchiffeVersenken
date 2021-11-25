@@ -206,6 +206,64 @@ public class Spielgui {
 
 	}
 
+	private void host1() {
+
+		frame.setContentPane(Box.createVerticalBox());
+
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+		frame.getContentPane().add(Box.createGlue());
+
+		label = new JLabel("Schiffe versenken");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(label);
+
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+
+		label = new JLabel("Wie lang soll das Spielfeld sein?");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(label);
+
+		label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(label);
+
+		panel = new JPanel();
+		JTextField textfeld2 = new JTextField();
+		textfeld2.addActionListener((e) -> {
+			try{Integer.parseInt(textfeld2.getText());
+			}catch(NumberFormatException ex){
+				frame.dispose();
+				new Spielgui(4);
+			}
+			int test = Integer.parseInt(textfeld2.getText());
+			if(test>=5 && test<=30) {
+				fieldSize = test;
+				shipAmount(fieldSize);
+				frame.dispose();
+				network.Connection.setServer(true);
+				System.out.println(String.format("setServer is: %s", Connection.isServer()));
+				new Spielgui(6);
+			}
+			else {
+				frame.dispose();
+				new Spielgui(4);
+			}
+		});
+		textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
+		textfeld2.setColumns(10);
+		panel.add(textfeld2);
+		frame.getContentPane().add(panel);
+
+		frame.getContentPane().add(Box.createGlue());
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+
+		// TODO:
+		// add submit button
+		// actions in textfields should only be executed when pressed
+		// TODO:
+		// add back button
+
+	}
 	private void host() {
 
 		frame.setContentPane(Box.createVerticalBox());
@@ -294,18 +352,8 @@ public class Spielgui {
 						(new StartCommunicationService()).execute();
 						System.out.println("Server ready to send and receive messages...\n");
 
-						/* TODO:
-						the problem is that the below code is executed before the communication loop has started
-						Console output: `5
-										 true
-										 >>>`
-						FIX
-						*/
 						String x = String.valueOf(fieldSize);
-						System.out.println(x);
-						String y = Integer.toString(fieldSize);
-						System.out.println(y);
-						Server.sendMessage(y);
+						Server.sendMessage(x);
 					}
 				}
 				(new StartConnectionService()).execute();
@@ -373,6 +421,7 @@ public class Spielgui {
 		promptIP.addActionListener((e) -> {
 			try{
 				ip = promptIP.getText();
+				frame.dispose();
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(5);
@@ -386,6 +435,11 @@ public class Spielgui {
 				public Socket doInBackground() {
 					try {
 						socketS = client.startConnection(ip, port);
+						try {
+							client.createConnection(socketS);
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
@@ -394,7 +448,6 @@ public class Spielgui {
 				@Override
 				protected void done() {
 					try {
-						System.out.println("Client connected!");
 						socketS = get();
 					} catch (Exception ignore) {
 						System.out.println("error starting communication loop");
@@ -402,28 +455,29 @@ public class Spielgui {
 					class StartClientCommunicationService extends SwingWorker<String, Object> {
 						@Override
 						public String doInBackground() {
-							try {
-								client.startCommunicationLoop(socketS);
-							} catch (IOException ex) {
-								ex.printStackTrace();
-							}
+							client.startCommunicationLoop();
 							return null;
 						}
 					}
-					/* TODO:
-					the problem is that the below code is executed before the communication loop has started
-					look at Observable Pattern, Bookmark
-					move code to network package
-					 */
 					(new StartClientCommunicationService()).execute();
 					System.out.print("Client ready to send and receive messages...\n");
-//					fieldSize = Integer.parseInt(Connection.getMessage());
-//					new Spielgui(6);
+					while (fieldSize == 0) {
+						try {
+							fieldSize = Integer.parseInt(Connection.getMessage());
+						} catch (Exception ignore) {
+						}
+						// wait
+					}
+					// possibly problematic: gui call from within background thread
+					new Spielgui(6);
 				}
 			}
 			(new ConnectionService()).execute();
-			new Spielgui(1);
 		});
+
+		// TODO:
+		// on submit
+		// frame.dispose();
 
 		promptIP.setHorizontalAlignment(SwingConstants.CENTER);
 		promptIP.setColumns(10);
@@ -458,7 +512,10 @@ public class Spielgui {
 	            }
 	        }
 	        //Hier soll wenn wir client sind ein "done" an den host schicken
-	        frame.dispose();
+			if (Connection.isServer() == false) {
+				Client.sendMessage(String.format("done"));
+			}
+			frame.dispose();
 			new Spielgui(7);
 		});
 		menuBar.add(beginnen);
@@ -540,8 +597,22 @@ public class Spielgui {
 					int y = Integer.parseInt(s[1]);
 					if(schiffe[x][y] == false){
 						((JButton)e.getSource()).setBackground(new Color(0,255,0));
-		            } else {
+						if (Connection.isServer()) {
+							System.out.println("some output in sendmessage from server");
+							Server.sendMessage(String.format("%s%s", x, y));
+						} else if (Connection.isServer() == false) {
+							System.out.println("some output in sendmessage from client");
+							Client.sendMessage(String.format("%s%s", x, y));
+						}
+					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
+						if (Connection.isServer()) {
+							System.out.println("some output in sendmessage from server");
+							Server.sendMessage(String.format("%s%s", x, y));
+						} else if (Connection.isServer() == false) {
+							System.out.println("some output in sendmessage from client");
+							Client.sendMessage(String.format("%s%s", x, y));
+						}
 		            }
 					
 				});

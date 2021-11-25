@@ -3,10 +3,6 @@
 import javax.swing.*;
 import java.io.IOException;
 
-//import static GUI.GUI.start;
-import static GUI.Spielgui.ip;
-import static GUI.Spielgui.port;
-
 import GUI.Spielgui;
 
 public class tester {
