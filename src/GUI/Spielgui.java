@@ -16,11 +16,11 @@ import javax.swing.*;
 public class Spielgui {
 
 	private JFrame frame;
-	private JPanel panel;
-	private JLabel label;
+	
 	public static int port;
 	public static String ip;
 	public Socket socketS;
+	
 	private static int fieldSize;
 	private static int amount2x;
 	private static int amount3x;
@@ -33,13 +33,6 @@ public class Spielgui {
 	private static JButton[][] enemyfield;
 	private static boolean[][] enemyschiffe;
 	
-	public static int getfieldSize() {
-		return fieldSize;
-	}
-	
-	public static JButton[][] getfield() {
-		return field;
-	}
 	
 	public Spielgui(int zahl) {
 
@@ -77,7 +70,7 @@ public class Spielgui {
 
 	private void hauptmenue() {
 
-		label = new JLabel("Schiffe versenken");
+		JLabel label = new JLabel("Schiffe versenken");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		JButton button1 = new JButton("Einzelspieler");
@@ -126,7 +119,7 @@ public class Spielgui {
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 		frame.getContentPane().add(Box.createGlue());
 
-		label = new JLabel("Schiffe versenken");
+		JLabel label = new JLabel("Schiffe versenken");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 
@@ -140,7 +133,7 @@ public class Spielgui {
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 		
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
 			try{Integer. parseInt(textfeld.getText());
@@ -171,7 +164,7 @@ public class Spielgui {
 
 	private void mehrspieler() {
 
-		label = new JLabel("Schiffe versenken");
+		JLabel label = new JLabel("Schiffe versenken");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		JButton button1 = new JButton("Host");
@@ -213,7 +206,7 @@ public class Spielgui {
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 		frame.getContentPane().add(Box.createGlue());
 
-		label = new JLabel("Schiffe versenken");
+		JLabel label = new JLabel("Schiffe versenken");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 
@@ -223,7 +216,7 @@ public class Spielgui {
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 		
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
 			try{Integer.parseInt(textfeld.getText());
@@ -329,7 +322,7 @@ public class Spielgui {
 		frame.getContentPane().add(Box.createVerticalStrut(50));
 		frame.getContentPane().add(Box.createGlue());
 
-		label = new JLabel("Schiffe versenken");
+		JLabel label = new JLabel("Schiffe versenken");
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 
@@ -339,7 +332,7 @@ public class Spielgui {
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 		frame.getContentPane().add(label);
 
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
 			try{
@@ -434,11 +427,11 @@ public class Spielgui {
 
 	private void schiffeplatzieren() {
 
-
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 		
 		schiffe = new boolean[fieldSize][fieldSize];
+		enemyschiffe = new boolean[fieldSize][fieldSize];
 
 		JButton beginnen = new JButton("Spiel beginnen");
 		beginnen.addActionListener((e) -> {
@@ -448,14 +441,14 @@ public class Spielgui {
 	            int x = rand.nextInt((fieldSize - 1) + 1);
 	            int y = rand.nextInt((fieldSize - 1) + 1);
 
-	            if(schiffe[x][y] == false){
-	                schiffe[x][y] = true;
-	            } else if(schiffe[x][y] == true){
+	            if(enemyschiffe[x][y] == false){
+	                enemyschiffe[x][y] = true;
+	            } else if(enemyschiffe[x][y] == true){
 	                i=i-1;
 	            }
 	        }
 	        //Hier soll wenn wir client sind ein "ready" an den host schicken
-			Connection.sendMessage("ready");
+			//Connection.sendMessage("ready"); habs mal auskommentiert weil es im einzelspieler ne exception schmeißt
 			frame.dispose();
 			new Spielgui(7);
 		});
@@ -502,7 +495,65 @@ public class Spielgui {
 	}
 	
 	private void spiel() {
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
 
+		JButton speichern = new JButton("Speichern");
+		speichern.addActionListener((e) -> {
+			System.out.println("Speichern");
+		});
+		menuBar.add(speichern);
+		
+		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setResizeWeight(0.5);
+		frame.getContentPane().add(splitPane);
+		
+		field = new JButton[fieldSize][fieldSize];
+		enemyfield = new JButton[fieldSize][fieldSize];
+		
+		JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
+		splitPane.setLeftComponent(panelleft);
+		panelleft.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
+		for (int i = 0; i < fieldSize; i++) {
+			for(int j = 0; j < fieldSize; j++) {
+				enemyfield[i][j] = new JButton(1+j+i*fieldSize+"");
+				enemyfield[i][j].setName(i+" "+j);
+				enemyfield[i][j].addActionListener((e) -> {
+					String[] s = ((JButton)e.getSource()).getName().split(" ");
+					int x = Integer.parseInt(s[0]);
+					int y = Integer.parseInt(s[1]);
+					if(enemyschiffe[x][y] == false){
+						((JButton)e.getSource()).setBackground(new Color(0,255,0));
+					} else {
+		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
+		            }
+				});
+				panelleft.add(enemyfield[i][j]);
+			}
+		}
+		
+		JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
+		splitPane.setRightComponent(panelright);
+		panelright.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
+		
+		for (int i = 0; i < fieldSize; i++) {
+			for(int j = 0; j < fieldSize; j++) {
+				field[i][j] = new JButton(1+j+i*fieldSize+"");
+				field[i][j].setName(i+" "+j);
+				if(schiffe[i][j] == false){
+					field[i][j].setBackground(new Color(0,255,0));
+				} else {
+					field[i][j].setBackground(new Color(255,0,0));
+	            }
+				panelright.add(field[i][j]);
+			}
+		}
+		
+		frame.pack();
+		
+		/*
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
@@ -540,7 +591,7 @@ public class Spielgui {
 			}
 		}
 		frame.getContentPane().add(panel);
-		frame.pack();
+		frame.pack();*/
 	}
 
 	private void placeShipRC(int i, int j){
