@@ -9,8 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Random;
-
 import javax.swing.*;
 
 public class Spielgui {
@@ -21,18 +19,17 @@ public class Spielgui {
 	public static String ip;
 	public Socket socketS;
 	
-	private static int fieldSize;
-	private static int amount2x;
-	private static int amount3x;
-	private static int amount4x;
-	private static int amount5x;
+	public static int fieldSize;
+	public static int amount2x;
+	public static int amount3x;
+	public static int amount4x;
+	public static int amount5x;
 	
 	private static JButton[][] field;
 	private static boolean[][] schiffe;
 	
 	private static JButton[][] enemyfield;
 	private static boolean[][] enemyschiffe;
-	
 	
 	public Spielgui(int zahl) {
 
@@ -431,22 +428,10 @@ public class Spielgui {
 		frame.setJMenuBar(menuBar);
 		
 		schiffe = new boolean[fieldSize][fieldSize];
-		enemyschiffe = new boolean[fieldSize][fieldSize];
+		enemyschiffe = KI.kischiffeplatzieren(enemyschiffe);
 
 		JButton beginnen = new JButton("Spiel beginnen");
 		beginnen.addActionListener((e) -> {
-			Random rand = new Random();
-
-	        for(int i=0;i<10;i++){
-	            int x = rand.nextInt((fieldSize - 1) + 1);
-	            int y = rand.nextInt((fieldSize - 1) + 1);
-
-	            if(enemyschiffe[x][y] == false){
-	                enemyschiffe[x][y] = true;
-	            } else if(enemyschiffe[x][y] == true){
-	                i=i-1;
-	            }
-	        }
 	        //Hier soll wenn wir client sind ein "ready" an den host schicken
 			//Connection.sendMessage("ready"); habs mal auskommentiert weil es im einzelspieler ne exception schmeißt
 			frame.dispose();
@@ -878,7 +863,7 @@ public class Spielgui {
 		return true;
 	}
 
-	private void shipAmount(int x){
+	public void shipAmount(int x){
 		amount2x=0;
 		amount3x=0;
 		amount4x=0;
