@@ -510,7 +510,7 @@ public class Spielgui {
 					int x = Integer.parseInt(s[0]);
 					int y = Integer.parseInt(s[1]);
 					if(enemyschiffe[x][y] == false){
-						((JButton)e.getSource()).setBackground(new Color(0,255,0));
+						((JButton)e.getSource()).setBackground(new Color(0,0,255));
 					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
 		            }
@@ -528,9 +528,9 @@ public class Spielgui {
 				field[i][j] = new JButton(1+j+i*fieldSize+"");
 				field[i][j].setName(i+" "+j);
 				if(schiffe[i][j] == false){
-					field[i][j].setBackground(new Color(0,255,0));
+					field[i][j].setBackground(new Color(0,0,255));
 				} else {
-					field[i][j].setBackground(new Color(255,0,0));
+					field[i][j].setBackground(new Color(0,255,0));
 	            }
 				panelright.add(field[i][j]);
 			}
