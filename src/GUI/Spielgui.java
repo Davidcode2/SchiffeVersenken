@@ -863,7 +863,7 @@ public class Spielgui {
 		return true;
 	}
 
-	public void shipAmount(int x){
+	private void shipAmount(int x){
 		amount2x=0;
 		amount3x=0;
 		amount4x=0;
