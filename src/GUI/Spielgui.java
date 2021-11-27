@@ -88,14 +88,14 @@ public class Spielgui {
 			frame.dispose();
 			new Spielgui(3);
 		});
-		
+		/*
 		JButton button3 = new JButton("Spiel laden");
 		button3.setFocusable(false);
 		button3.setAlignmentX(Component.CENTER_ALIGNMENT);
 		button3.addActionListener((e) -> {
 			System.out.println("laden");
 		});
-
+		*/
 		frame.setContentPane(Box.createVerticalBox());
 
 		frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -105,7 +105,7 @@ public class Spielgui {
 
 		frame.getContentPane().add(button1);
 		frame.getContentPane().add(button2);
-		frame.getContentPane().add(button3);
+		//frame.getContentPane().add(button3);
 
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -495,16 +495,16 @@ public class Spielgui {
 	}
 	
 	private void spiel() {
-		
+		/*
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+ 		frame.setJMenuBar(menuBar);
 
 		JButton speichern = new JButton("Speichern");
 		speichern.addActionListener((e) -> {
 			System.out.println("Speichern");
 		});
 		menuBar.add(speichern);
-		
+		*/
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.5);
