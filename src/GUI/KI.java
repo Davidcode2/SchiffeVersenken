@@ -165,10 +165,10 @@ public class KI {
 							if(j==0 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
+							if(j==3 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
+							if(j==3 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
 							}
 							positionhorizontal+=1;//durch das schiff durchgehen
@@ -209,13 +209,13 @@ public class KI {
 							if(j==0 && positionhorizontal>0 && positionvertikal>0) {//wasser links oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal-1]=2;
 							}
-							if(j==4 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
+							if(j==3 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
 							}
 							if(j==0 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
+							if(j==3 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
 							}
 							positionvertikal+=1;//durch das schiff durchgehen
@@ -263,10 +263,10 @@ public class KI {
 							if(j==0 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
+							if(j==2 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
+							if(j==2 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
 							}
 							positionhorizontal+=1;//durch das schiff durchgehen
@@ -307,13 +307,13 @@ public class KI {
 							if(j==0 && positionhorizontal>0 && positionvertikal>0) {//wasser links oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal-1]=2;
 							}
-							if(j==4 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
+							if(j==2 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
 							}
 							if(j==0 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
+							if(j==2 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
 							}
 							positionvertikal+=1;//durch das schiff durchgehen
@@ -361,22 +361,10 @@ public class KI {
 							if(j==0 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
+							if(j==1 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
 								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
 							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
-								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
-							}
-							if(j==0 && positionhorizontal>0 && positionvertikal>0) {//wasser links oberhalb vom schiff platzieren
-								hilfsarray[positionvertikal-1][positionhorizontal-1]=2;
-							}
-							if(j==4 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
-								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
-							}
-							if(j==0 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
-								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
-							}
-							if(j==4 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
+							if(j==1 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
 							}
 							positionhorizontal+=1;//durch das schiff durchgehen
@@ -413,6 +401,18 @@ public class KI {
 							}
 							if(j==1 && positionvertikal+1<fieldSize) {//wasser unterhalb vom schiff platzieren
 								hilfsarray[positionvertikal+1][positionhorizontal]=2;
+							}
+							if(j==0 && positionhorizontal>0 && positionvertikal>0) {//wasser links oberhalb vom schiff platzieren
+								hilfsarray[positionvertikal-1][positionhorizontal-1]=2;
+							}
+							if(j==1 && positionhorizontal>0 && positionvertikal+1<fieldSize) {//wasser links unterhalb vom schiff platzieren
+								hilfsarray[positionvertikal+1][positionhorizontal-1]=2;
+							}
+							if(j==0 && positionhorizontal+1<fieldSize && positionvertikal>0) {//wasser rechts oberhalb vom schiff platzieren
+								hilfsarray[positionvertikal-1][positionhorizontal+1]=2;
+							}
+							if(j==1 && positionhorizontal+1<fieldSize && positionvertikal+1<fieldSize) {//wasser rechts unterhalb vom schiff platzieren
+								hilfsarray[positionvertikal+1][positionhorizontal+1]=2;
 							}
 							positionvertikal+=1;//durch das schiff durchgehen
 						}
