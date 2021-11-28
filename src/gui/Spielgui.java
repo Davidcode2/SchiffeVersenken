@@ -155,6 +155,9 @@ public class Spielgui {
 			if(test>=5 && test<=30) {	//zahl wird überprüft
 				fieldSize = test;
 				shipAmount(fieldSize);
+				hitCounter = 2*amount2x + 3*amount3x + 4*amount4x + 5*amount5x;
+				enemyHitCounter = hitCounter;
+				System.out.println("benötigte Treffer: "+hitCounter);
 				frame.dispose();
 				new Spielgui(6);
 			}
@@ -516,12 +519,7 @@ public class Spielgui {
 		
 		field = new JButton[fieldSize][fieldSize];
 		enemyfield = new JButton[fieldSize][fieldSize];
-		
-		System.out.println(amount2x);
-		
-		 hitCounter = 7;
-		 enemyHitCounter = hitCounter;
-		
+				
 		JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
 		splitPane.setLeftComponent(panelleft);
 		panelleft.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
@@ -537,17 +535,16 @@ public class Spielgui {
 						((JButton)e.getSource()).setBackground(new Color(0,0,255));
 					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
-		            	hitCounter-=1;
-		            	//System.out.println("hC: "+hitCounter);
-		            	if(hitCounter==0) { //klappt noch nicht
+		            	hitCounter--;
+		            	if(hitCounter==0) {
 		            		frame.dispose();
 		            		new Spielgui(8);
+		            		return;
 		            	}
 		            }
 					if(isSingleplayer) {
 						enemyHitCounter -= KI.kiShot(field, ships);
-						//System.out.println("eHC: "+enemyHitCounter);
-						if(enemyHitCounter==0) { //klappt noch nicht
+						if(enemyHitCounter==0) {
 							frame.dispose();
 		            		new Spielgui(9);
 		            	}
