@@ -435,11 +435,9 @@ public class KI {
         return enemyShips;
 	}
 	
-	public static void kiShot(JButton[][] field, boolean[][] ships) {
+	public static int kiShot(JButton[][] field, boolean[][] ships) {
 		
-		boolean isHit = false;
-		
-		while(!isHit) {
+		while(true) {
 		
 			int positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
 			int positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
@@ -449,10 +447,11 @@ public class KI {
 			}
 			if(ships[positionVertical][positionHorizontal] == false){
 				field[positionVertical][positionHorizontal].setBackground(new Color(255,0,255));
+				return 0;
 			} else {
 				field[positionVertical][positionHorizontal].setBackground(new Color(255,255,0));
+				return 1;
 	        }
-			isHit=true;
 		}
 	}
 	

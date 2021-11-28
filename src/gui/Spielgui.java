@@ -33,8 +33,8 @@ public class Spielgui {
 	private static JButton[][] enemyfield;
 	private static boolean[][] enemyschiffe;
 	
-	private static int hitCounter = 2*amount2x + 3*amount3x + 4*amount4x + 5*amount5x;
-	private static int enemyHitCounter = hitCounter;
+	private static int hitCounter;
+	private static int enemyHitCounter;
 	
 	public Spielgui(int zahl) {
 
@@ -146,13 +146,13 @@ public class Spielgui {
 		JPanel panel = new JPanel();
 		JTextField textfeld = new JTextField();
 		textfeld.addActionListener((e) -> {
-			try{Integer. parseInt(textfeld.getText());
+			try{Integer. parseInt(textfeld.getText());	//eingabe ist keine zahl
 			}catch(NumberFormatException ex){
 				frame.dispose();
 				new Spielgui(2);
 			}
 			int test = Integer.parseInt(textfeld.getText());
-			if(test>=5 && test<=30) {
+			if(test>=5 && test<=30) {	//zahl wird überprüft
 				fieldSize = test;
 				shipAmount(fieldSize);
 				frame.dispose();
@@ -517,6 +517,11 @@ public class Spielgui {
 		field = new JButton[fieldSize][fieldSize];
 		enemyfield = new JButton[fieldSize][fieldSize];
 		
+		System.out.println(amount2x);
+		
+		 hitCounter = 7;
+		 enemyHitCounter = hitCounter;
+		
 		JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
 		splitPane.setLeftComponent(panelleft);
 		panelleft.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
@@ -533,14 +538,15 @@ public class Spielgui {
 					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
 		            	hitCounter-=1;
+		            	//System.out.println("hC: "+hitCounter);
 		            	if(hitCounter==0) { //klappt noch nicht
 		            		frame.dispose();
 		            		new Spielgui(8);
 		            	}
 		            }
 					if(isSingleplayer) {
-						KI.kiShot(field, ships);
-						enemyHitCounter-=1;
+						enemyHitCounter -= KI.kiShot(field, ships);
+						//System.out.println("eHC: "+enemyHitCounter);
 						if(enemyHitCounter==0) { //klappt noch nicht
 							frame.dispose();
 		            		new Spielgui(9);
