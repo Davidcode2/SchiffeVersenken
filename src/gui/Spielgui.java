@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import network.Client;
 import network.Connection;
@@ -19,6 +19,8 @@ public class Spielgui {
 	public static String ip;
 	public Socket socketS;
 	
+	private static boolean isSingleplayer;
+	
 	public static int fieldSize;
 	public static int amount2x;
 	public static int amount3x;
@@ -26,10 +28,13 @@ public class Spielgui {
 	public static int amount5x;
 	
 	private static JButton[][] field;
-	private static boolean[][] schiffe;
+	private static boolean[][] ships;
 	
 	private static JButton[][] enemyfield;
 	private static boolean[][] enemyschiffe;
+	
+	private static int hitCounter = 2*amount2x + 3*amount3x + 4*amount4x + 5*amount5x;
+	private static int enemyHitCounter = hitCounter;
 	
 	public Spielgui(int zahl) {
 
@@ -57,6 +62,12 @@ public class Spielgui {
 				break;
 			case 7:
 				spiel();
+				break;
+			case 8:
+				winningScreen();
+				break;
+			case 9:
+				losingScreen();
 				break;
 			default:
 				System.out.println("Programm startet nicht.");
@@ -110,6 +121,8 @@ public class Spielgui {
 	}
 
 	private void einzelspieler() {
+		
+		isSingleplayer=true;
 
 		frame.setContentPane(Box.createVerticalBox());
 
@@ -423,12 +436,18 @@ public class Spielgui {
 	}
 
 	private void schiffeplatzieren() {
-
+		
+		ships = new boolean[fieldSize][fieldSize];
+		
+		if(isSingleplayer) {
+			enemyschiffe = KI.kiPlacingShips(enemyschiffe);
+		}
+		else {
+			enemyschiffe = new boolean[fieldSize][fieldSize];
+		}
+		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
-		
-		schiffe = new boolean[fieldSize][fieldSize];
-		enemyschiffe = KI.kischiffeplatzieren(enemyschiffe);
 
 		JButton beginnen = new JButton("Spiel beginnen");
 		beginnen.addActionListener((e) -> {
@@ -478,7 +497,7 @@ public class Spielgui {
 		frame.getContentPane().add(panel);
 		frame.pack();
 	}
-	
+
 	private void spiel() {
 		/*
 		JMenuBar menuBar = new JMenuBar();
@@ -513,7 +532,20 @@ public class Spielgui {
 						((JButton)e.getSource()).setBackground(new Color(0,0,255));
 					} else {
 		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
+		            	hitCounter-=1;
+		            	if(hitCounter==0) { //klappt noch nicht
+		            		frame.dispose();
+		            		new Spielgui(8);
+		            	}
 		            }
+					if(isSingleplayer) {
+						KI.kiShot(field, ships);
+						enemyHitCounter-=1;
+						if(enemyHitCounter==0) { //klappt noch nicht
+							frame.dispose();
+		            		new Spielgui(9);
+		            	}
+					}
 				});
 				panelleft.add(enemyfield[i][j]);
 			}
@@ -527,7 +559,7 @@ public class Spielgui {
 			for(int j = 0; j < fieldSize; j++) {
 				field[i][j] = new JButton(1+j+i*fieldSize+"");
 				field[i][j].setName(i+" "+j);
-				if(schiffe[i][j] == false){
+				if(ships[i][j] == false){
 					field[i][j].setBackground(new Color(0,0,255));
 				} else {
 					field[i][j].setBackground(new Color(0,255,0));
@@ -579,11 +611,61 @@ public class Spielgui {
 		frame.pack();*/
 	}
 
+	private void winningScreen() {
+		
+		JMenuBar menuBar = new JMenuBar();
+ 		frame.setJMenuBar(menuBar);
+
+		JButton endGame = new JButton("Spiel schließen");
+		endGame.addActionListener((e) -> {
+			frame.dispose();
+		});
+		menuBar.add(endGame);
+		
+		JLabel label = new JLabel("YOU WON");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		frame.setContentPane(Box.createVerticalBox());
+
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+		frame.getContentPane().add(Box.createGlue());
+
+		frame.getContentPane().add(label);
+
+		frame.getContentPane().add(Box.createGlue());
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+	}
+
+	private void losingScreen() {
+		
+		JMenuBar menuBar = new JMenuBar();
+ 		frame.setJMenuBar(menuBar);
+
+		JButton endGame = new JButton("Spiel schließen");
+		endGame.addActionListener((e) -> {
+			frame.dispose();
+		});
+		menuBar.add(endGame);
+		
+		JLabel label = new JLabel("YOU LOST");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		frame.setContentPane(Box.createVerticalBox());
+
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+		frame.getContentPane().add(Box.createGlue());
+
+		frame.getContentPane().add(label);
+
+		frame.getContentPane().add(Box.createGlue());
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+	}
+
 	private void placeShipRC(int i, int j){
 
 		if(amount2x!=0 && checkCollisionRC(i,j,2)){
-			schiffe[i][j] = true;
-			schiffe[i][j+1] = true;
+			ships[i][j] = true;
+			ships[i][j+1] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i][j+1].setBackground(new Color(0,255,0));
@@ -591,9 +673,9 @@ public class Spielgui {
 			amount2x--;
 
 		} else if (amount3x!=0 && checkCollisionRC(i,j,3)){
-			schiffe[i][j] = true;
-			schiffe[i][j+1] = true;
-			schiffe[i][j+2] = true;
+			ships[i][j] = true;
+			ships[i][j+1] = true;
+			ships[i][j+2] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i][j+1].setBackground(new Color(0,255,0));
@@ -602,10 +684,10 @@ public class Spielgui {
 			amount3x--;
 
 		} else if (amount4x!=0 && checkCollisionRC(i,j,4)){
-			schiffe[i][j] = true;
-			schiffe[i][j+1] = true;
-			schiffe[i][j+2] = true;
-			schiffe[i][j+3] = true;
+			ships[i][j] = true;
+			ships[i][j+1] = true;
+			ships[i][j+2] = true;
+			ships[i][j+3] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i][j+1].setBackground(new Color(0,255,0));
@@ -615,11 +697,11 @@ public class Spielgui {
 			amount4x--;
 
 		} else if (amount5x!=0 && checkCollisionRC(i,j,5)){
-			schiffe[i][j] = true;
-			schiffe[i][j+1] = true;
-			schiffe[i][j+2] = true;
-			schiffe[i][j+3] = true;
-			schiffe[i][j+4] = true;
+			ships[i][j] = true;
+			ships[i][j+1] = true;
+			ships[i][j+2] = true;
+			ships[i][j+3] = true;
+			ships[i][j+4] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i][j+1].setBackground(new Color(0,255,0));
@@ -638,8 +720,8 @@ public class Spielgui {
 	private void placeShipLC(int i, int j){
 
 		if(amount2x!=0 && checkCollisionLC(i,j,2)){
-			schiffe[i][j] = true;
-			schiffe[i+1][j] = true;
+			ships[i][j] = true;
+			ships[i+1][j] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i+1][j].setBackground(new Color(0,255,0));
@@ -647,9 +729,9 @@ public class Spielgui {
 			amount2x--;
 
 		} else if (amount3x!=0  && checkCollisionLC(i,j,3)){
-			schiffe[i][j] = true;
-			schiffe[i+1][j] = true;
-			schiffe[i+2][j] = true;
+			ships[i][j] = true;
+			ships[i+1][j] = true;
+			ships[i+2][j] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i+1][j].setBackground(new Color(0,255,0));
@@ -658,10 +740,10 @@ public class Spielgui {
 			amount3x--;
 
 		} else if (amount4x!=0 && checkCollisionLC(i,j,4)){
-			schiffe[i][j] = true;
-			schiffe[i+1][j] = true;
-			schiffe[i+2][j] = true;
-			schiffe[i+3][j] = true;
+			ships[i][j] = true;
+			ships[i+1][j] = true;
+			ships[i+2][j] = true;
+			ships[i+3][j] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i+1][j].setBackground(new Color(0,255,0));
@@ -671,11 +753,11 @@ public class Spielgui {
 			amount4x--;
 
 		} else if (amount5x!=0 && checkCollisionLC(i,j,5)){
-			schiffe[i][j] = true;
-			schiffe[i+1][j] = true;
-			schiffe[i+2][j] = true;
-			schiffe[i+3][j] = true;
-			schiffe[i+4][j] = true;
+			ships[i][j] = true;
+			ships[i+1][j] = true;
+			ships[i+2][j] = true;
+			ships[i+3][j] = true;
+			ships[i+4][j] = true;
 
 			field[i][j].setBackground(new Color(0,255,0));
 			field[i+1][j].setBackground(new Color(0,255,0));
@@ -768,7 +850,7 @@ public class Spielgui {
 
 		for(int m=u; m<h+1; m++){
 			for (int n=v; n<h2; n++){
-				if (schiffe[i+m][j+n] == true){
+				if (ships[i+m][j+n] == true){
 					return false;
 				}
 			}
@@ -855,7 +937,7 @@ public class Spielgui {
 
 		for(int m=u; m<h+1; m++){
 			for (int n=v; n<h2; n++){
-				if (schiffe[i+n][j+m] == true){
+				if (ships[i+n][j+m] == true){
 					return false;
 				}
 			}

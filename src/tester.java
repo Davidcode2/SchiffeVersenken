@@ -1,9 +1,10 @@
-//import GUI.GUI;
+//import gui.GUI;
 
 import javax.swing.*;
-import java.io.IOException;
 
-import GUI.Spielgui;
+import gui.Spielgui;
+
+import java.io.IOException;
 
 public class tester {
 
