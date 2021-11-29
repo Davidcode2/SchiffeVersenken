@@ -145,7 +145,12 @@ public class Spielgui {
 		
 		JPanel panel = new JPanel();
 		JTextField textfeld = new JTextField();
-		textfeld.addActionListener((e) -> {
+		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
+		textfeld.setColumns(10);
+		panel.add(textfeld);
+		
+		JButton start = new JButton("Weiter");
+		start.addActionListener((e) -> {
 			try{Integer. parseInt(textfeld.getText());	//eingabe ist keine zahl
 			}catch(NumberFormatException ex){
 				frame.dispose();
@@ -166,9 +171,7 @@ public class Spielgui {
 				new Spielgui(2);
 			}
 		});
-		textfeld.setHorizontalAlignment(SwingConstants.CENTER);
-		textfeld.setColumns(10);
-		panel.add(textfeld);
+		panel.add(start);
 		frame.getContentPane().add(panel);
 		frame.getContentPane().add(Box.createGlue());
 		frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -466,13 +469,17 @@ public class Spielgui {
 			shipAmount(fieldSize);
 			frame.dispose();
 			new Spielgui(6);
-			
 		});
 		menuBar.add(restart);
 		
-		JPanel panel = new JPanel();
-
-		panel.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
+		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setResizeWeight(0.75);
+		frame.getContentPane().add(splitPane);
+		
+		JPanel panelLeft = new JPanel();
+		splitPane.setLeftComponent(panelLeft);
+		panelLeft.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
 		
 		field = new JButton[fieldSize][fieldSize];
 		
@@ -494,10 +501,36 @@ public class Spielgui {
 				        }
 				    }    
 				});
-				panel.add(field[i][j]);
+				panelLeft.add(field[i][j]);
 			}
 		}
-		frame.getContentPane().add(panel);
+		
+		JPanel panelRight = new JPanel();
+		splitPane.setRightComponent(panelRight);
+		panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
+		
+		panelRight.add(Box.createVerticalStrut(50));
+		panelRight.add(Box.createGlue());
+		
+		JLabel ships5x = new JLabel("	"+ amount5x +" 5er Schiffe");
+		ships5x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships5x);
+		
+		JLabel ships4x = new JLabel("	"+ amount4x +" 4er Schiffe");
+		ships4x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships4x);
+		
+		JLabel ships3x = new JLabel("	"+ amount3x +" 3er Schiffe");
+		ships3x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships3x);
+		
+		JLabel ships2x = new JLabel("	"+ amount2x +" 2er Schiffe");
+		ships2x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships2x);
+		
+		panelRight.add(Box.createGlue());
+		panelRight.add(Box.createVerticalStrut(50));
+		
 		frame.pack();
 	}
 
