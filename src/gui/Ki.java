@@ -1,21 +1,16 @@
 package gui;
 
 import java.awt.Color;
-
 import javax.swing.JButton;
 
-public class KI {
+public class Ki {
 	
 	private static int fieldSize = Spielgui.fieldSize;
-	private static int amount2x = Spielgui.amount2x;
-	private static int amount3x = Spielgui.amount3x;
-	private static int amount4x = Spielgui.amount4x;
-	private static int amount5x = Spielgui.amount5x;
 	
-	public static boolean[][] kiPlacingShips(boolean[][] enemyShips) {
+	protected static boolean kiPlacingShips(boolean[][] enemyShips) {
 		
-		enemyShips = new boolean[fieldSize][fieldSize];
-		
+		int timer=0; //abbruchbedingung falls die ki nicht alle schiffe auf das spielfeld bekommt
+				
 		//hilfsarray bekommt später 3 verschiedene Werte: 0 für Wasser, 1 für Schiff, 2 für Wasser ums Schiff
 		int[][] helpArray = new int[fieldSize][fieldSize];
 		
@@ -34,10 +29,14 @@ public class KI {
 		//Wenn im Folgenden der random Wert kleiner als 0.5 ist, dann wird das Schiff horizontal gesetzt sonst vertikal.
 		
 		//5er Schiffe platzieren
-		for(int i=0; i<amount5x; i++) {
+		for(int i=0; i<Logic.amount5x; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -85,6 +84,10 @@ public class KI {
 			}
 			else {//vertikal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -132,10 +135,14 @@ public class KI {
 			}
 		}
 		//4er Schiffe platzieren
-		for(int i=0; i<amount4x; i++) {
+		for(int i=0; i<Logic.amount4x; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -183,6 +190,10 @@ public class KI {
 			}
 			else {//vertikal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -230,10 +241,14 @@ public class KI {
 			}
 		}
 		//3er Schiffe platzieren
-		for(int i=0; i<amount3x; i++) {
+		for(int i=0; i<Logic.amount3x; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -281,6 +296,10 @@ public class KI {
 			}
 			else {//vertikal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -328,10 +347,14 @@ public class KI {
 			}
 		}
 		//2er Schiffe platzieren
-		for(int i=0; i<amount2x; i++) {
+		for(int i=0; i<Logic.amount2x; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -379,6 +402,10 @@ public class KI {
 			}
 			else {//vertikal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
+					timer++;
+					if(timer>1000) {
+						return false;
+					}
 					flag=true;//bedingung zurücksetzen
 					positionHorizontal=(int) (Math.random()*fieldSize);//berechnet die x Koordinate
 					positionVertical=(int) (Math.random()*fieldSize);//berechnet die y Koordinate
@@ -432,10 +459,10 @@ public class KI {
 				}
 			}
 		}
-        return enemyShips;
+        return true;
 	}
 	
-	public static int kiShot(JButton[][] field, boolean[][] ships) {
+	protected static int kiShot(JButton[][] field, boolean[][] ships) {
 		
 		while(true) {
 		
@@ -454,5 +481,4 @@ public class KI {
 	        }
 		}
 	}
-	
 }
