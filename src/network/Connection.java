@@ -64,12 +64,10 @@ public class Connection {
         // if turn == true -> Server
         if (isServer()) {
             try {
-                if (Server.getConnection().getTurn()) {
-//			System.out.println(connection.isServer());
+                if (Server.getConnection().getTurn() || message.equals("ready")) {
                     Server.getConnection().getOut().write(String.format("%s%n", message));
                     Server.getConnection().getOut().flush();
                     Server.getConnection().setTurn(false);
-//			connection.getIn().readLine();
                 } else {
                     System.out.println("wait for other players turn");
                 }
@@ -79,12 +77,10 @@ public class Connection {
             }
         } else {
             try {
-                if (Client.getConnection().getTurn()) {
-//			System.out.println(connection.isServer());
+                if (Client.getConnection().getTurn() || message.equals("ready")) {
                     Client.getConnection().getOut().write(String.format("%s%n", message));
                     Client.getConnection().getOut().flush();
                     Client.getConnection().setTurn(false);
-//			connection.getIn().readLine();
                 } else {
                     System.out.println("wait for other players turn");
                 }

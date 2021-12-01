@@ -394,8 +394,9 @@ public class Spielgui {
 						}
 					}
 				}
-		        //Hier soll wenn wir client sind ein "ready" an den host schicken
-				//Connection.sendMessage("ready"); habs mal auskommentiert weil es im einzelspieler ne exception schmeißt
+				if (!isSingleplayer) {
+					Connection.sendMessage("ready");
+				}
 				frame.dispose();
 				new Spielgui(7);
 			}
@@ -500,10 +501,10 @@ public class Spielgui {
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.5);
 		frame.getContentPane().add(splitPane);
-		
+
 		field = new JButton[fieldSize][fieldSize];
 		enemyField = new JButton[fieldSize][fieldSize];
-				
+
 		JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
 		splitPane.setLeftComponent(panelleft);
 		panelleft.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
@@ -515,25 +516,53 @@ public class Spielgui {
 					String[] s = ((JButton)e.getSource()).getName().split(" ");
 					int x = Integer.parseInt(s[0]);
 					int y = Integer.parseInt(s[1]);
-					if(enemyShips[x][y] == false){
-						((JButton)e.getSource()).setBackground(new Color(0,0,255));
-						//Connection.sendMessage(String.format("shot %s %s", x, y));
-					} else {
-		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
-		            	//Connection.sendMessage(String.format("shot %s %s", x, y));
-		            	hitCounter--;
-		            	if(hitCounter==0) {
-		            		frame.dispose();
-		            		new Spielgui(8);
-		            		return;
-		            	}
-		            }
-					if(isSingleplayer) {
+					if (isSingleplayer) {
+						if(enemyShips[x][y] == false){
+							((JButton)e.getSource()).setBackground(new Color(0,0,255));
+						} else {
+							((JButton)e.getSource()).setBackground(new Color(255,0,0));
+							hitCounter--;
+							if(hitCounter==0) {
+								frame.dispose();
+								new Spielgui(8);
+								return;
+							}
+						}
 						enemyHitCounter -= Ki.kiShot(field, ships);
 						if(enemyHitCounter==0) {
 							frame.dispose();
-		            		new Spielgui(9);
-		            	}
+							new Spielgui(9);
+						}
+					}
+					else {
+						// TODO:
+						// place elsewhere
+						// get order right
+						Connection.sendMessage(String.format("shot %s %s", x, y));
+						String msg = Connection.getMessage();
+						if (msg.contains("shot ")) {
+							String[] temp = msg.split(" ");
+							int shotx = Integer.valueOf(temp[1]);
+							int shoty = Integer.valueOf(temp[2]);
+							// check own ship array
+							if (ships[shotx][shoty] == false) {
+								((JButton)e.getSource()).setBackground(new Color(0,0,255));
+								Connection.sendMessage("answer 0");
+							} else {
+								((JButton)e.getSource()).setBackground(new Color(255,0,0));
+								// what does 1 2 etc mean?
+								Connection.sendMessage("answer 1");
+								hitCounter--;
+								if(hitCounter==0) {
+									frame.dispose();
+									new Spielgui(8);
+									return;
+								}
+							}
+
+							// send response
+
+						}
 					}
 				});
 				panelleft.add(enemyField[i][j]);
