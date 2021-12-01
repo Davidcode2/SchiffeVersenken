@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,43 +14,43 @@ public class GUI {
 
     public GUI(int window){
 
-        frame = new JFrame("Spiel");
-        frame.setSize(500, 500);
-        frame.setTitle("BattleShips");
-
-
-        switch (window) {
-            case 1:
-                hauptmenue();
-                break;
-            case 2:
-                einzelspieler();
-                break;
-            case 3:
-                mehrspieler();
-                break;
-            case 4:
-                host();
-                break;
-            case 5:
-                client();
-                break;
-            case 6:
-                schiffeplatzieren();
-                break;
-            case 7:
-                spiel();
-                break;
-            default:
-                System.out.println("Programm startet nicht.");
-        }
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+    	frame = new JFrame("Spiel");
+		frame.setSize(1440, 810);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		switch (window) {
+			case 1:
+				hauptmenue();
+				break;
+			case 2:
+				einzelspieler();
+				break;
+			case 3:
+				mehrspieler();
+				break;
+			case 4:
+				host();
+				break;
+			case 5:
+				client();
+				break;
+			case 6:
+				schiffeplatzieren();
+				break;
+			case 7:
+				spiel();
+				break;
+			case 8:
+				winningScreen();
+				break;
+			case 9:
+				losingScreen();
+				break;
+			default:
+				System.out.println("Programm startet nicht.");
+		}
     }
-
-
-
-
+    
     private void hauptmenue() {
 
         JLabel label = new JLabel("Schiffe versenken");
@@ -118,7 +119,12 @@ public class GUI {
 
         JPanel panel = new JPanel();
         JTextField textfield = new JTextField();
-        textfield.addActionListener((e) -> {
+        textfield.setHorizontalAlignment(SwingConstants.CENTER);
+        textfield.setColumns(10);
+        panel.add(textfield);
+        
+        JButton start = new JButton("Weiter");
+        start.addActionListener((e) -> {
             try{Integer. parseInt(textfield.getText());
             }catch(NumberFormatException ex){
                 frame.dispose();
@@ -137,9 +143,7 @@ public class GUI {
                 new GUI(2);
             }
         });
-        textfield.setHorizontalAlignment(SwingConstants.CENTER);
-        textfield.setColumns(10);
-        panel.add(textfield);
+		panel.add(start);
         frame.getContentPane().add(panel);
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -584,5 +588,55 @@ public class GUI {
             buttonsUser[x][y].setBackground(new Color(0, 255, 0));
         }
     }
+    
+    private void winningScreen() {
+		
+		JMenuBar menuBar = new JMenuBar();
+ 		frame.setJMenuBar(menuBar);
+
+		JButton endGame = new JButton("Spiel schließen");
+		endGame.addActionListener((e) -> {
+			frame.dispose();
+		});
+		menuBar.add(endGame);
+		
+		JLabel label = new JLabel("YOU WON");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		frame.setContentPane(Box.createVerticalBox());
+
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+		frame.getContentPane().add(Box.createGlue());
+
+		frame.getContentPane().add(label);
+
+		frame.getContentPane().add(Box.createGlue());
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+	}
+
+	private void losingScreen() {
+		
+		JMenuBar menuBar = new JMenuBar();
+ 		frame.setJMenuBar(menuBar);
+
+		JButton endGame = new JButton("Spiel schließen");
+		endGame.addActionListener((e) -> {
+			frame.dispose();
+		});
+		menuBar.add(endGame);
+		
+		JLabel label = new JLabel("YOU LOST");
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		frame.setContentPane(Box.createVerticalBox());
+
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+		frame.getContentPane().add(Box.createGlue());
+
+		frame.getContentPane().add(label);
+
+		frame.getContentPane().add(Box.createGlue());
+		frame.getContentPane().add(Box.createVerticalStrut(50));
+	}
 
 }
