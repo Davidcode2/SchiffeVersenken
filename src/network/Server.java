@@ -79,7 +79,7 @@ public class Server {
 	}
 
 	public static void stopServer(Connection connection) throws IOException {
-			// EOF ins Socket "schreiben".
+		// EOF ins Socket "schreiben".
 			connection.getS().shutdownOutput();
 			System.out.println("Connection closed.");
 		}

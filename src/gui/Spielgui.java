@@ -1,13 +1,10 @@
 package gui;
 
-import network.Client;
-import network.Connection;
-import network.Server;
+import network.*;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.net.Socket;
 import javax.swing.*;
 
@@ -21,7 +18,7 @@ public class Spielgui {
 	
 	private static boolean isSingleplayer;
 	
-	protected static int fieldSize;
+	public static int fieldSize;
 	
 	protected static JButton[][] field;
 	private static boolean[][] ships;
@@ -33,6 +30,10 @@ public class Spielgui {
 	
 	private static int hitCounter;
 	private static int enemyHitCounter;
+
+	public int getFieldSize() {
+		return fieldSize;
+	}
 	
 	public Spielgui(int number) {
 
@@ -267,44 +268,9 @@ public class Spielgui {
 				frame.dispose();
 				network.Connection.setServer(true);
 				System.out.println(String.format("setServer is: %s", Connection.isServer()));
-				network.Server server = new Server();
 
-				// Worker thread waiting for connection in background
-				class StartConnectionService extends SwingWorker<Socket, Object> {
-					@Override
-					public Socket doInBackground() {
-						socketS = server.startConnection(port);
-						try {
-							server.createConnection(socketS);
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						}
-						return socketS;
-					}
-
-					@Override
-					protected void done() {
-						try {
-							socketS = get();
-							System.out.println("Client connected to socket!");
-						} catch (Exception ignore) {
-							System.out.println("error");
-						}
-						class StartCommunicationService extends SwingWorker<String, Object> {
-							@Override
-							public String doInBackground() {
-								server.startCommunicationLoop();
-								return null;
-							}
-						}
-						(new StartCommunicationService()).execute();
-						System.out.println("Server ready to send and receive messages...\n");
-
-						String x = String.valueOf(fieldSize);
-						Connection.sendMessage(x);
-					}
-				}
-				(new StartConnectionService()).execute();
+				// start connection
+				(new ServerConnectionService()).execute();
 				new Spielgui(6);
 			}
 			else {
@@ -375,53 +341,8 @@ public class Spielgui {
 				new Spielgui(5);
 			}
 			Connection.setServer(false);
-			network.Client client = new network.Client();
-			System.out.println(String.format("connection data %s %s", ip, port));
-
-			class ConnectionService extends SwingWorker<Socket, Object> {
-				@Override
-				public Socket doInBackground() {
-					try {
-						socketS = client.startConnection(ip, port);
-						try {
-							client.createConnection(socketS);
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						}
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
-					return socketS;
-				}
-				@Override
-				protected void done() {
-					try {
-						socketS = get();
-					} catch (Exception ignore) {
-						System.out.println("error starting communication loop");
-					}
-					class StartClientCommunicationService extends SwingWorker<String, Object> {
-						@Override
-						public String doInBackground() {
-							client.startCommunicationLoop();
-							return null;
-						}
-					}
-					(new StartClientCommunicationService()).execute();
-					System.out.print("Client ready to send and receive messages...\n");
-					while (fieldSize == 0) {
-						try {
-							fieldSize = Integer.parseInt(Connection.getMessage());
-						} catch (Exception ignore) {
-						}
-						// wait
-					}
-					// possibly problematic: gui call from within background thread
-					Connection.sendMessage("done");
-					new Spielgui(6);
-				}
-			}
-			(new ConnectionService()).execute();
+			// start connection
+			(new ClientConnectionService()).execute();
 		});
 
 		// TODO:
