@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Board {
     private final Field[][] fieldArray;
-    private int size;
+    private static int size;
     private ArrayList<Ship> shipList = new ArrayList<Ship>();
 
     public Board(int size) {
@@ -126,11 +126,11 @@ public class Board {
         }
     }
 
-    public int getSize() {
+    public static int getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public static void setSize(int size) {
         this.size = size;
     }
 }

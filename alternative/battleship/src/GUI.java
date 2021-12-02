@@ -1,8 +1,3 @@
-import network.ClientConnectionService;
-import network.Connection;
-import network.Server;
-import network.ServerConnectionService;
-
 import javax.swing.*;
 
 import java.awt.*;
@@ -254,9 +249,9 @@ public class GUI {
                 userBoard = new Board(boardSize);
                 Ship.calcAmount(userBoard.getSize());
                 frame.dispose();
-                network.Connection.setServer(true);
+                Connection.setServer(true);
                 System.out.println(String.format("setServer is: %s", Connection.isServer()));
-                network.Server server = new Server();
+                Server server = new Server();
                 frame.dispose();
                 (new ServerConnectionService()).execute();
                 new GUI(6);
@@ -324,7 +319,7 @@ public class GUI {
             try{
                 ip = promptIP.getText();
                 Connection.setServer(false);
-                network.Client client = new network.Client();
+                Client client = new Client();
                 System.out.println(String.format("connection data %s %s", ip, port));
                 (new ClientConnectionService()).execute();
                 frame.dispose();

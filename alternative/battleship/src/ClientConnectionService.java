@@ -1,18 +1,16 @@
-package network;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 
 public class ClientConnectionService extends SwingWorker<Socket, Object> {
-    network.Client client = new network.Client();
+    Client client = new Client();
     private Socket socketS;
 
     //        System.out.println(String.format("connection data %s %s", ip, port));
     @Override
     public Socket doInBackground() {
         try {
-            socketS = client.startConnection(getIp(), getPort());
+            socketS = client.startConnection(GUI.getIp(), GUI.getPort());
             try {
                 client.createConnection(socketS);
             } catch (IOException ex) {
@@ -39,9 +37,9 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         }
         (new StartClientCommunicationService()).execute();
         System.out.print("Client ready to send and receive messages...\n");
-        while (userBoard.getSize() == 0) {
+        while (Board.getSize() == 0) {
             try {
-                fieldSize = Integer.parseInt(Connection.getMessage());
+                 Board.setSize(Integer.parseInt(Connection.getMessage()));
             } catch (Exception ignore) {
             }
             // wait
