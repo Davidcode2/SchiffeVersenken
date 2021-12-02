@@ -62,6 +62,7 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         Connection.setServer(false);
         System.out.println(String.format("connection data %s %s", ip, port));
         Connection.sendMessage("done");
+        Ship.calcAmount(board.getSize());
         new GUI(6);
     }
 }

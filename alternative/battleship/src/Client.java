@@ -30,7 +30,7 @@ public class Client {
 		// über Portnummer port herstellen.
 		// Als Resultat erhält man ein Socket.
 		Socket s = new Socket(ip, port);
-		System.out.println(connection.isServer());
+		System.out.println(String.format("is Server: %s", connection.isServer()));
 		System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
 		System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
 		return s;
