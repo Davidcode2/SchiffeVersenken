@@ -1,3 +1,8 @@
+import network.ClientConnectionService;
+import network.Connection;
+import network.Server;
+import network.ServerConnectionService;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -11,6 +16,15 @@ public class GUI {
     private static Board enemyBoard;
     public static JButton[][] buttonsUser;
     private static JButton[][] buttonsEnemy;
+    private static int port;
+    private static String ip;
+
+    public static int getPort() {
+        return port;
+    }
+    public static String getIp() {
+        return ip;
+    }
 
     public GUI(int window){
 
@@ -212,7 +226,7 @@ public class GUI {
                 frame.dispose();
                 new GUI(4);
             }
-            //port = Integer.parseInt(textfeld.getText());
+            port = Integer.parseInt(textfeld.getText());
         });
         textfeld.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld.setColumns(10);
@@ -235,60 +249,21 @@ public class GUI {
                 frame.dispose();
                 new GUI(4);
             }
-            int test = Integer.parseInt(textfeld2.getText());
-            if(test>=5 && test<=30) {
-                //fieldSize = test;
-                //shipAmount(fieldSize);
-                //network.Connection.setServer(true);
-                //System.out.println(String.format("setServer is: %s", Connection.isServer()));
-                //network.Server server = new Server();
+            int boardSize = Integer.parseInt(textfeld2.getText());
+            if(boardSize>=5 && boardSize<=30) {
+                userBoard = new Board(boardSize);
+                Ship.calcAmount(userBoard.getSize());
                 frame.dispose();
-
-                // Worker thread waiting for connection in background
-
-                /*
-                class StartConnectionService extends SwingWorker<Socket, Object> {
-                    @Override
-                    public Socket doInBackground() {
-                        socketS = server.startConnection(port);
-                        try {
-                            server.createConnection(socketS);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                        return socketS;
-                    }
-
-                    @Override
-                    protected void done() {
-                        try {
-                            socketS = get();
-                            System.out.println("Client connected to socket!");
-                        } catch (Exception ignore) {
-                            System.out.println("error");
-                        }
-                        class StartCommunicationService extends SwingWorker<String, Object> {
-                            @Override
-                            public String doInBackground() {
-                                server.startCommunicationLoop();
-                                return null;
-                            }
-                        }
-                        (new StartCommunicationService()).execute();
-                        System.out.println("Server ready to send and receive messages...\n");
-
-                        String x = String.valueOf(fieldSize);
-                        Connection.sendMessage(x);
-                    }
-                }
-                (new StartConnectionService()).execute();
-
-                 */
+                network.Connection.setServer(true);
+                System.out.println(String.format("setServer is: %s", Connection.isServer()));
+                network.Server server = new Server();
+                frame.dispose();
+                (new ServerConnectionService()).execute();
                 new GUI(6);
             }
             else {
                 frame.dispose();
-                new GUI(4);
+                new GUI(2);
             }
         });
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -328,7 +303,7 @@ public class GUI {
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
             try{
-                //port = Integer.parseInt(textfeld.getText());
+                port = Integer.parseInt(textfeld.getText());
             }catch(NumberFormatException ex){
                 frame.dispose();
                 new GUI(5);
@@ -347,65 +322,16 @@ public class GUI {
         JTextField promptIP = new JTextField();
         promptIP.addActionListener((e) -> {
             try{
-                //ip = promptIP.getText();
+                ip = promptIP.getText();
+                Connection.setServer(false);
+                network.Client client = new network.Client();
+                System.out.println(String.format("connection data %s %s", ip, port));
+                (new ClientConnectionService()).execute();
                 frame.dispose();
             }catch(NumberFormatException ex){
                 frame.dispose();
                 new GUI(5);
             }
-            //Connection.setServer(false);
-            //network.Client client = new network.Client();
-            //System.out.println(String.format("connection data %s %s", ip, port));
-
-            /*
-            class ConnectionService extends SwingWorker<Socket, Object> {
-                @Override
-                public Socket doInBackground() {
-                    try {
-                        socketS = client.startConnection(ip, port);
-                        try {
-                            client.createConnection(socketS);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    return socketS;
-                }
-                @Override
-                protected void done() {
-                    try {
-                        socketS = get();
-                    } catch (Exception ignore) {
-                        System.out.println("error starting communication loop");
-                    }
-                    class StartClientCommunicationService extends SwingWorker<String, Object> {
-                        @Override
-                        public String doInBackground() {
-                            client.startCommunicationLoop();
-                            return null;
-                        }
-                    }
-                    (new StartClientCommunicationService()).execute();
-                    System.out.print("Client ready to send and receive messages...\n");
-                    while (fieldSize == 0) {
-                        try {
-                            fieldSize = Integer.parseInt(Connection.getMessage());
-                        } catch (Exception ignore) {
-                        }
-                        // wait
-                    }
-                    // possibly problematic: gui call from within background thread
-                    Connection.sendMessage("done");
-                    new Spielgui(6);
-                }
-            }
-
-
-            (new ConnectionService()).execute();
-
-             */
         });
 
         // TODO:
