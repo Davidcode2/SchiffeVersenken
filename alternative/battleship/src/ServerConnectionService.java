@@ -7,10 +7,17 @@ import java.net.Socket;
 public class ServerConnectionService extends SwingWorker<Socket, Object> {
     Server server = new Server();
     private Socket socketS;
+    private int fieldsize;
+    private int port;
+
+    public ServerConnectionService(int fieldsize, int port) {
+        this.fieldsize = fieldsize;
+        this.port = port;
+    }
 
     @Override
     public Socket doInBackground() {
-        socketS = server.startConnection(GUI.getPort());
+        socketS = server.startConnection(port);
         try {
             server.createConnection(socketS);
         } catch (IOException ex) {
@@ -37,7 +44,7 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
         (new StartCommunicationService()).execute();
         System.out.println("Server ready to send and receive messages...\n");
 
-        String x = String.valueOf(Board.getSize());
+        String x = String.valueOf(fieldsize);
         Connection.sendMessage(x);
     }
 }

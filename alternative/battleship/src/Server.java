@@ -74,7 +74,6 @@ public class Server {
 					int shoty = Integer.valueOf(temp[2]);
 					// check own ship array
 					if (ships[shotx][shoty] == false) {
-						colorButtonsUser()
 						((JButton)e.getSource()).setBackground(new Color(0,0,255));
 						Connection.sendMessage("answer 0");
 					} else {

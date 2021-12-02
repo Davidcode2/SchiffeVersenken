@@ -5,12 +5,21 @@ import java.net.Socket;
 public class ClientConnectionService extends SwingWorker<Socket, Object> {
     Client client = new Client();
     private Socket socketS;
+    private Board board;
+    private String ip;
+    private int port;
+
+    public ClientConnectionService(Board userBoard, String ip, int port) {
+        this.board = userBoard;
+        this.ip = ip;
+        this.port = port;
+    }
 
     //        System.out.println(String.format("connection data %s %s", ip, port));
     @Override
     public Socket doInBackground() {
         try {
-            socketS = client.startConnection(GUI.getIp(), GUI.getPort());
+            socketS = client.startConnection(ip, port);
             try {
                 client.createConnection(socketS);
             } catch (IOException ex) {
@@ -37,9 +46,9 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         }
         (new StartClientCommunicationService()).execute();
         System.out.print("Client ready to send and receive messages...\n");
-        while (Board.getSize() == 0) {
+        while (board.getSize() == 0) {
             try {
-                 Board.setSize(Integer.parseInt(Connection.getMessage()));
+                 board.setSize(Integer.parseInt(Connection.getMessage()));
             } catch (Exception ignore) {
             }
             // wait

@@ -14,13 +14,6 @@ public class GUI {
     private static int port;
     private static String ip;
 
-    public static int getPort() {
-        return port;
-    }
-    public static String getIp() {
-        return ip;
-    }
-
     public GUI(int window){
 
     	frame = new JFrame("Spiel");
@@ -247,13 +240,14 @@ public class GUI {
             int boardSize = Integer.parseInt(textfeld2.getText());
             if(boardSize>=5 && boardSize<=30) {
                 userBoard = new Board(boardSize);
+                int fieldsize = userBoard.getSize();
                 Ship.calcAmount(userBoard.getSize());
                 frame.dispose();
                 Connection.setServer(true);
                 System.out.println(String.format("setServer is: %s", Connection.isServer()));
                 Server server = new Server();
                 frame.dispose();
-                (new ServerConnectionService()).execute();
+                (new ServerConnectionService(fieldsize, port)).execute();
                 new GUI(6);
             }
             else {
@@ -298,7 +292,7 @@ public class GUI {
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
             try{
-                port = Integer.parseInt(textfeld.getText());
+                int port = Integer.parseInt(textfeld.getText());
             }catch(NumberFormatException ex){
                 frame.dispose();
                 new GUI(5);
@@ -317,11 +311,11 @@ public class GUI {
         JTextField promptIP = new JTextField();
         promptIP.addActionListener((e) -> {
             try{
-                ip = promptIP.getText();
+                String ip = promptIP.getText();
                 Connection.setServer(false);
                 Client client = new Client();
                 System.out.println(String.format("connection data %s %s", ip, port));
-                (new ClientConnectionService()).execute();
+                (new ClientConnectionService(userBoard, ip, port)).execute();
                 frame.dispose();
             }catch(NumberFormatException ex){
                 frame.dispose();
