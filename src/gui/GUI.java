@@ -13,7 +13,7 @@
 //
 //        // Hauptfenster mit Titelbalken etc. (JFrame) erzeugen.
 //        // "Swing2" wird in den Titelbalken geschrieben.
-//        boolean connectionType = network.Connection.isServer();
+//        boolean connectionType = Connection.isServer();
 //        String describer;
 //        if (connectionType) {
 //            describer = "Host";
@@ -45,10 +45,10 @@
 //            button.setAlignmentX(Component.CENTER_ALIGNMENT);
 //            button.addActionListener(
 //                    (e) -> {
-//                        if (network.Connection.isServer()) {
-//                            network.Server.sendMessage("12");
+//                        if (Connection.isServer()) {
+//                            Server.sendMessage("12");
 //                        } else {
-//                            network.Client.sendMessage("12");
+//                            Client.sendMessage("12");
 //                        }
 //                    }
 //            );
@@ -61,10 +61,10 @@
 //            button.setAlignmentX(Component.CENTER_ALIGNMENT);
 //            button.addActionListener(
 //                    (e) -> {
-//                        if (network.Connection.isServer()) {
-//                            network.Server.sendMessage("32");
+//                        if (Connection.isServer()) {
+//                            Server.sendMessage("32");
 //                        } else {
-//                            network.Client.sendMessage("32");
+//                            Client.sendMessage("32");
 //                        }
 //
 //                    }
@@ -80,10 +80,10 @@
 //            button.setAlignmentX(Component.CENTER_ALIGNMENT);
 //            button.addActionListener(
 //                    (e) -> {
-//                        if (network.Connection.isServer()) {
-//                            network.Server.sendMessage("random Nachricht");
+//                        if (Connection.isServer()) {
+//                            Server.sendMessage("random Nachricht");
 //                        } else {
-//                            network.Client.sendMessage("random Nachricht");
+//                            Client.sendMessage("random Nachricht");
 //                        }
 //                    }
 //            );
@@ -96,7 +96,7 @@
 //            button.setAlignmentX(Component.CENTER_ALIGNMENT);
 //            button.addActionListener(
 //                    (e) -> {
-//                        System.out.println(String.format("incoming message <<< %s%n", network.Connection.getMessage()));
+//                        System.out.println(String.format("incoming message <<< %s%n", Connection.getMessage()));
 //                    }
 //            );
 //            vbox.add(button);
@@ -123,10 +123,10 @@
 //
 //                button.addActionListener(
 //                        (e) -> {
-//                            if (network.Connection.isServer()) {
-//                                network.Server.sendMessage("Button gedrückt");
+//                            if (Connection.isServer()) {
+//                                Server.sendMessage("Button gedrückt");
 //                            } else {
-//                                network.Client.sendMessage("Button gedrückt");
+//                                Client.sendMessage("Button gedrückt");
 //                            }
 //                        }
 //                );

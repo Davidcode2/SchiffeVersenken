@@ -28,18 +28,18 @@ Code irgendwie compilieren (out ordner fehlt bei mir) und in Powershell `tester`
 
 Starten Serververbindung:
 ```java
-network.Server server = new network.Server()
+Server server = new Server()
 server.startConnection(int port);
 ```
 Starten Clientverbindung: *nach starten von Server* 
 ```java
-network.Client client = new network.Client()
+Client client = new Client()
 client.startConnection(String ip, int port); // ip beim lokalen testen: 127.0.0.1
 ```
 
-``network.Connection.sendMessage(String)`` versendet Nachricht an Mitspieler, sofern aktuller Spieler am Zug.
+``Connection.sendMessage(String)`` versendet Nachricht an Mitspieler, sofern aktuller Spieler am Zug.
 
-``network.Connection.getMessage()`` gibt zuletzt erhaltene Nachricht zurück (String).
+``Connection.getMessage()`` gibt zuletzt erhaltene Nachricht zurück (String).
 
 **TODO:**
 - Verbindung über Gui herstellen
