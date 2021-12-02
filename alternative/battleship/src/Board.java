@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 
 public class Board {
-    private final Field[][] fieldArray;
+    private Field[][] fieldArray;
     private int size;
     private ArrayList<Ship> shipList = new ArrayList<Ship>();
 
@@ -132,5 +132,13 @@ public class Board {
 
     public void setSize(int size) {
         this.size = size;
+        // initialize fieldArray
+        // da client nicht direkt bei initialisieren des Boards weiß wie groß es sein wird.
+        fieldArray = new Field[size][size];
+        for (int i = 0; i<size ; i++){
+            for (int j = 0; j<size; j++){
+                fieldArray[i][j] = new Field(i,j);
+            }
+        }
     }
 }

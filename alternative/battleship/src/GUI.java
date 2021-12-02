@@ -12,7 +12,6 @@ public class GUI {
     public static JButton[][] buttonsUser;
     private static JButton[][] buttonsEnemy;
     private static int port;
-    private static String ip;
 
     public GUI(int window){
 
@@ -209,12 +208,12 @@ public class GUI {
         JPanel panel = new JPanel();
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
-            try{Integer.parseInt(textfeld.getText());
-            }catch(NumberFormatException ex){
+            try{
+                port = Integer.parseInt(textfeld.getText());
+            } catch(NumberFormatException ex) {
                 frame.dispose();
                 new GUI(4);
             }
-            port = Integer.parseInt(textfeld.getText());
         });
         textfeld.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld.setColumns(10);
@@ -232,7 +231,8 @@ public class GUI {
         panel = new JPanel();
         JTextField textfeld2 = new JTextField();
         textfeld2.addActionListener((e) -> {
-            try{Integer.parseInt(textfeld2.getText());
+            try {
+                Integer.parseInt(textfeld2.getText());
             }catch(NumberFormatException ex){
                 frame.dispose();
                 new GUI(4);
@@ -241,11 +241,7 @@ public class GUI {
             if(boardSize>=5 && boardSize<=30) {
                 userBoard = new Board(boardSize);
                 int fieldsize = userBoard.getSize();
-                Ship.calcAmount(userBoard.getSize());
-                frame.dispose();
-                Connection.setServer(true);
-                System.out.println(String.format("setServer is: %s", Connection.isServer()));
-                Server server = new Server();
+                Ship.calcAmount(fieldsize);
                 frame.dispose();
                 (new ServerConnectionService(fieldsize, port)).execute();
                 new GUI(6);
@@ -292,7 +288,7 @@ public class GUI {
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
             try{
-                int port = Integer.parseInt(textfeld.getText());
+                port = Integer.parseInt(textfeld.getText());
             }catch(NumberFormatException ex){
                 frame.dispose();
                 new GUI(5);
@@ -312,9 +308,7 @@ public class GUI {
         promptIP.addActionListener((e) -> {
             try{
                 String ip = promptIP.getText();
-                Connection.setServer(false);
-                Client client = new Client();
-                System.out.println(String.format("connection data %s %s", ip, port));
+                userBoard = new Board(0);
                 (new ClientConnectionService(userBoard, ip, port)).execute();
                 frame.dispose();
             }catch(NumberFormatException ex){
@@ -348,8 +342,10 @@ public class GUI {
         JButton beginnen = new JButton("Spiel beginnen");
         beginnen.addActionListener((e) -> {
 
-            //Hier soll wenn wir client sind ein "ready" an den host schicken
-            //Connection.sendMessage("ready"); habs mal auskommentiert weil es im einzelspieler ne exception schmeißt
+            if (Connection.Multiplayer()) {
+                // wenn bereit, sende 'ready'
+                Connection.sendMessage("ready");
+            }
             frame.dispose();
             new GUI(7);
 

@@ -15,6 +15,8 @@ public class Connection {
     private static String message;
     private static boolean turn = true;
 
+    private static boolean Multiplayer = false;
+
     public Connection(BufferedReader in, Writer out, BufferedWriter usr) {
         this.in = in;
         this.out = out;
@@ -26,6 +28,13 @@ public class Connection {
     }
     public static boolean isServer() {
         return isServer;
+    }
+
+    public static boolean Multiplayer() {
+        return Multiplayer;
+    }
+    public static void setMultiplayer(boolean b) {
+        Multiplayer = b;
     }
 
     public static Socket getS() {

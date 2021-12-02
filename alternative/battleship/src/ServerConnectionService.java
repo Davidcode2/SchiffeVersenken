@@ -42,6 +42,8 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
             }
         }
         (new StartCommunicationService()).execute();
+        Connection.setServer(true);
+        System.out.println(String.format("is Server: %s", Connection.isServer()));
         System.out.println("Server ready to send and receive messages...\n");
 
         String x = String.valueOf(fieldsize);

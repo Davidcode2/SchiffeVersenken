@@ -47,6 +47,7 @@ public class Client {
 				new BufferedWriter(new OutputStreamWriter(System.out));
 
 		connection = new Connection(in, out, usr);
+		Connection.setMultiplayer(true);
 		setConnection(connection);
 	}
 

@@ -8,6 +8,7 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
     private Board board;
     private String ip;
     private int port;
+    private boolean boardSizeReceived = false;
 
     public ClientConnectionService(Board userBoard, String ip, int port) {
         this.board = userBoard;
@@ -46,9 +47,11 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         }
         (new StartClientCommunicationService()).execute();
         System.out.print("Client ready to send and receive messages...\n");
-        while (board.getSize() == 0) {
+        while (!boardSizeReceived) {
             try {
-                 board.setSize(Integer.parseInt(Connection.getMessage()));
+                int fieldsize = Integer.parseInt(Connection.getMessage());
+                board.setSize(fieldsize);
+                boardSizeReceived = true;
             } catch (Exception ignore) {
             }
             // wait
@@ -56,6 +59,8 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         // possibly problematic: gui call from within background thread
         // TODO:
         // issue: gui doesn't know how many ships it can set (all 0), works on click "schiffe neu setzen"
+        Connection.setServer(false);
+        System.out.println(String.format("connection data %s %s", ip, port));
         Connection.sendMessage("done");
         new GUI(6);
     }
