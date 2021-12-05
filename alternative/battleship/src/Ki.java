@@ -1,11 +1,10 @@
-package gui;
 
 import java.awt.Color;
 import javax.swing.JButton;
 
 public class Ki {
 	
-	private static int fieldSize = Spielgui.fieldSize;
+	private static int fieldSize = GUI.buttonsUser.length;  //Spielgui.fieldSize;
 	
 	protected static boolean kiPlacingShips(boolean[][] enemyShips) {
 		
@@ -29,7 +28,7 @@ public class Ki {
 		//Wenn im Folgenden der random Wert kleiner als 0.5 ist, dann wird das Schiff horizontal gesetzt sonst vertikal.
 		
 		//5er Schiffe platzieren
-		for(int i=0; i<Logic.amount5x; i++) {
+		for(int i=0; i<Ship.getAmounts()[3]; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
@@ -135,7 +134,7 @@ public class Ki {
 			}
 		}
 		//4er Schiffe platzieren
-		for(int i=0; i<Logic.amount4x; i++) {
+		for(int i=0; i<Ship.getAmounts()[2]; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
@@ -241,7 +240,7 @@ public class Ki {
 			}
 		}
 		//3er Schiffe platzieren
-		for(int i=0; i<Logic.amount3x; i++) {
+		for(int i=0; i<Ship.getAmounts()[1]; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde
@@ -347,7 +346,7 @@ public class Ki {
 			}
 		}
 		//2er Schiffe platzieren
-		for(int i=0; i<Logic.amount2x; i++) {
+		for(int i=0; i<Ship.getAmounts()[0]; i++) {
 			shipPlaced=false;
 			if(Math.random()<0.5) {//horizontal
 				while(!shipPlaced) {//solange probieren bis das schiff platziert wurde

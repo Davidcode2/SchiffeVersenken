@@ -9,6 +9,8 @@ public class Ship {
         this.size = size;
         this.startPoint = startPoint;
         this.direction = direction;
+
+
     }
 
     public static void calcAmount(int size) {
@@ -49,10 +51,6 @@ public class Ship {
                 amounts[3] = temp;
             }
         }while(rest != 0 && rest != 1);
-        System.out.println("2x: " + amounts[0]);
-        System.out.println("3x: " + amounts[1]);
-        System.out.println("4x: " + amounts[2]);
-        System.out.println("5x: " + amounts[3]);
     }
 
     public void setStartPoint(int[] startPoint) {
@@ -79,4 +77,7 @@ public class Ship {
         return direction;
     }
 
+    public void setSize(int size) {
+        this.size = size;
+    }
 }

@@ -1,10 +1,9 @@
-package gui;
 
 import java.awt.Color;
 
 public class Logic {
 	
-	private static int fieldSize = Spielgui.fieldSize;
+	private static int fieldSize = GUI.buttonsUser.length;  //Spielgui.fieldSize;
 	protected static int amount2x;
 	protected static int amount3x;
 	protected static int amount4x;
@@ -57,7 +56,7 @@ public class Logic {
 		
 		for(int j=0; j<shipLenght; j++) {
 			helpArray[positionVertical][positionHorizontal]=1;//teil vom schiff platzieren
-			Spielgui.field[positionVertical][positionHorizontal].setBackground(new Color(0,255,0));
+			//Spielgui.field[positionVertical][positionHorizontal].setBackground(new Color(0,255,0));
 			if(j==0 && positionHorizontal>0) {//wasser links vom schiff platzieren
 				helpArray[positionVertical][positionHorizontal-1]=2;
 			}
@@ -134,7 +133,7 @@ public class Logic {
 		
 		for(int j=0; j<shipLenght; j++) {
 			helpArray[positionVertical][positionHorizontal]=1;//teil vom schiff platzieren
-			Spielgui.field[positionVertical][positionHorizontal].setBackground(new Color(0,255,0));
+			//Spielgui.field[positionVertical][positionHorizontal].setBackground(new Color(0,255,0));
 			if(j==0 && positionVertical>0) {//wasser oberhalb vom schiff platzieren
 				helpArray[positionVertical-1][positionHorizontal]=2;
 			}

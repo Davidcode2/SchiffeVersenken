@@ -1,6 +1,11 @@
 public class Field {
     private int[] pos = new int[2];
     private boolean isOccupied = false;
+    private boolean isShip = false;
+    private boolean isWater = true;
+    private boolean isHit = false;
+    private boolean isMiss = false;
+    private boolean isSunk = false;
 
     public Field(int x, int y) {
         pos[0] = x;
@@ -11,6 +16,38 @@ public class Field {
         return pos;
     }
 
+    public boolean isSunk() {
+        return isSunk;
+    }
+
+    public void setSunk(boolean sunk) {
+        isSunk = sunk;
+    }
+
+    public boolean isMiss() {
+        return isMiss;
+    }
+
+    public void setMiss(boolean miss) {
+        isMiss = miss;
+    }
+
+    public boolean isWater() {
+        return isWater;
+    }
+
+    public boolean isHit() {
+        return isHit;
+    }
+
+    public void setHit(boolean hit) {
+        isHit = hit;
+    }
+
+    public void setWater(boolean water) {
+        isWater = water;
+    }
+
     public boolean isOccupied() {
         return isOccupied;
     }
@@ -19,4 +56,12 @@ public class Field {
         isOccupied = occupied;
     }
 
+    public boolean isShip() {
+        return isShip;
+    }
+
+    public void setShip(boolean ship) {
+        isWater = !ship;
+        isShip = ship;
+    }
 }

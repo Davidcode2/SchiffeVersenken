@@ -7,10 +7,10 @@ import java.awt.event.MouseEvent;
 public class GUI {
 
     private JFrame frame;
-    private static Board userBoard;
-    private static Board enemyBoard;
+    public static Board userBoard;
+    public static Board enemyBoard;
     public static JButton[][] buttonsUser;
-    private static JButton[][] buttonsEnemy;
+    public static JButton[][] buttonsEnemy;
     private static int port;
 
     public GUI(int window){
@@ -133,8 +133,8 @@ public class GUI {
             }
             int boardSize = Integer.parseInt(textfield.getText());
             if(boardSize>=5 && boardSize<=30) {
-                userBoard = new Board(boardSize);
-                enemyBoard = new Board(boardSize);
+                userBoard = new Board(boardSize, "server");
+                enemyBoard = new Board(boardSize, "client");
                 Ship.calcAmount(userBoard.getSize());
                 frame.dispose();
                 new GUI(6);
@@ -239,7 +239,7 @@ public class GUI {
             }
             int boardSize = Integer.parseInt(textfeld2.getText());
             if(boardSize>=5 && boardSize<=30) {
-                userBoard = new Board(boardSize);
+                userBoard = new Board(boardSize, "server");
                 int fieldsize = userBoard.getSize();
                 Ship.calcAmount(fieldsize);
                 frame.dispose();
@@ -308,7 +308,7 @@ public class GUI {
         promptIP.addActionListener((e) -> {
             try{
                 String ip = promptIP.getText();
-                userBoard = new Board(0);
+                userBoard = new Board(0, "server");
                 (new ClientConnectionService(userBoard, ip, port)).execute();
                 frame.dispose();
             }catch(NumberFormatException ex){
@@ -332,12 +332,9 @@ public class GUI {
     }
 
     private void schiffeplatzieren() {
-
+        //TODO: Fenstergröße anfangs einstellen
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
-
-        //schiffe = new boolean[fieldSize][fieldSize];
-        //enemyschiffe = new boolean[fieldSize][fieldSize];
 
         JButton beginnen = new JButton("Spiel beginnen");
         beginnen.addActionListener((e) -> {
@@ -346,8 +343,12 @@ public class GUI {
                 // wenn bereit, sende 'ready'
                 Connection.sendMessage("ready");
             }
-            frame.dispose();
-            new GUI(7);
+
+            if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2]+ Ship.getAmounts()[3] == 0){
+                frame.dispose();
+                new GUI(7);
+            }
+
 
         });
 
@@ -355,6 +356,7 @@ public class GUI {
 
         JButton restart = new JButton("Schiffe neu setzen");
         restart.addActionListener((e) -> {
+            //TODO: fix this
             Ship.calcAmount(userBoard.getSize());
             frame.dispose();
             new GUI(6);
@@ -363,7 +365,6 @@ public class GUI {
         menuBar.add(restart);
 
         JPanel panel = new JPanel();
-        System.out.println(userBoard.getSize());
         panel.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
 
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
@@ -371,8 +372,10 @@ public class GUI {
         for (int i = 0; i < userBoard.getSize(); i++) {
             for(int j = 0; j < userBoard.getSize(); j++) {
 
-                buttonsUser[i][j] = new JButton(1+j+i*userBoard.getSize()+"");
+
+                buttonsUser[i][j] = new JButton("");
                 buttonsUser[i][j].setName(i+" "+j);
+                colorButtons("server",i,j,"Blue");
                 buttonsUser[i][j].addMouseListener(new MouseAdapter(){
                     public void mouseClicked(MouseEvent event){
                         String[] s = ((JButton)event.getSource()).getName().split(" ");
@@ -385,6 +388,7 @@ public class GUI {
                         else {
                             userBoard.place(x,y,"vertical");
                         }
+
                     }
                 });
                 panel.add(buttonsUser[i][j]);
@@ -395,10 +399,12 @@ public class GUI {
     }
 
     private void spiel() {
-
-        if (Connection.Multiplayer()) {
-            enemyBoard = new Board(userBoard.getSize());
+        //TODO: Fenstergröße anfangs einstellen
+        /*if (Connection.Multiplayer()) {
+            enemyBoard = new Board(userBoard.getSize(), "client");
         }
+
+         */
 
 		/*
 		JMenuBar menuBar = new JMenuBar();
@@ -423,14 +429,22 @@ public class GUI {
         panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
         for (int i = 0; i < enemyBoard.getSize(); i++) {
             for (int j = 0; j < enemyBoard.getSize(); j++) {
-                buttonsEnemy[i][j] = new JButton(1 + j + i * enemyBoard.getSize() + "");
+                buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
                 buttonsEnemy[i][j].setName(i + " " + j);
                 buttonsEnemy[i][j].addActionListener((e) -> {
-
+                    String[] s = ((JButton)e.getSource()).getName().split(" ");
+                    int x = Integer.parseInt(s[0]);
+                    int y = Integer.parseInt(s[1]);
+                    Controller.handleShotSP(x,y);
+                    if (Controller.checkWin()){
+                        frame.dispose();
+                        new GUI(8);
+                    }
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }
         }
+
 
         JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
         splitPane.setRightComponent(panelright);
@@ -438,24 +452,15 @@ public class GUI {
 
         for (int i = 0; i < userBoard.getSize(); i++) {
             for(int j = 0; j < userBoard.getSize(); j++) {
-                buttonsUser[i][j] = new JButton(1+j+i*userBoard.getSize()+"");
+                buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
                 buttonsUser[i][j].setName(i+" "+j);
-                //userBoard.print();
-
-                /*
-                if(schiffe[i][j] == false){
-                    buttonsUser[i][j].setBackground(new Color(0,255,0));
-                } else {
-                    buttonsUser[i][j].setBackground(new Color(255,0,0));
-                }
-
-                 */
                 panelright.add(buttonsUser[i][j]);
-
-
             }
         }
-
+        Controller.startGame();
+        AI.start("client");
+        userBoard.print();
+        enemyBoard.print();
         frame.pack();
 
 		/*
@@ -499,10 +504,33 @@ public class GUI {
 		frame.pack();*/
     }
 
-    public static void colorButtonsUser(int x, int y, String color) {
-        if (color == "Green") {
-            buttonsUser[x][y].setBackground(new Color(0, 255, 0));
+    public static void colorButtons(String status, int x, int y, String color) {
+        if (status == "server"){
+            if (color == "Green") {
+                buttonsUser[x][y].setBackground(new Color(102, 255, 102));
+            } else if (color == "Blue") {
+                buttonsUser[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "Red") {
+                buttonsUser[x][y].setBackground(new Color(255, 102, 102));
+            } else if (color == "Grey") {
+                buttonsUser[x][y].setBackground(new Color(100, 100, 100));
+            } else if (color == "LightGrey") {
+                buttonsUser[x][y].setBackground(new Color(192, 192, 192));
+            }
+        } else if (status == "client"){
+            if (color == "Green") {
+                buttonsEnemy[x][y].setBackground(new Color(102, 255, 102));
+            } else if (color == "Blue") {
+                buttonsEnemy[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "Red") {
+                buttonsEnemy[x][y].setBackground(new Color(255, 102, 102));
+            } else if (color == "Grey") {
+                buttonsEnemy[x][y].setBackground(new Color(100, 100, 100));
+            } else if (color == "LightGrey") {
+                buttonsEnemy[x][y].setBackground(new Color(192, 192, 192));
+            }
         }
+
     }
 
     private void winningScreen() {
