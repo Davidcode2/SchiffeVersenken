@@ -68,7 +68,7 @@ public class Server {
 				connection.setMessage(Connection.getIn().readLine());
 				connection.setTurn(true);
 				if (connection.getMessage() == null) break;
-				if (connection.getMessage().contains("ship")) {
+//				if (connection.getMessage().contains("ship")) {
 //					String msg = connection.getMessage();
 //					String[] temp = msg.split(" ");
 //					int shotx = Integer.valueOf(temp[1]);
@@ -88,8 +88,8 @@ public class Server {
 //							return;
 //						}
 //					}
-						Connection.sendMessage("answer 0");
-				}
+//						Connection.sendMessage("answer 0");
+//				}
 				System.out.println("<<< " + connection.getMessage());
 			}
 

@@ -62,8 +62,10 @@ public class Board {
             }
 
         } else {
-            System.out.println("reset amounts");
-            Ship.calcAmount(fieldArray.length);
+            // TODO: display banner saying:
+            System.out.println("all Ships have been placed.");
+//            System.out.println("reset amounts");
+//            Ship.calcAmount(fieldArray.length);
         }
     }
 
@@ -142,6 +144,7 @@ public class Board {
             fieldArray[x][y].setHit(true);
             for (int i=0; i<shipList.size();i++){
                 if (shipList.get(i).getStartPoint()[0] == x && shipList.get(i).getStartPoint()[1] == y && checkSunk(x,y,shipList.get(i))){
+                    fieldArray[x][y].setSunk(true);
                     shipList.remove(i);
                     System.out.println("removed");
                 }

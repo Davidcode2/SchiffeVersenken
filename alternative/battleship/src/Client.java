@@ -66,6 +66,9 @@ public class Client {
 				connection.setMessage(Connection.getIn().readLine());
 				connection.setTurn(true);
 				if (connection.getMessage() == null) break;
+//				if (connection.getMessage().contains("ship")) {
+//					Controller.inboundShotMP();
+//				}
 				System.out.println("<<< " + connection.getMessage());
 
 				// outgoing messages

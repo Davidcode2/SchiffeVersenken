@@ -68,6 +68,35 @@ public class Connection {
         return turn;
     }
 
+    public static void sendMessage(int x, int y) {
+        if (isServer()) {
+            try {
+                if (Server.getConnection().getTurn() || message.equals("ready")) {
+                    Server.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
+                    Server.getConnection().getOut().flush();
+                    Server.getConnection().setTurn(false);
+                } else {
+                    System.out.println("wait for other players turn");
+                }
+            } catch (IOException e) {
+                System.out.println("write to socket failed");
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                if (Client.getConnection().getTurn() || message.equals("ready")) {
+                    Client.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
+                    Client.getConnection().getOut().flush();
+                    Client.getConnection().setTurn(false);
+                } else {
+                    System.out.println("wait for other players turn");
+                }
+            } catch (IOException e) {
+                System.out.println("write to socket failed");
+                e.printStackTrace();
+            }
+        }
+    }
     public static void sendMessage(String message) {
         // if turn == true -> Server
         if (isServer()) {

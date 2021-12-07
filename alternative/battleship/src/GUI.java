@@ -315,6 +315,11 @@ public class GUI {
                 frame.dispose();
                 new GUI(5);
             }
+//            if (Connection.getIn() == null) {
+                // TODO: create "Waiting for Server" Screen
+                // TODO: continue waiting for server, if it isn't started
+
+//            }
         });
 
         // TODO:
@@ -402,11 +407,10 @@ public class GUI {
     private void spiel() {
         //TODO: Fenstergröße anfangs einstellen
         //TODO: Winning/Losing Screen connecten (HitAmount)
-        /*if (Connection.Multiplayer()) {
+        if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
         }
 
-         */
 
 		/*
 		JMenuBar menuBar = new JMenuBar();
@@ -437,7 +441,12 @@ public class GUI {
                     String[] s = ((JButton)e.getSource()).getName().split(" ");
                     int x = Integer.parseInt(s[0]);
                     int y = Integer.parseInt(s[1]);
-                    Controller.handleShotSP(x,y);
+                    if (Connection.Multiplayer()) {
+                        Controller.handleShotMP(x,y);
+                        Controller.inboundShotMP();
+                    } else {
+                        Controller.handleShotSP(x, y);
+                    }
                     if (Controller.checkWin()){
                         frame.dispose();
                         new GUI(8);
@@ -459,11 +468,13 @@ public class GUI {
                 panelright.add(buttonsUser[i][j]);
             }
         }
-        Controller.startGame();
-        AI.start("client");
-        userBoard.print();
-        enemyBoard.print();
-        frame.pack();
+        if (!Connection.Multiplayer()) {
+            Controller.startGame();
+            AI.start("client");
+        }
+            userBoard.print();
+            enemyBoard.print();
+            frame.pack();
 
 		/*
 		JMenuBar menuBar = new JMenuBar();

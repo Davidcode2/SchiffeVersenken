@@ -37,9 +37,47 @@ public class Controller {
                 handleShotSP(x,y);
             }
         }
+    }
 
+    public static void handleShotMP(int x, int y){
+        Connection.sendMessage(x,y);
+        String message = Connection.getMessage();
+        if (message.contains("answer")) {
+            int shipState = Integer.parseInt(message.split(" ")[1]);
+            if (shipState == 1 || shipState == 2) {
+                GUI.colorButtons("server", x,y,"grey");
+            }
+            else {
+                GUI.colorButtons("server", x,y,"#3250FF");
+            }
+        }
+//        if (Connection.getTurn){
+//            Connection.getMessage();
+//
+//        } else if (serverTurn){
+//            GUI.enemyBoard.shot(x,y);
+//            if (GUI.enemyBoard.getFieldArray()[x][y].isMiss()){
+//                switchTurn();
+//                handleShotMP(x,y);
+//            }
+//        }
+    }
 
+    public static void inboundShotMP() {
+        String message = Connection.getMessage();
+        if (message.contains("shot")) {
+            int x = Integer.parseInt(message.split(" ")[1]);
+            int y = Integer.parseInt(message.split(" ")[2]);
+            GUI.userBoard.shot(x,y);
+            if (GUI.userBoard.getFieldArray()[x][y].isHit()) {
+                if (GUI.userBoard.getFieldArray()[x][y].isSunk()) {
+                    Connection.sendMessage(String.format("answer %s", 2));
+                } else {
+                    Connection.sendMessage(String.format("answer %s", 1));
+                }
+            }
 
+        }
     }
 
     public static void switchTurn() {
