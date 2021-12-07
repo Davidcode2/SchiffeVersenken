@@ -62,8 +62,10 @@ public class Board {
             }
 
         } else {
-            System.out.println("reset amounts");
-            Ship.calcAmount(fieldArray.length);
+            // TODO: display banner saying:
+            System.out.println("all Ships have been placed.");
+//            System.out.println("reset amounts");
+//            Ship.calcAmount(fieldArray.length);
         }
     }
 

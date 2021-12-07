@@ -16,7 +16,6 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         this.port = port;
     }
 
-    //        System.out.println(String.format("connection data %s %s", ip, port));
     @Override
     public Socket doInBackground() {
         try {
@@ -57,8 +56,6 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
             // wait
         }
         // possibly problematic: gui call from within background thread
-        // TODO:
-        // issue: gui doesn't know how many ships it can set (all 0), works on click "schiffe neu setzen"
         Connection.setServer(false);
         System.out.println(String.format("connection data %s %s", ip, port));
         Connection.sendMessage("done");
