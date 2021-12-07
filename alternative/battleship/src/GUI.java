@@ -333,6 +333,7 @@ public class GUI {
 
     private void schiffeplatzieren() {
         //TODO: Fenstergröße anfangs einstellen
+        //TODO: Anzeige Label
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
@@ -400,6 +401,7 @@ public class GUI {
 
     private void spiel() {
         //TODO: Fenstergröße anfangs einstellen
+        //TODO: Winning/Losing Screen connecten (HitAmount)
         /*if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
         }

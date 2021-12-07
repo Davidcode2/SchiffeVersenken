@@ -1,5 +1,6 @@
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class AI {
 
@@ -12,6 +13,8 @@ public class AI {
 
     public static void start(String status) {
         Ship.calcAmount(GUI.enemyBoard.getSize());
+        int temp = 0;
+
         if(status == "client"){
             //TODO: Endlosschleife abfangen, falls kein Platz mehr für Schiffe
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
@@ -38,7 +41,7 @@ public class AI {
         }
     }
 
-    public static void shot(){
+    public static void shot() {
         int var = (int) (Math.random() * 3) + 2;
         //TODO: KI-Delay
         //Thread.sleep(var*1000);
