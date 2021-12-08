@@ -358,7 +358,7 @@ public class GUI {
 
         JButton restart = new JButton("Schiffe neu setzen");
         restart.addActionListener((e) -> {
-            //TODO: fix this
+        	userBoard = new Board(userBoard.getSize(), "server");
             Ship.calcAmount(userBoard.getSize());
             frame.dispose();
             new GUI(6);
