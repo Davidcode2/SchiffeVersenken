@@ -344,6 +344,7 @@ public class GUI {
             if (Connection.Multiplayer()) {
                 // wenn bereit, sende 'ready'
                 Connection.sendMessage("ready");
+                // TODO: warten bis Spielpartner bereit
             }
 
             if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2]+ Ship.getAmounts()[3] == 0){
@@ -479,8 +480,7 @@ public class GUI {
                     int x = Integer.parseInt(s[0]);
                     int y = Integer.parseInt(s[1]);
                     if (Connection.Multiplayer()) {
-//                        Controller.inboundShotMP();
-                        Controller.handleShotMP(x,y);
+                        Connection.sendMessage(x,y);
                     } else {
                         Controller.handleShotSP(x, y);
                     }

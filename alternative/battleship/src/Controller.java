@@ -40,20 +40,6 @@ public class Controller {
         }
     }
 
-    public static void handleShotMP(int x, int y){
-        Connection.sendMessage(x,y);
-//        String message = Connection.getMessage();
-//        if (message.contains("answer")) {
-//            int shipState = Integer.parseInt(message.split(" ")[1]);
-//            if (shipState == 1 || shipState == 2) {
-//                GUI.colorButtons("client", x, y, "Grey");
-//            } else {
-//                GUI.colorButtons("client", x, y, "DarkBlue");
-//                Connection.sendMessage("pass");
-//            }
-//        }
-    }
-
     static class inboundMessageLoop extends SwingWorker<Object, Object> {
         @Override
         protected Object doInBackground() throws Exception {
@@ -61,9 +47,7 @@ public class Controller {
                 @Override
                 public void run() {
                     String message = Connection.getMessage();
-                    System.out.println("in loop");
                     if (message.contains("answer")) {
-                        System.out.println("we're in the loop and have encountered an answer");
                         int shipState = Integer.parseInt(message.split(" ")[1]);
                         if (shipState == 1 || shipState == 2) {
                             GUI.colorButtons("client", 0, 0, "Grey");
@@ -73,7 +57,6 @@ public class Controller {
                         }
                     }
                     if (message.contains("shot")) {
-                        System.out.println("we're in the loop and have encountered an shot");
                         int x = Integer.parseInt(message.split(" ")[1]);
                         int y = Integer.parseInt(message.split(" ")[2]);
                         GUI.userBoard.shot(x, y);
@@ -90,24 +73,6 @@ public class Controller {
                 }
             }, 0, 1000);
             return null;
-        }
-    }
-
-    public static void inboundShotMP() {
-        String message = Connection.getMessage();
-        if (message.contains("shot")) {
-            int x = Integer.parseInt(message.split(" ")[1]);
-            int y = Integer.parseInt(message.split(" ")[2]);
-            GUI.userBoard.shot(x,y);
-            if (GUI.userBoard.getFieldArray()[x][y].isHit()) {
-                if (GUI.userBoard.getFieldArray()[x][y].isSunk()) {
-                    Connection.sendMessage(String.format("answer %s", 2));
-                } else {
-                    Connection.sendMessage(String.format("answer %s", 1));
-                }
-            } else {
-                Connection.sendMessage(String.format("answer %s", 0));
-            }
         }
     }
 
