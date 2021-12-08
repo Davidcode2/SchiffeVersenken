@@ -488,7 +488,6 @@ public class GUI {
                     } else {
                         Controller.handleShotSP(x, y);
                     }
-<<<<<<< HEAD
                     if(hitCounter==0){
                         frame.dispose();
                         new GUI(8);
@@ -499,12 +498,6 @@ public class GUI {
                         new GUI(9);
                         return;
                     }
-=======
-//                    if (Controller.checkWin()){   // für saubere Ausgabe auskommentiert
-//                        frame.dispose();
-//                        new GUI(8);
-//                    }
->>>>>>> refs/remotes/origin/main
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }

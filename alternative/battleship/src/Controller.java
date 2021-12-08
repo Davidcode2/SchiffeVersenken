@@ -1,10 +1,4 @@
 import javax.swing.*;
-<<<<<<< HEAD
-=======
-import java.awt.*;
-import java.util.TimerTask;
->>>>>>> refs/remotes/origin/main
-
 public class Controller {
 
     public static boolean clientTurn;
