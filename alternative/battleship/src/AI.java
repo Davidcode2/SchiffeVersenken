@@ -50,6 +50,7 @@ public class AI {
         if (!GUI.userBoard.getFieldArray()[x][y].isHit() && !GUI.userBoard.getFieldArray()[x][y].isMiss()){
             GUI.userBoard.shot(x,y);
             if(GUI.userBoard.getFieldArray()[x][y].isHit()){
+            	GUI.enemyHitCounter--;
                 shot();
             } else {
                 Controller.switchTurn();

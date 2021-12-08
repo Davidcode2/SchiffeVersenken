@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class Controller {
 
@@ -19,6 +18,7 @@ public class Controller {
             System.out.println("client beginnt");
             clientTurn = true;
             serverTurn = false;
+            AI.shot();
         } else {
             System.out.println("server beginnt");
             clientTurn = false;
@@ -32,6 +32,9 @@ public class Controller {
 
         } else if (serverTurn){
             GUI.enemyBoard.shot(x,y);
+            if(GUI.enemyBoard.getFieldArray()[x][y].isHit()) {
+            	GUI.hitCounter--;
+            }
             if (GUI.enemyBoard.getFieldArray()[x][y].isMiss()){
                 switchTurn();
                 handleShotSP(x,y);

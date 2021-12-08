@@ -11,6 +11,8 @@ public class GUI {
     public static JButton[][] buttonsUser;
     public static JButton[][] buttonsEnemy;
     private static int port;
+    public static int hitCounter;
+    public static int enemyHitCounter;
 
     public GUI(int window){
 
@@ -441,13 +443,15 @@ public class GUI {
     }
 
     private void spiel() {
-    	frame.setMinimumSize(new Dimension(1440, 810));
-        //TODO: Winning/Losing Screen connecten (HitAmount)
+    	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
         }
-
-
+        
+        Ship.calcAmount(userBoard.getSize());
+        hitCounter = 5*Ship.getAmounts()[3]+4*Ship.getAmounts()[2]+3*Ship.getAmounts()[1]+2*Ship.getAmounts()[0];
+        enemyHitCounter=hitCounter;
+        
 		/*
 		JMenuBar menuBar = new JMenuBar();
  		frame.setJMenuBar(menuBar);
@@ -483,9 +487,15 @@ public class GUI {
                     } else {
                         Controller.handleShotSP(x, y);
                     }
-                    if (Controller.checkWin()){
+                    if(hitCounter==0){
                         frame.dispose();
                         new GUI(8);
+                        return;
+                    }
+                    if(enemyHitCounter==0){
+                    	frame.dispose();
+                        new GUI(9);
+                        return;
                     }
                 });
                 panelleft.add(buttonsEnemy[i][j]);
