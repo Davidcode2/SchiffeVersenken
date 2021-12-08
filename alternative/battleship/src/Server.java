@@ -61,7 +61,6 @@ public class Server {
 //		 Abbruch bei EOF vom Socket bzw. bei EOF oder Leerzeile vom Benutzer.
 			while (true) {
 				// outgoing messages
-				System.out.print(">>> ");
 				connection.getUsr().write(String.format("%s%n", connection.getOut()));
 
 				// incoming messages

@@ -346,6 +346,7 @@ public class GUI {
             if (Connection.Multiplayer()) {
                 // wenn bereit, sende 'ready'
                 Connection.sendMessage("ready");
+                // TODO: warten bis Spielpartner bereit
             }
 
             if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2]+ Ship.getAmounts()[3] == 0){
@@ -446,6 +447,7 @@ public class GUI {
     	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
+            (new Controller.inboundMessageLoop()).execute();
         }
         
         Ship.calcAmount(userBoard.getSize());
@@ -482,11 +484,11 @@ public class GUI {
                     int x = Integer.parseInt(s[0]);
                     int y = Integer.parseInt(s[1]);
                     if (Connection.Multiplayer()) {
-                        Controller.handleShotMP(x,y);
-                        Controller.inboundShotMP();
+                        Connection.sendMessage(x,y);
                     } else {
                         Controller.handleShotSP(x, y);
                     }
+<<<<<<< HEAD
                     if(hitCounter==0){
                         frame.dispose();
                         new GUI(8);
@@ -497,6 +499,12 @@ public class GUI {
                         new GUI(9);
                         return;
                     }
+=======
+//                    if (Controller.checkWin()){   // für saubere Ausgabe auskommentiert
+//                        frame.dispose();
+//                        new GUI(8);
+//                    }
+>>>>>>> refs/remotes/origin/main
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }
@@ -573,6 +581,8 @@ public class GUI {
                 buttonsUser[x][y].setBackground(new Color(102, 255, 102));
             } else if (color == "Blue") {
                 buttonsUser[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "DarkBlue") {
+                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
             } else if (color == "Red") {
                 buttonsUser[x][y].setBackground(new Color(255, 102, 102));
             } else if (color == "Grey") {
@@ -585,6 +595,8 @@ public class GUI {
                 buttonsEnemy[x][y].setBackground(new Color(102, 255, 102));
             } else if (color == "Blue") {
                 buttonsEnemy[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "DarkBlue") {
+                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
             } else if (color == "Red") {
                 buttonsEnemy[x][y].setBackground(new Color(255, 102, 102));
             } else if (color == "Grey") {
