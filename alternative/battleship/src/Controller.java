@@ -54,7 +54,7 @@ public class Controller {
                         if (shipState == 1 || shipState == 2) {
                             GUI.colorButtons("client", shot[0],shot[1], "Grey");
                         } else {
-                            GUI.colorButtons("client", shot[0], shot[1], "DarkBlue");
+                            GUI.colorButtons("client", shot[0],shot[1], "Red");
                             Connection.sendMessage("pass");
                         }
                     }

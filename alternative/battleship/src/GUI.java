@@ -578,6 +578,8 @@ public class GUI {
                 buttonsEnemy[x][y].setBackground(new Color(102, 255, 102));
             } else if (color == "Blue") {
                 buttonsEnemy[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "DarkBlue") {
+                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
             } else if (color == "Red") {
                 buttonsEnemy[x][y].setBackground(new Color(255, 102, 102));
             } else if (color == "Grey") {
