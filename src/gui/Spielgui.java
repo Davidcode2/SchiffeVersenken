@@ -483,7 +483,6 @@ public class Spielgui {
 				panelLeft.add(field[i][j]);
 			}
 		}
-		//frame.pack();
 	}
 
 	private void spiel() {

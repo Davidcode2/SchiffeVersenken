@@ -1,5 +1,4 @@
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -98,14 +97,13 @@ public class GUI {
 
     private void einzelspieler() {
 
-        JLabel label = new JLabel("Schiffe versenken");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
         frame.getContentPane().add(Box.createGlue());
-
+        
+        JLabel label = new JLabel("Schiffe versenken");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         frame.getContentPane().add(label);
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -337,9 +335,7 @@ public class GUI {
     }
 
     private void schiffeplatzieren() {
-        //TODO: Fenstergröße anfangs einstellen
-        //TODO: Anzeige Label
-        JMenuBar menuBar = new JMenuBar();
+    	JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
         JButton beginnen = new JButton("Spiel beginnen");
@@ -369,15 +365,54 @@ public class GUI {
 
         });
         menuBar.add(restart);
+        
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setResizeWeight(0.75);
+		frame.getContentPane().add(splitPane);
+		
+		JPanel panelRight = new JPanel();
+		splitPane.setRightComponent(panelRight);
+		panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
+		
+		panelRight.add(Box.createVerticalStrut(50));
+		panelRight.add(Box.createGlue());
+		
+		JLabel infoLeft = new JLabel(" Linksklick platziert das Schiff vertikal ");
+		infoLeft.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(infoLeft);
+		
+		JLabel infoRight = new JLabel(" Rechtsklick platziert das Schiff horizontal ");
+		infoRight.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(infoRight);
+		
+		JLabel ships5x = new JLabel("	"+Ship.getAmounts()[3]+" 5er Schiffe");
+		ships5x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships5x);
+		
+		JLabel ships4x = new JLabel("	"+Ship.getAmounts()[2]+" 4er Schiffe");
+		ships4x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships4x);
+		
+		JLabel ships3x = new JLabel("	"+Ship.getAmounts()[1]+" 3er Schiffe");
+		ships3x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships3x);
+		
+		JLabel ships2x = new JLabel("	"+Ship.getAmounts()[0]+" 2er Schiffe");
+		ships2x.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelRight.add(ships2x);
+		
+		panelRight.add(Box.createGlue());
+		panelRight.add(Box.createVerticalStrut(50));
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
+		JPanel panelLeft = new JPanel();
+		splitPane.setLeftComponent(panelLeft);
+        panelLeft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
 
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
 
         for (int i = 0; i < userBoard.getSize(); i++) {
             for(int j = 0; j < userBoard.getSize(); j++) {
-
 
                 buttonsUser[i][j] = new JButton("");
                 buttonsUser[i][j].setName(i+" "+j);
@@ -394,18 +429,19 @@ public class GUI {
                         else {
                             userBoard.place(x,y,"vertical");
                         }
-
+                        ships5x.setText("	"+Ship.getAmounts()[3]+" 5er Schiffe");
+			        	ships4x.setText("	"+Ship.getAmounts()[2]+" 4er Schiffe");
+			        	ships3x.setText("	"+Ship.getAmounts()[1]+" 3er Schiffe");
+			        	ships2x.setText("	"+Ship.getAmounts()[0]+" 2er Schiffe");
                     }
                 });
-                panel.add(buttonsUser[i][j]);
+                panelLeft.add(buttonsUser[i][j]);
             }
         }
-        frame.getContentPane().add(panel);
-        frame.pack();
     }
 
     private void spiel() {
-        //TODO: Fenstergröße anfangs einstellen
+    	frame.setMinimumSize(new Dimension(1440, 810));
         //TODO: Winning/Losing Screen connecten (HitAmount)
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
@@ -470,11 +506,15 @@ public class GUI {
         }
         if (!Connection.Multiplayer()) {
             Controller.startGame();
-            AI.start("client");
+            boolean wert = false;
+            while(!wert) {
+            	enemyBoard = new Board(userBoard.getSize(), "client");
+            	wert = AI.start("client");
+            }
         }
-            userBoard.print();
-            enemyBoard.print();
-            frame.pack();
+        userBoard.print();
+        enemyBoard.print();
+        frame.pack();
 
 		/*
 		JMenuBar menuBar = new JMenuBar();
