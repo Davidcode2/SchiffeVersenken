@@ -1,23 +1,18 @@
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
 public class AI {
 
     private static int x;
     private static int y;
     private static String direction;
-    static Timer timer = new Timer();
 
-
-
-    public static void start(String status) {
+    public static boolean start(String status) {
         Ship.calcAmount(GUI.enemyBoard.getSize());
-        int temp = 0;
-
+        int timer = 0;
         if(status == "client"){
-            //TODO: Endlosschleife abfangen, falls kein Platz mehr für Schiffe
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
+            	timer++;
+				if(timer>1500) {
+					return false;
+				}
                 x = (int) (Math.random() * GUI.buttonsEnemy.length);
                 y = (int) (Math.random() * GUI.buttonsEnemy.length);
                 if (Math.random() < 0.5){
@@ -29,6 +24,10 @@ public class AI {
             }
         } else if (status == "server"){
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
+            	timer++;
+				if(timer>1500) {
+					return false;
+				}
                 x = (int) (Math.random() * GUI.buttonsUser.length);
                 y = (int) (Math.random() * GUI.buttonsUser.length);
                 if (Math.random() < 0.5){
@@ -39,10 +38,10 @@ public class AI {
                 GUI.userBoard.place(x, y, direction);
             }
         }
+        return true;
     }
 
     public static void shot() {
-        int var = (int) (Math.random() * 3) + 2;
         //TODO: KI-Delay
         //Thread.sleep(var*1000);
         x = (int) (Math.random() * GUI.buttonsUser.length);
