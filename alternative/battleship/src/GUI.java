@@ -447,7 +447,7 @@ public class GUI {
     	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
-            (new Controller.inboundMessageLoop()).execute();
+            (new Connection.inboundMessageLoop()).execute();
         }
         
         Ship.calcAmount(userBoard.getSize());

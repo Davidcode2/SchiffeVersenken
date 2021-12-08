@@ -47,44 +47,6 @@ public class Controller {
         }
     }
 
-    static class inboundMessageLoop extends SwingWorker<Object, Object> {
-        @Override
-        protected Object doInBackground() throws Exception {
-            new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    String message = Connection.getMessage();
-                    boolean readStack = false;
-                    if (message.contains("answer")) {
-                        int[] shot = Connection.peekShot();
-                        int shipState = Integer.parseInt(message.split(" ")[1]);
-                        if (shipState == 1 || shipState == 2) {
-                            GUI.colorButtons("client", shot[0],shot[1], "Grey");
-                        } else {
-                            GUI.colorButtons("client", shot[0],shot[1], "Red");
-                            Connection.sendMessage("pass");
-                        }
-                    }
-                    if (message.contains("shot")) {
-                        int x = Integer.parseInt(message.split(" ")[1]);
-                        int y = Integer.parseInt(message.split(" ")[2]);
-                        GUI.userBoard.shot(x, y);
-                        if (GUI.userBoard.getFieldArray()[x][y].isHit()) {
-                            if (GUI.userBoard.getFieldArray()[x][y].isSunk()) {
-                                Connection.sendMessage(String.format("answer %s", 2));
-                            } else {
-                                Connection.sendMessage(String.format("answer %s", 1));
-                            }
-                        } else {
-                            Connection.sendMessage(String.format("answer %s", 0));
-                        }
-                    }
-                }
-            }, 0, 1000);
-            return null;
-        }
-    }
-
     public static void switchTurn() {
         clientTurn = !clientTurn;
         serverTurn = !serverTurn;
