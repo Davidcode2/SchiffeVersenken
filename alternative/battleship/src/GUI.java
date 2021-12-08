@@ -446,7 +446,7 @@ public class GUI {
         //TODO: Winning/Losing Screen connecten (HitAmount)
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
-            (new Controller.inboundMessageLoop()).execute();
+            (new Connection.inboundMessageLoop()).execute();
         }
 
 
