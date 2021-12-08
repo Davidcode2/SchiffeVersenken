@@ -72,7 +72,6 @@ public class Client {
 				System.out.println("<<< " + connection.getMessage());
 
 				// outgoing messages
-				System.out.print(">>> ");
 				connection.getUsr().write(String.format("%s%n", connection.getOut()));
 			}
 		} catch (IOException e) {

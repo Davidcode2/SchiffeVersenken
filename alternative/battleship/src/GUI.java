@@ -409,6 +409,7 @@ public class GUI {
         //TODO: Winning/Losing Screen connecten (HitAmount)
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
+            (new Controller.inboundMessageLoop()).execute();
         }
 
 
@@ -442,15 +443,15 @@ public class GUI {
                     int x = Integer.parseInt(s[0]);
                     int y = Integer.parseInt(s[1]);
                     if (Connection.Multiplayer()) {
+//                        Controller.inboundShotMP();
                         Controller.handleShotMP(x,y);
-                        Controller.inboundShotMP();
                     } else {
                         Controller.handleShotSP(x, y);
                     }
-                    if (Controller.checkWin()){
-                        frame.dispose();
-                        new GUI(8);
-                    }
+//                    if (Controller.checkWin()){   // für saubere Ausgabe auskommentiert
+//                        frame.dispose();
+//                        new GUI(8);
+//                    }
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }
@@ -523,6 +524,8 @@ public class GUI {
                 buttonsUser[x][y].setBackground(new Color(102, 255, 102));
             } else if (color == "Blue") {
                 buttonsUser[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "DarkBlue") {
+                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
             } else if (color == "Red") {
                 buttonsUser[x][y].setBackground(new Color(255, 102, 102));
             } else if (color == "Grey") {

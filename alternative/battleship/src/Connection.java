@@ -14,6 +14,7 @@ public class Connection {
     private static boolean isServer;
     private static String message;
     private static boolean turn = true;
+    private static int readyCounter = 0;
 
     private static boolean Multiplayer = false;
 
@@ -71,7 +72,7 @@ public class Connection {
     public static void sendMessage(int x, int y) {
         if (isServer()) {
             try {
-                if (Server.getConnection().getTurn() || message.equals("ready")) {
+                if (Server.getConnection().getTurn()) {
                     Server.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
                     Server.getConnection().getOut().flush();
                     Server.getConnection().setTurn(false);
@@ -84,7 +85,7 @@ public class Connection {
             }
         } else {
             try {
-                if (Client.getConnection().getTurn() || message.equals("ready")) {
+                if (Client.getConnection().getTurn()) {
                     Client.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
                     Client.getConnection().getOut().flush();
                     Client.getConnection().setTurn(false);
@@ -101,9 +102,13 @@ public class Connection {
         // if turn == true -> Server
         if (isServer()) {
             try {
-                if (Server.getConnection().getTurn() || message.equals("ready")) {
+                if (Server.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                    if (message.equals("ready")) {
+                        readyCounter = 1;
+                    }
                     Server.getConnection().getOut().write(String.format("%s%n", message));
                     Server.getConnection().getOut().flush();
+                    System.out.println("outgoing>> " + message);
                     Server.getConnection().setTurn(false);
                 } else {
                     System.out.println("wait for other players turn");
@@ -114,9 +119,13 @@ public class Connection {
             }
         } else {
             try {
-                if (Client.getConnection().getTurn() || message.equals("ready")) {
+                if (Client.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                    if (message.equals("ready")) {
+                        readyCounter = 1;
+                    }
                     Client.getConnection().getOut().write(String.format("%s%n", message));
                     Client.getConnection().getOut().flush();
+                    System.out.println("outgoing>> " + message);
                     Client.getConnection().setTurn(false);
                 } else {
                     System.out.println("wait for other players turn");

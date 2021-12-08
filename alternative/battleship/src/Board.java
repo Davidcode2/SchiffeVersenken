@@ -157,7 +157,7 @@ public class Board {
 
     private boolean checkSunk(int x, int y, Ship ship) {
         //TODO: fix
-        System.out.println(ship.getSize());
+//        System.out.println(ship.getSize()); // auskommentiert für saubere Ausgabe
         if (ship.getSize() == 1){
             return true;
         } else {
