@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.Stack;
 
 public class Connection {
 
@@ -53,6 +54,29 @@ public class Connection {
     public static BufferedWriter getUsr() {
         return usr;
     }
+    private static Stack shotLog = new Stack();
+    public static void pushShot(int x, int y) {
+        int[] xy = new int[2];
+        xy[0] = x;
+        xy[1] = y;
+        shotLog.push(xy);
+    }
+    public static int[] popShot() {
+        if (shotLog.empty()) {
+            return null;
+        }
+        int[] shot = (int[]) shotLog.pop();
+        System.out.println(shot);
+        System.out.println(shot.toString());
+        return shot;
+    }
+    public static int[] peekShot() {
+        if (shotLog.empty()) {
+            return null;
+        }
+        int[] shot = (int[]) shotLog.peek();
+        return shot;
+    }
 
     public static String getMessage() {
         return message;
@@ -75,6 +99,7 @@ public class Connection {
                 if (Server.getConnection().getTurn()) {
                     Server.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
                     Server.getConnection().getOut().flush();
+                    pushShot(x,y);
                     Server.getConnection().setTurn(false);
                 } else {
                     System.out.println("wait for other players turn");
@@ -88,6 +113,7 @@ public class Connection {
                 if (Client.getConnection().getTurn()) {
                     Client.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
                     Client.getConnection().getOut().flush();
+                    pushShot(x,y);
                     Client.getConnection().setTurn(false);
                 } else {
                     System.out.println("wait for other players turn");

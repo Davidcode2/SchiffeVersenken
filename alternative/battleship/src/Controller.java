@@ -47,12 +47,14 @@ public class Controller {
                 @Override
                 public void run() {
                     String message = Connection.getMessage();
+                    boolean readStack = false;
                     if (message.contains("answer")) {
+                        int[] shot = Connection.peekShot();
                         int shipState = Integer.parseInt(message.split(" ")[1]);
                         if (shipState == 1 || shipState == 2) {
-                            GUI.colorButtons("client", 0, 0, "Grey");
+                            GUI.colorButtons("client", shot[0],shot[1], "Grey");
                         } else {
-                            GUI.colorButtons("client", 0, 0, "DarkBlue");
+                            GUI.colorButtons("client", shot[0], shot[1], "DarkBlue");
                             Connection.sendMessage("pass");
                         }
                     }
