@@ -174,8 +174,19 @@ public class GUI {
                 new GUI(2);
             }
         });
+
+        JButton button2 = new JButton("Zurück");
+        button2.setFocusable(false);
+        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button2.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(1);
+        });
+
+
         panel.add(start);
         frame.getContentPane().add(panel);
+        frame.getContentPane().add(button2);
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
@@ -202,6 +213,14 @@ public class GUI {
             new GUI(5);
         });
 
+        JButton buttonBack = new JButton("Zurück");
+        buttonBack.setFocusable(false);
+        buttonBack.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonBack.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(1);
+        });
+
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -212,6 +231,8 @@ public class GUI {
         frame.getContentPane().add(button1);
 
         frame.getContentPane().add(button2);
+
+        frame.getContentPane().add(buttonBack);
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -286,7 +307,18 @@ public class GUI {
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld2.setColumns(10);
         panel.add(textfeld2);
+
+        JButton button2 = new JButton("Zurück");
+        button2.setFocusable(false);
+        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button2.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(3);
+        });
+
         frame.getContentPane().add(panel);
+
+        frame.getContentPane().add(button2);
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -360,10 +392,20 @@ public class GUI {
         // TODO:
         // on submit
 
+        JButton button2 = new JButton("Zurück");
+        button2.setFocusable(false);
+        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button2.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(3);
+        });
+
         promptIP.setHorizontalAlignment(SwingConstants.CENTER);
         promptIP.setColumns(10);
         panel.add(promptIP);
         frame.getContentPane().add(panel);
+
+        frame.getContentPane().add(button2);
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -447,7 +489,16 @@ public class GUI {
 
         });
         menuBar.add(restart);
-        
+
+        JButton backButton = new JButton("Zurück");
+        backButton.setFocusable(false);
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(2);
+        });
+        menuBar.add(backButton);
+
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.75);
