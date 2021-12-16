@@ -244,6 +244,8 @@ public class GUI {
                 Ship.calcAmount(fieldsize);
                 frame.dispose();
                 (new ServerConnectionService(fieldsize, port)).execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(true);
                 new GUI(6);
             }
             else {
@@ -306,20 +308,23 @@ public class GUI {
         panel = new JPanel();
         JTextField promptIP = new JTextField();
         promptIP.addActionListener((e) -> {
-            try{
+            boolean disposeFlag = true;
+            try {
                 String ip = promptIP.getText();
                 userBoard = new Board(0, "server");
-                (new ClientConnectionService(userBoard, ip, port)).execute();
+                ClientConnectionService ccService = new ClientConnectionService(userBoard, ip, port);
+                ccService.execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(false);
                 frame.dispose();
-            }catch(NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 frame.dispose();
                 new GUI(5);
             }
-//            if (Connection.getIn() == null) {
-                // TODO: create "Waiting for Server" Screen
-                // TODO: continue waiting for server, if it isn't started
-
-//            }
+//                }
+//                JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
+        // TODO: create "Waiting for Server" Screen
+        // TODO: continue waiting for server, if it isn't started
         });
 
         // TODO:
@@ -336,6 +341,10 @@ public class GUI {
 
     }
 
+    public void showAlert(String alert) {
+        JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
+    }
+
     private void schiffeplatzieren() {
     	JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
@@ -343,18 +352,37 @@ public class GUI {
         JButton beginnen = new JButton("Spiel beginnen");
         beginnen.addActionListener((e) -> {
 
-            if (Connection.Multiplayer()) {
-                // wenn bereit, sende 'ready'
-                Connection.sendMessage("ready");
-                // TODO: warten bis Spielpartner bereit
+            // prüfe ob multiplayer und ob Teilnehmer verbunden
+            if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
+                if (Connection.Multiplayer()) {
+                    if (Connection.isServer()) {
+                        // TODO: warten bis Spielpartner bereit
+                        try {
+                            if (Connection.getMessage().equals("done") || Connection.getMessage().equals("ready")) {
+                                // wenn bereit, sende 'ready'
+                                Connection.sendMessage("ready");
+                                frame.dispose();
+                                new GUI(7);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Warte auf Mitspieler.");
+                            }
+                        } catch (NullPointerException er) {
+                            JOptionPane.showMessageDialog(null, "Warte auf Mitspieler.");
+                        }
+                    } else if (Connection.isServer() == false) {
+                        Connection.sendMessage("ready");
+                        if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
+                            frame.dispose();
+                            new GUI(7);
+                        }
+                    }
+                } else {
+                    frame.dispose();
+                    new GUI(7);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Noch nicht alle Schiffe gesetzt.");
             }
-
-            if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2]+ Ship.getAmounts()[3] == 0){
-                frame.dispose();
-                new GUI(7);
-            }
-
-
         });
 
         menuBar.add(beginnen);

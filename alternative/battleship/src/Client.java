@@ -10,6 +10,10 @@ public class Client {
 	public static Connection getConnection() {
 		return connection;
 	}
+	private static boolean clientConnected = false;
+	public static boolean getClientConnected() {
+		return clientConnected;
+	}
 
 	public boolean getClientLoopReady() {
 		return clientLoopReady;
@@ -25,11 +29,11 @@ public class Client {
 	// Verwendete Portnummer (vgl. Server).
 	public Socket startConnection(String ip, int port) throws IOException {
 
-//		try {
-		// Verbindung zum Server mit Name oder IP-Adresse args[0]
-		// über Portnummer port herstellen.
+		InetSocketAddress inSocket = new InetSocketAddress(ip, port);
 		// Als Resultat erhält man ein Socket.
-		Socket s = new Socket(ip, port);
+		Socket s = new Socket();
+		s.connect(inSocket, 10000);
+		clientConnected = true;
 		System.out.println(String.format("is Server: %s", connection.isServer()));
 		System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
 		System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));

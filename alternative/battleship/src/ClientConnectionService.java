@@ -47,16 +47,15 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         (new StartClientCommunicationService()).execute();
         System.out.print("Client ready to send and receive messages...\n");
         while (!boardSizeReceived) {
+            // wait
             try {
                 int fieldsize = Integer.parseInt(Connection.getMessage());
                 board.setSize(fieldsize);
                 boardSizeReceived = true;
             } catch (Exception ignore) {
             }
-            // wait
         }
         // possibly problematic: gui call from within background thread
-        Connection.setServer(false);
         System.out.println(String.format("connection data %s %s", ip, port));
         Connection.sendMessage("done");
         Ship.calcAmount(board.getSize());
