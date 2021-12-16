@@ -74,14 +74,14 @@ public class GUI {
             frame.dispose();
             new GUI(3);
         });
-		
-		JButton ButtonSpielLaden = new JButton("Spiel laden");
-		ButtonSpielLaden.setFocusable(false);
-		ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
-		ButtonSpielLaden.addActionListener((e) -> {
-			System.out.println("laden");
-		});
-		
+
+        JButton ButtonSpielLaden = new JButton("Spiel laden");
+        ButtonSpielLaden.setFocusable(false);
+        ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ButtonSpielLaden.addActionListener((e) -> {
+            System.out.println("laden");
+        });
+
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -104,36 +104,36 @@ public class GUI {
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
         frame.getContentPane().add(Box.createGlue());
-        
+
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         frame.getContentPane().add(label);
-        
+
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
         label = new JLabel("Welche Schwierigkeit soll der Gegner haben ?");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         frame.getContentPane().add(label);
-        
+
         JButton easy = new JButton("einfacher Gegner");
         JButton hard = new JButton("schwieriger Gegner");
-        
+
         easy.setFocusable(false);
         easy.setAlignmentX(Component.CENTER_ALIGNMENT);
         easy.addActionListener((e) -> {
-        	difficultAi = false;
-        	easy.setEnabled(false);
-        	hard.setEnabled(true);
+            difficultAi = false;
+            easy.setEnabled(false);
+            hard.setEnabled(true);
         });
-        
+
         hard.setFocusable(false);
         hard.setAlignmentX(Component.CENTER_ALIGNMENT);
         hard.addActionListener((e) -> {
-        	difficultAi = true;
-        	easy.setEnabled(true);
-        	hard.setEnabled(false);
+            difficultAi = true;
+            easy.setEnabled(true);
+            hard.setEnabled(false);
         });
-        
+
         frame.getContentPane().add(easy);
         frame.getContentPane().add(hard);
 
@@ -183,13 +183,11 @@ public class GUI {
             new GUI(1);
         });
 
-
         panel.add(start);
         frame.getContentPane().add(panel);
         frame.getContentPane().add(button2);
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
-
     }
 
     private void mehrspieler() {
@@ -236,7 +234,6 @@ public class GUI {
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
-
     }
 
     private void host() {
@@ -326,9 +323,6 @@ public class GUI {
         // TODO:
         // add submit button
         // actions in textfields should only be executed when pressed
-        // TODO:
-        // add back button
-
     }
 
     private void client() {
@@ -383,10 +377,10 @@ public class GUI {
                 frame.dispose();
                 new GUI(5);
             }
-//                }
 //                JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
-        // TODO: create "Waiting for Server" Screen
-        // TODO: continue waiting for server, if it isn't started
+            // TODO: create "Waiting for Server" Screen
+            // continue waiting for server, if it isn't started
+            // tricky
         });
 
         // TODO:
@@ -417,7 +411,7 @@ public class GUI {
         frame.getContentPane().add(Box.createVerticalStrut(50));
         frame.getContentPane().add(Box.createGlue());
 
-    JLabel label = new JLabel("Schiffe versenken");
+        JLabel label = new JLabel("Warte auf Server");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         frame.getContentPane().add(label);
 
@@ -432,7 +426,7 @@ public class GUI {
     }
 
     private void schiffeplatzieren() {
-    	JMenuBar menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
         JButton beginnen = new JButton("Spiel beginnen");
@@ -482,7 +476,7 @@ public class GUI {
 
         JButton restart = new JButton("Schiffe neu setzen");
         restart.addActionListener((e) -> {
-        	userBoard = new Board(userBoard.getSize(), "server");
+            userBoard = new Board(userBoard.getSize(), "server");
             Ship.calcAmount(userBoard.getSize());
             frame.dispose();
             new GUI(6);
@@ -500,46 +494,46 @@ public class GUI {
         menuBar.add(backButton);
 
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.75);
-		frame.getContentPane().add(splitPane);
-		
-		JPanel panelRight = new JPanel();
-		splitPane.setRightComponent(panelRight);
-		panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
-		
-		panelRight.add(Box.createVerticalStrut(50));
-		panelRight.add(Box.createGlue());
-		
-		JLabel infoLeft = new JLabel(" Linksklick platziert das Schiff vertikal ");
-		infoLeft.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelRight.add(infoLeft);
-		
-		JLabel infoRight = new JLabel(" Rechtsklick platziert das Schiff horizontal ");
-		infoRight.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelRight.add(infoRight);
-		
-		JLabel ships5x = new JLabel("	"+Ship.getAmounts()[3]+" 5er Schiffe");
-		ships5x.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelRight.add(ships5x);
-		
-		JLabel ships4x = new JLabel("	"+Ship.getAmounts()[2]+" 4er Schiffe");
-		ships4x.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelRight.add(ships4x);
-		
-		JLabel ships3x = new JLabel("	"+Ship.getAmounts()[1]+" 3er Schiffe");
-		ships3x.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelRight.add(ships3x);
-		
-		JLabel ships2x = new JLabel("	"+Ship.getAmounts()[0]+" 2er Schiffe");
-		ships2x.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelRight.add(ships2x);
-		
-		panelRight.add(Box.createGlue());
-		panelRight.add(Box.createVerticalStrut(50));
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setResizeWeight(0.75);
+        frame.getContentPane().add(splitPane);
 
-		JPanel panelLeft = new JPanel();
-		splitPane.setLeftComponent(panelLeft);
+        JPanel panelRight = new JPanel();
+        splitPane.setRightComponent(panelRight);
+        panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
+
+        panelRight.add(Box.createVerticalStrut(50));
+        panelRight.add(Box.createGlue());
+
+        JLabel infoLeft = new JLabel(" Linksklick platziert das Schiff vertikal ");
+        infoLeft.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelRight.add(infoLeft);
+
+        JLabel infoRight = new JLabel(" Rechtsklick platziert das Schiff horizontal ");
+        infoRight.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelRight.add(infoRight);
+
+        JLabel ships5x = new JLabel("	"+Ship.getAmounts()[3]+" 5er Schiffe");
+        ships5x.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelRight.add(ships5x);
+
+        JLabel ships4x = new JLabel("	"+Ship.getAmounts()[2]+" 4er Schiffe");
+        ships4x.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelRight.add(ships4x);
+
+        JLabel ships3x = new JLabel("	"+Ship.getAmounts()[1]+" 3er Schiffe");
+        ships3x.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelRight.add(ships3x);
+
+        JLabel ships2x = new JLabel("	"+Ship.getAmounts()[0]+" 2er Schiffe");
+        ships2x.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelRight.add(ships2x);
+
+        panelRight.add(Box.createGlue());
+        panelRight.add(Box.createVerticalStrut(50));
+
+        JPanel panelLeft = new JPanel();
+        splitPane.setLeftComponent(panelLeft);
         panelLeft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
 
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
@@ -563,9 +557,9 @@ public class GUI {
                             userBoard.place(x,y,"vertical");
                         }
                         ships5x.setText("	"+Ship.getAmounts()[3]+" 5er Schiffe");
-			        	ships4x.setText("	"+Ship.getAmounts()[2]+" 4er Schiffe");
-			        	ships3x.setText("	"+Ship.getAmounts()[1]+" 3er Schiffe");
-			        	ships2x.setText("	"+Ship.getAmounts()[0]+" 2er Schiffe");
+                        ships4x.setText("	"+Ship.getAmounts()[2]+" 4er Schiffe");
+                        ships3x.setText("	"+Ship.getAmounts()[1]+" 3er Schiffe");
+                        ships2x.setText("	"+Ship.getAmounts()[0]+" 2er Schiffe");
                     }
                 });
                 panelLeft.add(buttonsUser[i][j]);
@@ -574,25 +568,25 @@ public class GUI {
     }
 
     private void spiel() {
-    	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
+        frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
             enemyBoard = new Board(userBoard.getSize(), "client");
             (new Connection.inboundMessageLoop()).execute();
         }
-        
+
         Ship.calcAmount(userBoard.getSize());
         hitCounter = 5*Ship.getAmounts()[3]+4*Ship.getAmounts()[2]+3*Ship.getAmounts()[1]+2*Ship.getAmounts()[0];
         enemyHitCounter=hitCounter;
-        
-		JMenuBar menuBar = new JMenuBar();
- 		frame.setJMenuBar(menuBar);
 
-		JButton speichern = new JButton("Speichern");
-		speichern.addActionListener((e) -> {
-			System.out.println("Speichern");
-		});
-		menuBar.add(speichern);
-		
+        JMenuBar menuBar = new JMenuBar();
+        frame.setJMenuBar(menuBar);
+
+        JButton speichern = new JButton("Speichern");
+        speichern.addActionListener((e) -> {
+            System.out.println("Speichern");
+        });
+        menuBar.add(speichern);
+
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         JSplitPane splitPane = new JSplitPane();
         splitPane.setResizeWeight(0.5);
@@ -625,7 +619,7 @@ public class GUI {
                         return;
                     }
                     if(enemyHitCounter==0){
-                    	frame.dispose();
+                        frame.dispose();
                         new GUI(9);
                         return;
                     }
@@ -633,7 +627,7 @@ public class GUI {
                 panelleft.add(buttonsEnemy[i][j]);
             }
         }
-        
+
         JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
         splitPane.setRightComponent(panelright);
         panelright.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
@@ -650,8 +644,8 @@ public class GUI {
             Controller.startGame();
             boolean wert = false;
             while(!wert) {
-            	enemyBoard = new Board(userBoard.getSize(), "client");
-            	wert = AI.start("client");
+                enemyBoard = new Board(userBoard.getSize(), "client");
+                wert = AI.start("client");
             }
         }
         userBoard.print();
