@@ -12,6 +12,12 @@ public class Field {
         pos[1] = y;
     }
 
+    // TODO: write toString
+    @Override
+    public String toString() {
+        return "" + this.pos[0] + " " + this.pos[1] +  " " + this.isOccupied + " " + this.isShip + " " + this.isWater + " " + this.isHit + " " + this.isMiss + " " + this.isSunk;
+    }
+
     public int[] getPos() {
         return pos;
     }

@@ -2,7 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.*;
 import java.net.SocketException;
+import java.util.Arrays;
 
 public class GUI {
 
@@ -605,8 +607,31 @@ public class GUI {
         JButton speichern = new JButton("Speichern");
         speichern.addActionListener((e) -> {
             System.out.println("Speichern");
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Spiel speichern");
+
+            int userSelection = fileChooser.showSaveDialog(frame);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                System.out.print("save file as: " + fileToSave.getAbsolutePath());
+                PrintWriter pwriter = null;
+                try {
+                    pwriter = new PrintWriter(new FileWriter(fileToSave));
+                    for (int i=0; i<userBoard.getFieldArray().length; i++) {
+                        for (int j = 0; j < userBoard.getFieldArray().length; j++) {
+                            System.out.println(userBoard.getFieldArray()[i][j].toString());
+                            pwriter.println(userBoard.getFieldArray()[i][j].toString());
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    pwriter.close();
+                }
+            }
         });
         menuBar.add(speichern);
+
 
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         JSplitPane splitPane = new JSplitPane();
