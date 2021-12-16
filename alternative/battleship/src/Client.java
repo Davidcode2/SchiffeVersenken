@@ -29,15 +29,15 @@ public class Client {
 	// Verwendete Portnummer (vgl. Server).
 	public Socket startConnection(String ip, int port) throws IOException {
 
-		InetSocketAddress inSocket = new InetSocketAddress(ip, port);
-		// Als Resultat erhält man ein Socket.
-		Socket s = new Socket();
-		s.connect(inSocket, 10000);
-		clientConnected = true;
-		System.out.println(String.format("is Server: %s", connection.isServer()));
-		System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
-		System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
-		return s;
+			InetSocketAddress inSocket = new InetSocketAddress(ip, port);
+			// Als Resultat erhält man ein Socket.
+			Socket s = new Socket();
+			s.connect(inSocket, 10000);
+			clientConnected = true;
+			System.out.println(String.format("is Server: %s", connection.isServer()));
+			System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
+			System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
+			return s;
 	}
 
 	public void createConnection(Socket s) throws IOException {

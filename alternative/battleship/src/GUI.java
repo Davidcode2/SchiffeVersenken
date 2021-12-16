@@ -359,7 +359,6 @@ public class GUI {
 
         // TODO:
         // on submit
-        // frame.dispose();
 
         promptIP.setHorizontalAlignment(SwingConstants.CENTER);
         promptIP.setColumns(10);
@@ -369,6 +368,21 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
+    }
+    private void waitForServer() {
+        frame.setContentPane(Box.createVerticalBox());
+
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+        frame.getContentPane().add(Box.createGlue());
+
+    JLabel label = new JLabel("Schiffe versenken");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        frame.getContentPane().add(label);
+
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+
+        frame.getContentPane().add(Box.createGlue());
+        frame.getContentPane().add(Box.createVerticalStrut(50));
     }
 
     public void showAlert(String alert) {
@@ -382,11 +396,10 @@ public class GUI {
         JButton beginnen = new JButton("Spiel beginnen");
         beginnen.addActionListener((e) -> {
 
-            // prüfe ob multiplayer und ob Teilnehmer verbunden
+            // prüfe ob alle Schiffe gesetzt
             if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
                 if (Connection.Multiplayer()) {
                     if (Connection.isServer()) {
-                        // TODO: warten bis Spielpartner bereit
                         try {
                             if (Connection.getMessage().equals("done") || Connection.getMessage().equals("ready")) {
                                 // wenn bereit, sende 'ready'
@@ -416,7 +429,6 @@ public class GUI {
                     if (Connection.Multiplayer()) {
                         // wenn bereit, sende 'ready'
                         Connection.sendMessage("ready");
-                        // TODO: warten bis Spielpartner bereit
                     }
                     frame.dispose();
                     new GUI(7);

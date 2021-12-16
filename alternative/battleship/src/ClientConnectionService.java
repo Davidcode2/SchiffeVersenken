@@ -20,11 +20,6 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
     public Socket doInBackground() {
         try {
             socketS = client.startConnection(ip, port);
-            try {
-                client.createConnection(socketS);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -36,6 +31,11 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
             socketS = get();
         } catch (Exception ignore) {
             System.out.println("error starting communication loop");
+        }
+        try {
+            client.createConnection(socketS);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         class StartClientCommunicationService extends SwingWorker<String, Object> {
             @Override
