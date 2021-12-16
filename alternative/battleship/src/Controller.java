@@ -13,22 +13,26 @@ public class Controller {
     }
 
     public static void startGame() {
+    	/*
         if (Math.random() < 0.5){
             System.out.println("client beginnt");
             clientTurn = true;
             serverTurn = false;
             AI.shot();
         } else {
-            System.out.println("server beginnt");
-            clientTurn = false;
-            serverTurn = true;
-        }
+        */
+        System.out.println("server beginnt");
+        clientTurn = false;
+        serverTurn = true;
     }
 
     public static void handleShotSP(int x, int y){
         if (clientTurn){
-            AI.shot();
-
+            if(GUI.difficultAi) {
+            	AI.shotHard();
+            }else {
+            	AI.shot();
+            }
         } else if (serverTurn){
             GUI.enemyBoard.shot(x,y);
             if(GUI.enemyBoard.getFieldArray()[x][y].isHit()) {
@@ -45,7 +49,7 @@ public class Controller {
         clientTurn = !clientTurn;
         serverTurn = !serverTurn;
     }
-
+    /*
     public static boolean checkWin() {
         int tempUser = 0;
         int tempEnemy = 0;
@@ -65,4 +69,5 @@ public class Controller {
             return false;
         }
     }
+    */
 }

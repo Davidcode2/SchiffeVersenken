@@ -10,7 +10,7 @@ public class AI {
         if(status == "client"){
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
             	timer++;
-				if(timer>1500) {
+				if(timer>1000) {
 					return false;
 				}
                 x = (int) (Math.random() * GUI.buttonsEnemy.length);
@@ -25,7 +25,7 @@ public class AI {
         } else if (status == "server"){
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
             	timer++;
-				if(timer>1500) {
+				if(timer>1000) {
 					return false;
 				}
                 x = (int) (Math.random() * GUI.buttonsUser.length);
@@ -58,5 +58,9 @@ public class AI {
         } else {
             shot();
         }
+    }
+    
+    public static void shotHard() {
+    	//TODO
     }
 }
