@@ -554,6 +554,7 @@ public class GUI {
                         Connection.sendMessage(x,y);
                     } else {
                         Controller.handleShotSP(x, y);
+                        buttonsEnemy[x][y].setEnabled(false);
                     }
                     if(hitCounter==0){
                         frame.dispose();
@@ -565,7 +566,6 @@ public class GUI {
                         new GUI(9);
                         return;
                     }
-                    buttonsEnemy[x][y].setEnabled(false);
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }
