@@ -13,6 +13,7 @@ public class GUI {
     private static int port;
     public static int hitCounter;
     public static int enemyHitCounter;
+    public static boolean difficultAi;
 
     public GUI(int window){
 
@@ -73,14 +74,14 @@ public class GUI {
             frame.dispose();
             new GUI(3);
         });
-		/*
+		
 		JButton ButtonSpielLaden = new JButton("Spiel laden");
 		ButtonSpielLaden.setFocusable(false);
 		ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
 		ButtonSpielLaden.addActionListener((e) -> {
 			System.out.println("laden");
 		});
-		*/
+		
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -90,7 +91,7 @@ public class GUI {
 
         frame.getContentPane().add(ButtonSP);
         frame.getContentPane().add(ButtonMP);
-        //frame.getContentPane().add(ButtonSpielLaden);
+        frame.getContentPane().add(ButtonSpielLaden);
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -107,6 +108,34 @@ public class GUI {
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         frame.getContentPane().add(label);
+        
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+
+        label = new JLabel("Welche Schwierigkeit soll der Gegner haben ?");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        frame.getContentPane().add(label);
+        
+        JButton easy = new JButton("einfacher Gegner");
+        JButton hard = new JButton("schwieriger Gegner");
+        
+        easy.setFocusable(false);
+        easy.setAlignmentX(Component.CENTER_ALIGNMENT);
+        easy.addActionListener((e) -> {
+        	difficultAi = false;
+        	easy.setEnabled(false);
+        	hard.setEnabled(true);
+        });
+        
+        hard.setFocusable(false);
+        hard.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hard.addActionListener((e) -> {
+        	difficultAi = true;
+        	easy.setEnabled(true);
+        	hard.setEnabled(false);
+        });
+        
+        frame.getContentPane().add(easy);
+        frame.getContentPane().add(hard);
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
@@ -125,6 +154,7 @@ public class GUI {
         panel.add(textfield);
 
         JButton start = new JButton("Weiter");
+        start.setFocusable(false);
         start.addActionListener((e) -> {
             try{Integer. parseInt(textfield.getText());
             }catch(NumberFormatException ex){
@@ -382,6 +412,15 @@ public class GUI {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Noch nicht alle Schiffe gesetzt.");
+                if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
+                    if (Connection.Multiplayer()) {
+                        // wenn bereit, sende 'ready'
+                        Connection.sendMessage("ready");
+                        // TODO: warten bis Spielpartner bereit
+                    }
+                    frame.dispose();
+                    new GUI(7);
+                }
             }
         });
 
@@ -482,7 +521,6 @@ public class GUI {
         hitCounter = 5*Ship.getAmounts()[3]+4*Ship.getAmounts()[2]+3*Ship.getAmounts()[1]+2*Ship.getAmounts()[0];
         enemyHitCounter=hitCounter;
         
-		/*
 		JMenuBar menuBar = new JMenuBar();
  		frame.setJMenuBar(menuBar);
 
@@ -491,7 +529,7 @@ public class GUI {
 			System.out.println("Speichern");
 		});
 		menuBar.add(speichern);
-		*/
+		
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         JSplitPane splitPane = new JSplitPane();
         splitPane.setResizeWeight(0.5);
@@ -507,6 +545,7 @@ public class GUI {
             for (int j = 0; j < enemyBoard.getSize(); j++) {
                 buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
                 buttonsEnemy[i][j].setName(i + " " + j);
+                buttonsEnemy[i][j].setEnabled(true);
                 buttonsEnemy[i][j].addActionListener((e) -> {
                     String[] s = ((JButton)e.getSource()).getName().split(" ");
                     int x = Integer.parseInt(s[0]);
@@ -526,12 +565,12 @@ public class GUI {
                         new GUI(9);
                         return;
                     }
+                    buttonsEnemy[x][y].setEnabled(false);
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }
         }
-
-
+        
         JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
         splitPane.setRightComponent(panelright);
         panelright.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
@@ -540,6 +579,7 @@ public class GUI {
             for(int j = 0; j < userBoard.getSize(); j++) {
                 buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
                 buttonsUser[i][j].setName(i+" "+j);
+                buttonsUser[i][j].setEnabled(false);
                 panelright.add(buttonsUser[i][j]);
             }
         }
@@ -554,46 +594,6 @@ public class GUI {
         userBoard.print();
         enemyBoard.print();
         frame.pack();
-
-		/*
-		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
-
-		JButton speichern = new JButton("Speichern");
-		speichern.addActionListener((e) -> {
-			System.out.println("Speichern");
-		});
-		menuBar.add(speichern);
-
-		JPanel panel = new JPanel();
-
-		panel.setLayout(new GridLayout(fieldSize, fieldSize, 1, 1));
-
-		field = new JButton[fieldSize][fieldSize];
-
-		for (int i = 0; i < fieldSize; i++) {
-			for(int j = 0; j < fieldSize; j++) {
-				field[i][j] = new JButton(1+j+i*fieldSize+"");
-				field[i][j].setName(i+" "+j);
-				field[i][j].addActionListener((e) -> {
-					String[] s = ((JButton)e.getSource()).getName().split(" ");
-					int x = Integer.parseInt(s[0]);
-					int y = Integer.parseInt(s[1]);
-					if(schiffe[x][y] == false){
-						((JButton)e.getSource()).setBackground(new Color(0,255,0));
-						Connection.sendMessage(String.format("shot %s %s", x, y));
-					} else {
-		            	((JButton)e.getSource()).setBackground(new Color(255,0,0));
-						Connection.sendMessage(String.format("shot %s %s", x, y));
-		            }
-
-				});
-
-				panel.add(field[i][j]);
-			}
-		}
-		frame.getContentPane().add(panel);
-		frame.pack();*/
     }
 
     public static void colorButtons(String status, int x, int y, String color) {
@@ -626,7 +626,6 @@ public class GUI {
                 buttonsEnemy[x][y].setBackground(new Color(192, 192, 192));
             }
         }
-
     }
 
     private void winningScreen() {
