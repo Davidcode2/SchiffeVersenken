@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.SocketException;
 
 public class GUI {
 
@@ -238,22 +239,13 @@ public class GUI {
 
     private void host() {
 
-        frame.setContentPane(Box.createVerticalBox());
+        JLabel mainlabel = new JLabel("Schiffe versenken");
+        mainlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-        frame.getContentPane().add(Box.createGlue());
+        JLabel portlabel = new JLabel("Auf welchem Port möchten sie spielen?");
+        portlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel label = new JLabel("Schiffe versenken");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        frame.getContentPane().add(label);
-
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-
-        label = new JLabel("Auf welchem Port möchten sie spielen?");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        frame.getContentPane().add(label);
-
-        JPanel panel = new JPanel();
+        JPanel portpanel = new JPanel();
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
             try{
@@ -265,18 +257,15 @@ public class GUI {
         });
         textfeld.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld.setColumns(10);
-        panel.add(textfeld);
-        frame.getContentPane().add(panel);
+        portpanel.add(textfeld);
 
-        label = new JLabel("Wie lang soll das Spielfeld sein?");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        frame.getContentPane().add(label);
+        JLabel sizelabel = new JLabel("Wie lang soll das Spielfeld sein?");
+        sizelabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        frame.getContentPane().add(label);
+        JLabel size1label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
+        size1label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        panel = new JPanel();
+        JPanel sizepanel = new JPanel();
         JTextField textfeld2 = new JTextField();
         textfeld2.addActionListener((e) -> {
             try {
@@ -303,7 +292,7 @@ public class GUI {
         });
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld2.setColumns(10);
-        panel.add(textfeld2);
+        sizepanel.add(textfeld2);
 
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
@@ -313,12 +302,45 @@ public class GUI {
             new GUI(3);
         });
 
-        frame.getContentPane().add(panel);
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setResizeWeight(0.75);
+        frame.getContentPane().add(splitPane);
 
-        frame.getContentPane().add(button2);
+        JPanel panelRight = new JPanel();
+        splitPane.setRightComponent(panelRight);
+        panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
+
+        String[] inetAdr = null;
+        try {
+            inetAdr = Server.ipAdresses();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < inetAdr.length; i++) {
+            JLabel inetLabel = new JLabel(inetAdr[i]);
+            inetLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelRight.add(inetLabel);
+        }
+
+        panelRight.add(Box.createGlue());
+        panelRight.add(Box.createVerticalStrut(50));
+
+        JPanel panelLeft = new JPanel();
+        splitPane.setLeftComponent(panelLeft);
+        panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
+        panelLeft.add(mainlabel);
+        panelLeft.add(portlabel);
+        panelLeft.add(portpanel);
+        panelLeft.add(sizelabel);
+        panelLeft.add(size1label);
+        panelLeft.add(sizepanel);
 
         frame.getContentPane().add(Box.createGlue());
-        frame.getContentPane().add(Box.createVerticalStrut(50));
+
+        panelLeft.add(button2);
+
+        panelLeft.add(Box.createVerticalStrut(50));
 
         // TODO:
         // add submit button
@@ -364,7 +386,6 @@ public class GUI {
         panel = new JPanel();
         JTextField promptIP = new JTextField();
         promptIP.addActionListener((e) -> {
-            boolean disposeFlag = true;
             try {
                 String ip = promptIP.getText();
                 userBoard = new Board(0, "server");
@@ -484,12 +505,12 @@ public class GUI {
         });
         menuBar.add(restart);
 
-        JButton backButton = new JButton("Zurück");
+        JButton backButton = new JButton("Hauptmenü");
         backButton.setFocusable(false);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.addActionListener((e) -> {
             frame.dispose();
-            new GUI(2);
+            new GUI(1);
         });
         menuBar.add(backButton);
 

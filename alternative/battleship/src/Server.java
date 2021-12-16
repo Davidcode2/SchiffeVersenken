@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 public class Server {
 
@@ -74,6 +76,27 @@ public class Server {
 			System.out.println("error starting communication loop");
 			e.printStackTrace();
 		}
+	}
+
+	public static String[] ipAdresses() throws SocketException {
+		ArrayList<String> inetAddr = new ArrayList<String>();
+		Enumeration<NetworkInterface> nis =
+				NetworkInterface.getNetworkInterfaces();
+		while (nis.hasMoreElements()) {
+			NetworkInterface ni = nis.nextElement();
+			Enumeration<InetAddress> ias = ni.getInetAddresses();
+			while (ias.hasMoreElements()) {
+				InetAddress ia = ias.nextElement();
+				if (!ia.isLoopbackAddress()) {
+					if (ia instanceof Inet4Address) {
+						inetAddr.add(ia.getHostAddress());
+					}
+				}
+			}
+		}
+		String[] inetAddrArray = new String[inetAddr.size()];
+		inetAddrArray = inetAddr.toArray(inetAddrArray);
+		return inetAddrArray;
 	}
 
 	public static void stopServer(Connection connection) throws IOException {
