@@ -479,6 +479,7 @@ public class GUI {
             for (int j = 0; j < enemyBoard.getSize(); j++) {
                 buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
                 buttonsEnemy[i][j].setName(i + " " + j);
+                buttonsEnemy[i][j].setEnabled(true);
                 buttonsEnemy[i][j].addActionListener((e) -> {
                     String[] s = ((JButton)e.getSource()).getName().split(" ");
                     int x = Integer.parseInt(s[0]);
@@ -498,6 +499,7 @@ public class GUI {
                         new GUI(9);
                         return;
                     }
+                    buttonsEnemy[x][y].setEnabled(false);
                 });
                 panelleft.add(buttonsEnemy[i][j]);
             }
@@ -512,6 +514,7 @@ public class GUI {
             for(int j = 0; j < userBoard.getSize(); j++) {
                 buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
                 buttonsUser[i][j].setName(i+" "+j);
+                buttonsUser[i][j].setEnabled(false);
                 panelright.add(buttonsUser[i][j]);
             }
         }
