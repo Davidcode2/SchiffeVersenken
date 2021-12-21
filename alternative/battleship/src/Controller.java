@@ -1,4 +1,10 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Controller {
 
     public static boolean clientTurn;
@@ -70,4 +76,52 @@ public class Controller {
         }
     }
     */
+    public static Field[][] loadSession(ArrayList<String> stringArrayL) {
+        System.out.println("laden");
+            int max = 0;
+            for (int i = 0; i < stringArrayL.size(); i++) {
+                String[] split = stringArrayL.get(i).split(" ");
+                if (Integer.parseInt(split[1]) > max) {
+                    max = Integer.parseInt(split[1]);
+                }
+            }
+            max += 1;
+            Field[] temp = new Field[(max * max)];
+            for (int i = 0; i < stringArrayL.size() / 2; i++) {
+                String[] splitArr = stringArrayL.get(i).split(" ");
+                int x = Integer.parseInt(splitArr[0]);
+                int y = Integer.parseInt(splitArr[1]);
+                boolean[] boolArr = new boolean[6];
+                for (int j = 0; j < 6; j++) {
+                    boolArr[j] = Boolean.parseBoolean(splitArr[j + 2]);
+                }
+                Field tempField = new Field(x, y, boolArr[0], boolArr[1], boolArr[2], boolArr[3], boolArr[4], boolArr[5]);
+                System.out.println(tempField.toString());
+                temp[i] = tempField;
+            }
+            Field[][] fieldArray = new Field[max][max];
+            boolean breakFlag = false;
+            int counter = 0;
+            for (int i=0; i<temp.length; i++) {
+                for (int j=0; j<temp.length/max; j++) {
+                    if (i==max || counter==max*max) {
+                        breakFlag = true;
+                        break;
+                    }
+                    fieldArray[i][j] = temp[counter];
+                    counter++;
+                    if (i==max-1) {
+                        if (j == max-1) {
+                            breakFlag = true;
+                            break;
+                        }
+                        i = 0;
+                    }
+                }
+                if (breakFlag == true) {
+                    break;
+                }
+            }
+        return fieldArray;
+        }
 }

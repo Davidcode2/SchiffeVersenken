@@ -85,41 +85,27 @@ public class GUI {
         ButtonSpielLaden.setFocusable(false);
         ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSpielLaden.addActionListener((e) -> {
-            // TODO: move to Controller
-            System.out.println("laden");
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
-            final JFileChooser fc = new JFileChooser();
-            fc.setFileFilter(filter);
-            int returnVal = fc.showOpenDialog(frame);
-            if (returnVal != -1) {
-                ArrayList<String> fieldStringArray = new ArrayList<String>();
-                File savedSession = fc.getSelectedFile();
-                try {
-                    Scanner scanner = new Scanner(savedSession);
-                    while (scanner.hasNextLine()) {
-                        fieldStringArray.add(scanner.nextLine());
-                    }
-                } catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                int max = 0;
-                for (int i=0; i<fieldStringArray.size(); i++) {
-                    String[] split = fieldStringArray.get(i).split(" ");
-                    if (Integer.parseInt(split[1]) > max) {
-                        max = Integer.parseInt(split[1]);
-                    }
-                }
-                max += 1;
-                Field[][] fieldArray = new Field[max][max];
-                    for (int i = 0; i < max; i++) {
-                        for (int j = 0; j < max; j++) {
-                            for (int x=0; x<fieldStringArray.size(); x++) {
-                                String[] split = fieldStringArray.get(x).split(" ");
-                                fieldArray[i][j] = new Field(i,j);
+                    System.out.println("laden");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
+                    final JFileChooser fc = new JFileChooser();
+                    fc.setFileFilter(filter);
+                    int returnVal = fc.showOpenDialog(frame);
+                    if (returnVal != -1) {
+                        ArrayList<String> fieldStringArray = new ArrayList<String>();
+                        File savedSession = fc.getSelectedFile();
+                        try {
+                            Scanner scanner = new Scanner(savedSession);
+                            while (scanner.hasNextLine()) {
+                                fieldStringArray.add(scanner.nextLine());
+                            }
+                        } catch (FileNotFoundException ex) {
+                            ex.printStackTrace();
                         }
+                        Field[][] myField = Controller.loadSession(fieldStringArray);
+                        //TODO: new Board Constructor
+//                        Board userBoad = new Board(myField.length, );
+                        new GUI(7);
                     }
-                }
-            }
         });
 
         frame.setContentPane(Box.createVerticalBox());
