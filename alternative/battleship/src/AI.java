@@ -42,8 +42,6 @@ public class AI {
     }
 
     public static void shot() {
-        //TODO: KI-Delay
-        //Thread.sleep(var*1000);
         x = (int) (Math.random() * GUI.buttonsUser.length);
         y = (int) (Math.random() * GUI.buttonsUser.length);
         System.out.println("AI schießt auf Feld: " + x + "/" + y);
@@ -61,6 +59,6 @@ public class AI {
     }
     
     public static void shotHard() {
-    	//TODO
+    	
     }
 }

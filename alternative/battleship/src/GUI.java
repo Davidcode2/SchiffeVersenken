@@ -122,6 +122,7 @@ public class GUI {
         JButton hard = new JButton("schwieriger Gegner");
 
         easy.setFocusable(false);
+        easy.setEnabled(false);
         easy.setAlignmentX(Component.CENTER_ALIGNMENT);
         easy.addActionListener((e) -> {
             difficultAi = false;
