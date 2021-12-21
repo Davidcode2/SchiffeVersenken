@@ -1,10 +1,13 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class GUI {
 
@@ -82,7 +85,27 @@ public class GUI {
         ButtonSpielLaden.setFocusable(false);
         ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSpielLaden.addActionListener((e) -> {
-            System.out.println("laden");
+                    System.out.println("laden");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
+                    final JFileChooser fc = new JFileChooser();
+                    fc.setFileFilter(filter);
+                    int returnVal = fc.showOpenDialog(frame);
+                    if (returnVal != -1) {
+                        ArrayList<String> fieldStringArray = new ArrayList<String>();
+                        File savedSession = fc.getSelectedFile();
+                        try {
+                            Scanner scanner = new Scanner(savedSession);
+                            while (scanner.hasNextLine()) {
+                                fieldStringArray.add(scanner.nextLine());
+                            }
+                        } catch (FileNotFoundException ex) {
+                            ex.printStackTrace();
+                        }
+                        Field[][] myField = Controller.loadSession(fieldStringArray);
+                        //TODO: new Board Constructor
+//                        Board userBoad = new Board(myField.length, );
+                        new GUI(7);
+                    }
         });
 
         frame.setContentPane(Box.createVerticalBox());
@@ -99,6 +122,17 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
+    }
+
+    private void loadSession(File savedSession) {
+        if (/*savedSession*/true) {
+            for (int i = 0; i < userBoard.getSize(); i++) {
+                for (int j = 0; j < userBoard.getSize(); j++) {
+//                    buttonsUser[i][j] = savedSession[i][j]
+                }
+            }
+            userBoard.print();
+        }
     }
 
     private void einzelspieler() {
@@ -607,8 +641,11 @@ public class GUI {
 
         JButton speichern = new JButton("Speichern");
         speichern.addActionListener((e) -> {
+            // TODO: move to Controller
             System.out.println("Speichern");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(filter);
             fileChooser.setDialogTitle("Spiel speichern");
 
             int userSelection = fileChooser.showSaveDialog(frame);
@@ -622,6 +659,14 @@ public class GUI {
                         for (int j = 0; j < userBoard.getFieldArray().length; j++) {
                             System.out.println(userBoard.getFieldArray()[i][j].toString());
                             pwriter.println(userBoard.getFieldArray()[i][j].toString());
+                        }
+                    }
+                    if (!Connection.Multiplayer()) {
+                        for (int i=0; i<enemyBoard.getFieldArray().length; i++) {
+                            for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
+                                System.out.println(enemyBoard.getFieldArray()[i][j].toString());
+                                pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
+                            }
                         }
                     }
                 } catch (IOException ex) {

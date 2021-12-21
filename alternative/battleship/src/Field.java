@@ -12,7 +12,23 @@ public class Field {
         pos[1] = y;
     }
 
-    // TODO: write toString
+    // overloaded Constructor for loading session
+    public Field(
+            int x, int y,
+            boolean isOccupied, boolean isShip, boolean isWater,
+            boolean isHit, boolean isMiss, boolean isSunk
+            )
+    {
+        this.pos[0] = x;
+        this.pos[1] = y;
+        this.isOccupied = isOccupied;
+        this.isShip = isShip;
+        this.isWater = isWater;
+        this.isHit = isHit;
+        this.isMiss = isMiss;
+        this.isSunk = isSunk;
+    }
+
     @Override
     public String toString() {
         return "" + this.pos[0] + " " + this.pos[1] +  " " + this.isOccupied + " " + this.isShip + " " + this.isWater + " " + this.isHit + " " + this.isMiss + " " + this.isSunk;
