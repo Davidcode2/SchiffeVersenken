@@ -93,7 +93,13 @@ public class Controller {
         Field[][][] arrFieldArray = new Field[boardCount][max][max];
         for (int n=0; n<boardCount;n++) {
             Field[] temp = new Field[(max * max)];
-            for (int i = 0; i < stringArrayL.size() / boardCount; i++) {
+            int i = 0;
+            int end = (stringArrayL.size() / 2) - 1;
+            if (n == 1) {
+                i = (stringArrayL.size() / 2);
+                end = stringArrayL.size();
+            }
+            for (; i < end; i++) {
                 String[] splitArr = stringArrayL.get(i).split(" ");
                 int x = Integer.parseInt(splitArr[0]);
                 int y = Integer.parseInt(splitArr[1]);
@@ -108,13 +114,13 @@ public class Controller {
             Field[][] fieldArray = new Field[max][max];
             boolean breakFlag = false;
             int counter = 0;
-            for (int i=0; i<max; i++) {
+            for (int s=0; s<max; s++) {
                 for (int j=0; j<max; j++) {
                     if (counter==max*max) {
                         breakFlag = true;
                         break;
                     }
-                    fieldArray[i][j] = temp[counter];
+                    fieldArray[s][j] = temp[counter];
                     counter++;
                     }
                 }
