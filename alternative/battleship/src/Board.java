@@ -16,7 +16,12 @@ public class Board {
                 fieldArray[i][j] = new Field(i,j);
             }
         }
-
+    }
+    // overloaded constructor for loading session
+    public Board(Field[][] fieldArray, int size, String status) {
+        this.fieldArray = fieldArray;
+        this.size = size;
+        this.status = status;
     }
 
     public void place(int x, int y, String direction) {

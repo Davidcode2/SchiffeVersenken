@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class GUI {
@@ -55,6 +54,9 @@ public class GUI {
             case 9:
                 losingScreen();
                 break;
+            case 10:
+                waitForServer();
+                break;
             default:
                 System.out.println("Programm startet nicht.");
         }
@@ -101,9 +103,19 @@ public class GUI {
                         } catch (FileNotFoundException ex) {
                             ex.printStackTrace();
                         }
-                        Field[][] myField = Controller.loadSession(fieldStringArray);
+                        Field[][][] myField = Controller.readBoard(fieldStringArray);
                         //TODO: new Board Constructor
-//                        Board userBoad = new Board(myField.length, );
+                        System.out.println(myField.length);
+                        System.out.println(myField[0].length);
+                        System.out.println(myField[0][0].length);
+                        userBoard = new Board(myField[0], myField[0][0].length, "server");
+                        if (myField.length == 2) {
+                            Connection.setMultiplayer(false);
+                            enemyBoard = new Board(myField[1], myField[0][0].length, "client");
+                        } else {
+                            Connection.setMultiplayer(true);
+                        }
+                        frame.dispose();
                         new GUI(7);
                     }
         });
@@ -685,38 +697,42 @@ public class GUI {
         frame.getContentPane().add(splitPane);
 
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
-        buttonsEnemy = new JButton[enemyBoard.getSize()][enemyBoard.getSize()];
+        if (!Connection.Multiplayer()) {
+            buttonsEnemy = new JButton[enemyBoard.getSize()][enemyBoard.getSize()];
 
-        JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
-        splitPane.setLeftComponent(panelleft);
-        panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
-        for (int i = 0; i < enemyBoard.getSize(); i++) {
-            for (int j = 0; j < enemyBoard.getSize(); j++) {
-                buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
-                buttonsEnemy[i][j].setName(i + " " + j);
-                buttonsEnemy[i][j].setEnabled(true);
-                buttonsEnemy[i][j].addActionListener((e) -> {
-                    String[] s = ((JButton)e.getSource()).getName().split(" ");
-                    int x = Integer.parseInt(s[0]);
-                    int y = Integer.parseInt(s[1]);
-                    if (Connection.Multiplayer()) {
-                        Connection.sendMessage(x,y);
-                    } else {
-                        Controller.handleShotSP(x, y);
-                        buttonsEnemy[x][y].setEnabled(false);
-                    }
-                    if(hitCounter==0){
-                        frame.dispose();
-                        new GUI(8);
-                        return;
-                    }
-                    if(enemyHitCounter==0){
-                        frame.dispose();
-                        new GUI(9);
-                        return;
-                    }
-                });
-                panelleft.add(buttonsEnemy[i][j]);
+            JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
+            splitPane.setLeftComponent(panelleft);
+            panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
+            for (int i = 0; i < enemyBoard.getSize(); i++) {
+                for (int j = 0; j < enemyBoard.getSize(); j++) {
+                    // TODO: remove after testing
+                    System.out.println(enemyBoard.getFieldArray()[i][j].toString());
+                    buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
+                    buttonsEnemy[i][j].setName(i + " " + j);
+                    buttonsEnemy[i][j].setEnabled(true);
+                    buttonsEnemy[i][j].addActionListener((e) -> {
+                        String[] s = ((JButton) e.getSource()).getName().split(" ");
+                        int x = Integer.parseInt(s[0]);
+                        int y = Integer.parseInt(s[1]);
+                        if (Connection.Multiplayer()) {
+                            Connection.sendMessage(x, y);
+                        } else {
+                            Controller.handleShotSP(x, y);
+                            buttonsEnemy[x][y].setEnabled(false);
+                        }
+                        if (hitCounter == 0) {
+                            frame.dispose();
+                            new GUI(8);
+                            return;
+                        }
+                        if (enemyHitCounter == 0) {
+                            frame.dispose();
+                            new GUI(9);
+                            return;
+                        }
+                    });
+                    panelleft.add(buttonsEnemy[i][j]);
+                }
             }
         }
 
@@ -726,6 +742,8 @@ public class GUI {
 
         for (int i = 0; i < userBoard.getSize(); i++) {
             for(int j = 0; j < userBoard.getSize(); j++) {
+                // TODO: remove after testing
+                System.out.println(userBoard.getFieldArray()[i][j].toString());
                 buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
                 buttonsUser[i][j].setName(i+" "+j);
                 buttonsUser[i][j].setEnabled(false);

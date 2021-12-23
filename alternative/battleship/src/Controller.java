@@ -76,23 +76,29 @@ public class Controller {
         }
     }
     */
-    public static Field[][] loadSession(ArrayList<String> stringArrayL) {
-        System.out.println("laden");
-            int max = 0;
-            for (int i = 0; i < stringArrayL.size(); i++) {
-                String[] split = stringArrayL.get(i).split(" ");
-                if (Integer.parseInt(split[1]) > max) {
-                    max = Integer.parseInt(split[1]);
-                }
+    public static Field[][][] readBoard(ArrayList<String> stringArrayL) {
+        int boardCount = 1;
+        int max = 0;
+        // get size of Board
+        for (int i = 0; i < stringArrayL.size(); i++) {
+            String[] split = stringArrayL.get(i).split(" ");
+            if (Integer.parseInt(split[1]) > max) {
+                max = Integer.parseInt(split[1]);
             }
-            max += 1;
+        }
+        max += 1;
+        if (stringArrayL.size() > max*max) {
+            boardCount++;
+        }
+        Field[][][] arrFieldArray = new Field[boardCount][max][max];
+        for (int n=0; n<boardCount;n++) {
             Field[] temp = new Field[(max * max)];
-            for (int i = 0; i < stringArrayL.size() / 2; i++) {
+            for (int i = 0; i < stringArrayL.size() / boardCount; i++) {
                 String[] splitArr = stringArrayL.get(i).split(" ");
                 int x = Integer.parseInt(splitArr[0]);
                 int y = Integer.parseInt(splitArr[1]);
                 boolean[] boolArr = new boolean[6];
-                for (int j = 0; j < 6; j++) {
+                for (int j = 0; j < boolArr.length; j++) {
                     boolArr[j] = Boolean.parseBoolean(splitArr[j + 2]);
                 }
                 Field tempField = new Field(x, y, boolArr[0], boolArr[1], boolArr[2], boolArr[3], boolArr[4], boolArr[5]);
@@ -102,26 +108,21 @@ public class Controller {
             Field[][] fieldArray = new Field[max][max];
             boolean breakFlag = false;
             int counter = 0;
-            for (int i=0; i<temp.length; i++) {
-                for (int j=0; j<temp.length/max; j++) {
-                    if (i==max || counter==max*max) {
+            for (int i=0; i<max; i++) {
+                for (int j=0; j<max; j++) {
+                    if (counter==max*max) {
                         breakFlag = true;
                         break;
                     }
                     fieldArray[i][j] = temp[counter];
                     counter++;
-                    if (i==max-1) {
-                        if (j == max-1) {
-                            breakFlag = true;
-                            break;
-                        }
-                        i = 0;
                     }
                 }
                 if (breakFlag == true) {
                     break;
                 }
+            arrFieldArray[n] = fieldArray;
             }
-        return fieldArray;
+        return arrFieldArray;
         }
 }
