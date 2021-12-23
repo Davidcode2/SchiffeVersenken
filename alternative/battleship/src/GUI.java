@@ -8,6 +8,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// TODO: Modus für Computer gegen Computer
+// TODO: Felder die aufjedenfall Wasser sind markieren
+
 public class GUI {
 
     private JFrame frame;
@@ -15,6 +18,7 @@ public class GUI {
     public static Board enemyBoard;
     public static JButton[][] buttonsUser;
     public static JButton[][] buttonsEnemy;
+    public static boolean savedSession = false;
     private static int port;
     public static int hitCounter;
     public static int enemyHitCounter;
@@ -88,6 +92,7 @@ public class GUI {
         ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSpielLaden.addActionListener((e) -> {
                     System.out.println("laden");
+                    savedSession = true;
                     FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
                     final JFileChooser fc = new JFileChooser();
                     fc.setFileFilter(filter);
@@ -104,14 +109,11 @@ public class GUI {
                             ex.printStackTrace();
                         }
                         Field[][][] myField = Controller.readBoard(fieldStringArray);
-                        //TODO: new Board Constructor
-                        System.out.println(myField.length);
-                        System.out.println(myField[0].length);
-                        System.out.println(myField[0][0].length);
                         userBoard = new Board(myField[0], myField[0][0].length, "server");
                         if (myField.length == 2) {
                             Connection.setMultiplayer(false);
                             enemyBoard = new Board(myField[1], myField[0][0].length, "client");
+                            System.out.println("created enemy board");
                         } else {
                             Connection.setMultiplayer(true);
                         }
@@ -697,16 +699,13 @@ public class GUI {
         frame.getContentPane().add(splitPane);
 
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
-        if (!Connection.Multiplayer()) {
-            buttonsEnemy = new JButton[enemyBoard.getSize()][enemyBoard.getSize()];
+        buttonsEnemy = new JButton[enemyBoard.getSize()][enemyBoard.getSize()];
 
             JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
             splitPane.setLeftComponent(panelleft);
             panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
             for (int i = 0; i < enemyBoard.getSize(); i++) {
                 for (int j = 0; j < enemyBoard.getSize(); j++) {
-                    // TODO: remove after testing
-                    System.out.println(enemyBoard.getFieldArray()[i][j].toString());
                     buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
                     buttonsEnemy[i][j].setName(i + " " + j);
                     buttonsEnemy[i][j].setEnabled(true);
@@ -734,7 +733,6 @@ public class GUI {
                     panelleft.add(buttonsEnemy[i][j]);
                 }
             }
-        }
 
         JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
         splitPane.setRightComponent(panelright);
@@ -742,8 +740,6 @@ public class GUI {
 
         for (int i = 0; i < userBoard.getSize(); i++) {
             for(int j = 0; j < userBoard.getSize(); j++) {
-                // TODO: remove after testing
-                System.out.println(userBoard.getFieldArray()[i][j].toString());
                 buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
                 buttonsUser[i][j].setName(i+" "+j);
                 buttonsUser[i][j].setEnabled(false);
@@ -751,11 +747,13 @@ public class GUI {
             }
         }
         if (!Connection.Multiplayer()) {
-            Controller.startGame();
-            boolean wert = false;
-            while(!wert) {
-                enemyBoard = new Board(userBoard.getSize(), "client");
-                wert = AI.start("client");
+            if (!savedSession) {
+                Controller.startGame();
+                boolean wert = false;
+                while (!wert) {
+                    enemyBoard = new Board(userBoard.getSize(), "client");
+                    wert = AI.start("client");
+                }
             }
         }
         userBoard.print();
@@ -844,5 +842,4 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
-
 }
