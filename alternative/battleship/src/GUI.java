@@ -747,8 +747,8 @@ public class GUI {
             }
         }
         if (!Connection.Multiplayer()) {
+            Controller.startGame();
             if (!savedSession) {
-                Controller.startGame();
                 boolean wert = false;
                 while (!wert) {
                     enemyBoard = new Board(userBoard.getSize(), "client");
