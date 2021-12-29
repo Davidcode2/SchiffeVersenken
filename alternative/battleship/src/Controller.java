@@ -94,7 +94,7 @@ public class Controller {
         for (int n=0; n<boardCount;n++) {
             Field[] temp = new Field[(max * max)];
             int i = 0;
-            int end = (stringArrayL.size() / 2) - 1;
+            int end = (stringArrayL.size() / 2);
             if (n == 1) {
                 i = (stringArrayL.size() / 2);
                 end = stringArrayL.size();
@@ -109,7 +109,11 @@ public class Controller {
                 }
                 Field tempField = new Field(x, y, boolArr[0], boolArr[1], boolArr[2], boolArr[3], boolArr[4], boolArr[5]);
                 System.out.println(tempField.toString());
-                temp[i] = tempField;
+                if (i >= max*max) {
+                    temp[i-(max*max)] = tempField;
+                } else {
+                    temp[i] = tempField;
+                }
             }
             Field[][] fieldArray = new Field[max][max];
             boolean breakFlag = false;
