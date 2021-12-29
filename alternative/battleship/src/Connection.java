@@ -167,6 +167,7 @@ public class Connection {
     }
 
     static class inboundMessageLoop extends SwingWorker<Object, Object> {
+        String previousMessage = "";
         @Override
         protected Object doInBackground() throws Exception {
             new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
@@ -174,6 +175,7 @@ public class Connection {
                 public void run() {
                     String message = Connection.getMessage();
                     if (message.contains("answer")) {
+                        previousMessage = message;
                         int[] shot = Connection.peekShot();
                         int shipState = Integer.parseInt(message.split(" ")[1]);
                         if (shipState == 1 || shipState == 2) {
@@ -184,6 +186,7 @@ public class Connection {
                         }
                     }
                     if (message.contains("shot")) {
+                        previousMessage = message;
                         int x = Integer.parseInt(message.split(" ")[1]);
                         int y = Integer.parseInt(message.split(" ")[2]);
                         GUI.userBoard.shot(x, y);
@@ -195,6 +198,15 @@ public class Connection {
                             }
                         } else {
                             Connection.sendMessage(String.format("answer %s", 0));
+                        }
+                    }
+                    if (message.contains("save") && !previousMessage.contains("save")) {
+                        previousMessage = message;
+                        long id = Long.valueOf(message.split(" ")[1]);
+                        try {
+                            Controller.saveSession(GUI.userBoard, GUI.enemyBoard, id);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }

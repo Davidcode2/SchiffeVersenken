@@ -5,7 +5,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.SocketException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 // TODO: Modus für Computer gegen Computer
@@ -13,7 +15,7 @@ import java.util.Scanner;
 
 public class GUI {
 
-    private JFrame frame;
+    public static JFrame frame;
     public static Board userBoard;
     public static Board enemyBoard;
     public static JButton[][] buttonsUser;
@@ -114,11 +116,13 @@ public class GUI {
                             Connection.setMultiplayer(false);
                             enemyBoard = new Board(myField[1], myField[0][0].length, "client");
                             System.out.println("created enemy board");
+                            frame.dispose();
+                            new GUI(7);
                         } else {
                             Connection.setMultiplayer(true);
+                            frame.dispose();
+                            new GUI(5);
                         }
-                        frame.dispose();
-                        new GUI(7);
                     }
         });
 
@@ -334,7 +338,11 @@ public class GUI {
                 (new ServerConnectionService(fieldsize, port)).execute();
                 Connection.setMultiplayer(true);
                 Connection.setServer(true);
-                new GUI(6);
+                if (savedSession) {
+                    new GUI(7);
+                } else {
+                    new GUI(6);
+                }
             }
             else {
                 frame.dispose();
@@ -655,42 +663,7 @@ public class GUI {
 
         JButton speichern = new JButton("Speichern");
         speichern.addActionListener((e) -> {
-            // TODO: move to Controller
-            System.out.println("Speichern");
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(filter);
-            fileChooser.setDialogTitle("Spiel speichern");
-
-            int userSelection = fileChooser.showSaveDialog(frame);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToSave = fileChooser.getSelectedFile();
-                System.out.print("save file as: " + fileToSave.getAbsolutePath());
-                PrintWriter pwriter = null;
-                try {
-                    pwriter = new PrintWriter(new FileWriter(fileToSave));
-                    for (int i=0; i<userBoard.getFieldArray().length; i++) {
-                        for (int j = 0; j < userBoard.getFieldArray().length; j++) {
-                            System.out.println(userBoard.getFieldArray()[i][j].toString());
-                            pwriter.println(userBoard.getFieldArray()[i][j].toString());
-                        }
-                    }
-                    if (!Connection.Multiplayer()) {
-                        for (int i=0; i<enemyBoard.getFieldArray().length; i++) {
-                            for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
-                                System.out.println(enemyBoard.getFieldArray()[i][j].toString());
-                                pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
-                            }
-                        }
-                    } else {
-                        //TODO: send message with save id
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } finally {
-                    pwriter.close();
-                }
-            }
+            Controller.saveSession(frame, userBoard, enemyBoard);
         });
         menuBar.add(speichern);
 
