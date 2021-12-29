@@ -22,6 +22,7 @@ public class GUI {
     public static JButton[][] buttonsEnemy;
     public static boolean savedSession = false;
     private static int port;
+    private static long id;
     public static int hitCounter;
     public static int enemyHitCounter;
     public static boolean difficultAi;
@@ -62,6 +63,9 @@ public class GUI {
                 break;
             case 10:
                 waitForServer();
+                break;
+            case 11:
+                hostSaved();
                 break;
             default:
                 System.out.println("Programm startet nicht.");
@@ -120,8 +124,9 @@ public class GUI {
                             new GUI(7);
                         } else {
                             Connection.setMultiplayer(true);
+                            id = Long.valueOf(fieldStringArray.get(0));
                             frame.dispose();
-                            new GUI(5);
+                            new GUI(11);
                         }
                     }
         });
@@ -501,6 +506,89 @@ public class GUI {
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
 
+    private void hostSaved() {
+        frame.setContentPane(Box.createVerticalBox());
+
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+        frame.getContentPane().add(Box.createGlue());
+
+        JLabel mainlabel = new JLabel("Schiffe versenken");
+        mainlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel portlabel = new JLabel("Auf welchem Port möchten sie spielen?");
+        portlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel portpanel = new JPanel();
+        JTextField textfeld = new JTextField();
+        textfeld.addActionListener((e) -> {
+            try{
+                port = Integer.parseInt(textfeld.getText());
+                new GUI(7);
+            } catch(NumberFormatException ex) {
+                frame.dispose();
+                new GUI(4);
+            }
+        });
+        textfeld.setHorizontalAlignment(SwingConstants.CENTER);
+        textfeld.setColumns(10);
+        portpanel.add(textfeld);
+
+        (new ServerConnectionService(userBoard.getSize(), port)).execute();
+        Connection.setMultiplayer(true);
+        Connection.setServer(true);
+
+        JButton button2 = new JButton("Zurück");
+        button2.setFocusable(false);
+        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button2.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(3);
+        });
+
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setResizeWeight(0.75);
+        frame.getContentPane().add(splitPane);
+
+        JPanel panelRight = new JPanel();
+        splitPane.setRightComponent(panelRight);
+        panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
+
+        String[] inetAdr = null;
+        try {
+            inetAdr = Server.ipAdresses();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < inetAdr.length; i++) {
+            JLabel inetLabel = new JLabel(inetAdr[i]);
+            inetLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panelRight.add(inetLabel);
+        }
+
+        panelRight.add(Box.createGlue());
+        panelRight.add(Box.createVerticalStrut(50));
+
+        JPanel panelLeft = new JPanel();
+        splitPane.setLeftComponent(panelLeft);
+        panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
+        panelLeft.add(mainlabel);
+        panelLeft.add(portlabel);
+        panelLeft.add(portpanel);
+
+        frame.getContentPane().add(Box.createGlue());
+
+        panelLeft.add(button2);
+
+        panelLeft.add(Box.createVerticalStrut(50));
+
+
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+
+        frame.getContentPane().add(Box.createGlue());
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+    }
+
     public void showAlert(String alert) {
         JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
     }
@@ -650,8 +738,12 @@ public class GUI {
     private void spiel() {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
-            enemyBoard = new Board(userBoard.getSize(), "client");
-            (new Connection.inboundMessageLoop()).execute();
+            if (!savedSession) {
+                enemyBoard = new Board(userBoard.getSize(), "client");
+            } else {
+               Connection.sendMessage(String.format("load %s", id));
+            }
+            new Connection.inboundMessageLoop().execute();
         }
 
         Ship.calcAmount(userBoard.getSize());
@@ -666,7 +758,27 @@ public class GUI {
             Controller.saveSession(frame, userBoard, enemyBoard);
         });
         menuBar.add(speichern);
-
+        JButton beenden = new JButton("Beenden");
+        speichern.addActionListener((e) -> {
+            if (Connection.Multiplayer()) {
+                if (Connection.isServer()) {
+                    try {
+                        Server.stopServer(Server.getConnection());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    try {
+                        Client.stopConnection(Client.getConnection());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+            frame.dispose();
+            new GUI(1);
+        });
+        menuBar.add(beenden);
 
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         JSplitPane splitPane = new JSplitPane();

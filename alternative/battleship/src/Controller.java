@@ -182,32 +182,31 @@ public class Controller {
     public static void saveSession(Board userBoard, Board enemyBoard, long id) throws IOException {
 
         System.out.println("Speichern");
-        File fileToSave = new File(System.getProperty("user.home"), Long.toString(id));
-        System.out.println(fileToSave.getAbsolutePath());
+        File fileToSave = new File(System.getProperty("user.home"), Long.toString(id) + ".txt");
 
         System.out.print("save file as: " + fileToSave.getAbsolutePath());
-//            PrintWriter pwriter = null;
-//            try {
-//                pwriter = new PrintWriter(new FileWriter(fileToSave));
-//                pwriter.println(id);
-//                for (int i = 0; i < userBoard.getFieldArray().length; i++) {
-//                    for (int j = 0; j < userBoard.getFieldArray().length; j++) {
-//                        System.out.println(userBoard.getFieldArray()[i][j].toString());
-//                        pwriter.println(userBoard.getFieldArray()[i][j].toString());
-//                    }
-//                }
-//                if (!Connection.Multiplayer()) {
-//                    for (int i = 0; i < enemyBoard.getFieldArray().length; i++) {
-//                        for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
-//                            System.out.println(enemyBoard.getFieldArray()[i][j].toString());
-//                            pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
-//                        }
-//                    }
-//                }
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            } finally {
-//                pwriter.close();
-//            }
+            PrintWriter pwriter = null;
+            try {
+                pwriter = new PrintWriter(new FileWriter(fileToSave));
+                pwriter.println(id);
+                for (int i = 0; i < userBoard.getFieldArray().length; i++) {
+                    for (int j = 0; j < userBoard.getFieldArray().length; j++) {
+                        System.out.println(userBoard.getFieldArray()[i][j].toString());
+                        pwriter.println(userBoard.getFieldArray()[i][j].toString());
+                    }
+                }
+                if (!Connection.Multiplayer()) {
+                    for (int i = 0; i < enemyBoard.getFieldArray().length; i++) {
+                        for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
+                            System.out.println(enemyBoard.getFieldArray()[i][j].toString());
+                            pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                pwriter.close();
+            }
         }
 }

@@ -130,7 +130,7 @@ public class Connection {
         // if turn == true -> Server
         if (isServer()) {
             try {
-                if (Server.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                if (message.contains("save") || Server.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
                     if (message.equals("ready")) {
                         readyCounter = 1;
                     }
@@ -147,7 +147,7 @@ public class Connection {
             }
         } else {
             try {
-                if (Client.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                if (message.contains("save") || Client.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
                     if (message.equals("ready")) {
                         readyCounter = 1;
                     }
