@@ -198,7 +198,7 @@ public class Connection {
                         }
                     }
                 }
-            }, 0, 1000);
+            }, 0, 500);
             return null;
         }
     }

@@ -682,6 +682,8 @@ public class GUI {
                                 pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
                             }
                         }
+                    } else {
+                        //TODO: send message with save id
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
