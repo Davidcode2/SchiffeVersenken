@@ -758,8 +758,10 @@ public class GUI {
             Controller.saveSession(frame, userBoard, enemyBoard);
         });
         menuBar.add(speichern);
+
         JButton beenden = new JButton("Beenden");
-        speichern.addActionListener((e) -> {
+        beenden.addActionListener((e) -> {
+            System.out.println("Beenden");
             if (Connection.Multiplayer()) {
                 if (Connection.isServer()) {
                     try {
