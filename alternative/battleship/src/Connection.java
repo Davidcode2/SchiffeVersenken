@@ -12,12 +12,12 @@ public class Connection {
     private static BufferedReader in;
     private static BufferedWriter usr;
     private static Writer out;
-    private static Socket s;
 
     private static boolean isServer;
     private static String message;
     private static boolean turn = true;
     private static int readyCounter = 0;
+    private static Socket so;
 
     private static boolean Multiplayer = false;
 
@@ -39,10 +39,6 @@ public class Connection {
     }
     public static void setMultiplayer(boolean b) {
         Multiplayer = b;
-    }
-
-    public static Socket getS() {
-        return s;
     }
 
     public static BufferedReader getIn() {
@@ -83,6 +79,14 @@ public class Connection {
     public static String getMessage() {
         return message;
     }
+
+    public static void setS(Socket s) {
+       so = s;
+    }
+    public static Socket getS() {
+        return so;
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }
@@ -214,5 +218,4 @@ public class Connection {
             return null;
         }
     }
-
 }

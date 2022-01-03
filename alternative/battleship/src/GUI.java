@@ -340,7 +340,9 @@ public class GUI {
                 int fieldsize = userBoard.getSize();
                 Ship.calcAmount(fieldsize);
                 frame.dispose();
-                (new ServerConnectionService(fieldsize, port)).execute();
+                ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
+                ServerConnectionService.setService(scService);
+                scService.execute();
                 Connection.setMultiplayer(true);
                 Connection.setServer(true);
                 if (savedSession) {
@@ -454,6 +456,7 @@ public class GUI {
                 String ip = promptIP.getText();
                 userBoard = new Board(0, "server");
                 ClientConnectionService ccService = new ClientConnectionService(userBoard, ip, port);
+                ClientConnectionService.setService(ccService);
                 ccService.execute();
                 Connection.setMultiplayer(true);
                 Connection.setServer(false);
@@ -765,13 +768,13 @@ public class GUI {
             if (Connection.Multiplayer()) {
                 if (Connection.isServer()) {
                     try {
-                        Server.stopServer(Server.getConnection());
+                        Server.stopServer(Connection.getS());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 } else {
                     try {
-                        Client.stopConnection(Client.getConnection());
+                        Client.stopConnection(Connection.getS());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

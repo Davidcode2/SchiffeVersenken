@@ -80,9 +80,10 @@ public class Client {
 		}
 	}
 
-	public static void stopConnection(Connection connection) throws IOException {
+	public static void stopConnection(Socket s) throws IOException {
 		// EOF ins Socket "schreiben".
-		connection.getS().shutdownOutput();
+		s.shutdownOutput();
+		ClientConnectionService.getInstance().cancel(true);
 		System.out.println("Connection closed.");
 	}
 }

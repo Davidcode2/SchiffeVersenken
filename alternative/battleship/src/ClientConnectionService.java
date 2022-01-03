@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Timer;
 
 public class ClientConnectionService extends SwingWorker<Socket, Object> {
     Client client = new Client();
@@ -9,11 +10,19 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
     private String ip;
     private int port;
     private boolean boardSizeReceived = false;
+    private static ClientConnectionService cs;
 
     public ClientConnectionService(Board userBoard, String ip, int port) {
         this.board = userBoard;
         this.ip = ip;
         this.port = port;
+    }
+
+    public static void setService (ClientConnectionService cService) {
+        cs = cService;
+    }
+    public static ClientConnectionService getInstance() {
+        return cs;
     }
 
     @Override
@@ -29,6 +38,7 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
     protected void done() {
         try {
             socketS = get();
+            Connection.setS(socketS);
         } catch (Exception ignore) {
             System.out.println("error starting communication loop");
         }
@@ -44,7 +54,7 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
                 return null;
             }
         }
-        (new StartClientCommunicationService()).execute();
+        new StartClientCommunicationService().execute();
         System.out.print("Client ready to send and receive messages...\n");
         while (!boardSizeReceived) {
             // wait

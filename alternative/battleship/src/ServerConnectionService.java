@@ -9,10 +9,18 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
     private Socket socketS;
     private int fieldsize;
     private int port;
+    private static ServerConnectionService sc;
 
     public ServerConnectionService(int fieldsize, int port) {
         this.fieldsize = fieldsize;
         this.port = port;
+    }
+
+    public static void setService(ServerConnectionService scService) {
+        sc = scService;
+    }
+    public static ServerConnectionService getInstance() {
+        return sc;
     }
 
     @Override
@@ -30,6 +38,7 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
     protected void done() {
         try {
             socketS = get();
+            Connection.setS(socketS);
             System.out.println("Client connected to socket!");
         } catch (Exception ignore) {
             System.out.println("error");

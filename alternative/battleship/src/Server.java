@@ -99,9 +99,10 @@ public class Server {
 		return inetAddrArray;
 	}
 
-	public static void stopServer(Connection connection) throws IOException {
+	public static void stopServer(Socket s) throws IOException {
 		// EOF ins Socket "schreiben".
 		connection.getS().shutdownOutput();
+		ServerConnectionService.getInstance().cancel(true);
 		System.out.println("Connection closed.");
 	}
 }
