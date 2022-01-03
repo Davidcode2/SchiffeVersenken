@@ -187,14 +187,15 @@ public class Controller {
                         pwriter.println(userBoard.getFieldArray()[i][j].toString());
                     }
                 }
-                if (!Connection.Multiplayer()) {
+//                if (!Connection.Multiplayer()) {
                     for (int i=0; i<enemyBoard.getFieldArray().length; i++) {
                         for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
                             System.out.println(enemyBoard.getFieldArray()[i][j].toString());
                             pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
                         }
                     }
-                } else {
+//                } else {
+                if (Connection.Multiplayer()) {
                     Connection.sendMessage(String.format("save %s", saveIdStr));
                 }
             } catch (IOException ex) {
@@ -220,14 +221,14 @@ public class Controller {
                         pwriter.println(userBoard.getFieldArray()[i][j].toString());
                     }
                 }
-                if (!Connection.Multiplayer()) {
+//                if (!Connection.Multiplayer()) {
                     for (int i = 0; i < enemyBoard.getFieldArray().length; i++) {
                         for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
                             System.out.println(enemyBoard.getFieldArray()[i][j].toString());
                             pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
                         }
                     }
-                }
+//                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             } finally {

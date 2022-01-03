@@ -133,17 +133,6 @@ public class GUI {
 
     }
 
-    private void loadSession(File savedSession) {
-        if (/*savedSession*/true) {
-            for (int i = 0; i < userBoard.getSize(); i++) {
-                for (int j = 0; j < userBoard.getSize(); j++) {
-//                    buttonsUser[i][j] = savedSession[i][j]
-                }
-            }
-            userBoard.print();
-        }
-    }
-
     private void einzelspieler() {
 
         frame.setContentPane(Box.createVerticalBox());

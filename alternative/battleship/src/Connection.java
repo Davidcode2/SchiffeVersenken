@@ -182,10 +182,14 @@ public class Connection {
                         previousMessage = message;
                         int[] shot = Connection.peekShot();
                         int shipState = Integer.parseInt(message.split(" ")[1]);
+                        int x = shot[0];
+                        int y = shot[1];
                         if (shipState == 1 || shipState == 2) {
                             GUI.colorButtons("client", shot[0],shot[1], "Grey");
+                            GUI.enemyBoard.getFieldArray()[x][y].isHit();
                         } else {
                             GUI.colorButtons("client", shot[0],shot[1], "Red");
+                            GUI.enemyBoard.getFieldArray()[x][y].isMiss();
                             Connection.sendMessage("pass");
                         }
                     }
