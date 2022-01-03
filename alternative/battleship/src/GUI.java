@@ -9,6 +9,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.TimerTask;
 
 // TODO: Modus für Computer gegen Computer
 // TODO: Felder die aufjedenfall Wasser sind markieren
@@ -22,7 +23,7 @@ public class GUI {
     public static JButton[][] buttonsEnemy;
     public static boolean savedSession = false;
     private static int port;
-    private static long id;
+    static long id;
     public static int hitCounter;
     public static int enemyHitCounter;
     public static boolean difficultAi;
@@ -97,38 +98,23 @@ public class GUI {
         ButtonSpielLaden.setFocusable(false);
         ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSpielLaden.addActionListener((e) -> {
-                    System.out.println("laden");
-                    savedSession = true;
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
-                    final JFileChooser fc = new JFileChooser();
-                    fc.setFileFilter(filter);
-                    int returnVal = fc.showOpenDialog(frame);
-                    if (returnVal != -1) {
-                        ArrayList<String> fieldStringArray = new ArrayList<String>();
-                        File savedSession = fc.getSelectedFile();
-                        try {
-                            Scanner scanner = new Scanner(savedSession);
-                            while (scanner.hasNextLine()) {
-                                fieldStringArray.add(scanner.nextLine());
-                            }
-                        } catch (FileNotFoundException ex) {
-                            ex.printStackTrace();
-                        }
-                        Field[][][] myField = Controller.readBoard(fieldStringArray);
-                        userBoard = new Board(myField[0], myField[0][0].length, "server");
-                        if (myField.length == 2) {
-                            Connection.setMultiplayer(false);
-                            enemyBoard = new Board(myField[1], myField[0][0].length, "client");
-                            System.out.println("created enemy board");
-                            frame.dispose();
-                            new GUI(7);
-                        } else {
-                            Connection.setMultiplayer(true);
-                            id = Long.valueOf(fieldStringArray.get(0));
-                            frame.dispose();
-                            new GUI(11);
-                        }
-                    }
+            System.out.println("laden");
+            savedSession = true;
+            ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
+            Field[][][] myField = Controller.readBoard(fieldStringArray);
+            GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
+            if (myField.length == 2) {
+                Connection.setMultiplayer(false);
+                GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
+                System.out.println("created enemy board");
+                frame.dispose();
+                new GUI(7);
+            } else {
+                Connection.setMultiplayer(true);
+                GUI.id = Long.valueOf(fieldStringArray.get(0));
+                frame.dispose();
+                new GUI(11);
+            }
         });
 
         frame.setContentPane(Box.createVerticalBox());
@@ -517,11 +503,51 @@ public class GUI {
         JLabel portlabel = new JLabel("Auf welchem Port möchten sie spielen?");
         portlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JLabel waitlabel = new JLabel("Warte auf Mitspieler");
+        waitlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setResizeWeight(0.75);
+        frame.getContentPane().add(splitPane);
+
+        JPanel panelLeft = new JPanel();
+        splitPane.setLeftComponent(panelLeft);
+
         JPanel portpanel = new JPanel();
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
             try{
                 port = Integer.parseInt(textfeld.getText());
+                ServerConnectionService scService = new ServerConnectionService(10, port);
+                ServerConnectionService.setService(scService);
+                scService.execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(true);
+                textfeld.setEditable(false);
+                textfeld.setEnabled(false);
+                if (Connection.isServer()) {
+                    new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (Connection.getMessage().equals("done") || Connection.getMessage().equals("ready")) {
+                                    Connection.sendMessage("ready");
+                                    Connection.sendMessage(String.format("load %s", id));
+                                    this.cancel();
+                                    frame.dispose();
+                                    new GUI(7);
+                                } else {
+//                                    JOptionPane.showMessageDialog(null, "Warte auf Mitspieler.");
+                                    panelLeft.add(waitlabel);
+                                }
+                            } catch (NullPointerException er) {
+//                                JOptionPane.showMessageDialog(null, "Warte auf Mitspieler.");
+                                panelLeft.add(waitlabel);
+                            }
+                        }
+                    },0,500);
+                }
             } catch(NumberFormatException ex) {
                 frame.dispose();
                 new GUI(4);
@@ -531,46 +557,8 @@ public class GUI {
         textfeld.setColumns(10);
         portpanel.add(textfeld);
 
-        JLabel sizelabel = new JLabel("Wie lang soll das Spielfeld sein?");
-        sizelabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel size1label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
-        size1label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JPanel sizepanel = new JPanel();
         JTextField textfeld2 = new JTextField();
-        textfeld2.addActionListener((e) -> {
-            try {
-                Integer.parseInt(textfeld2.getText());
-            }catch(NumberFormatException ex){
-                frame.dispose();
-                new GUI(4);
-            }
-            int boardSize = Integer.parseInt(textfeld2.getText());
-            if(boardSize>=5 && boardSize<=30) {
-                userBoard = new Board(boardSize, "server");
-                int fieldsize = userBoard.getSize();
-                Ship.calcAmount(fieldsize);
-                frame.dispose();
-                ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
-                ServerConnectionService.setService(scService);
-                scService.execute();
-                Connection.setMultiplayer(true);
-                Connection.setServer(true);
-                if (savedSession) {
-                    new GUI(7);
-                } else {
-                    new GUI(6);
-                }
-            }
-            else {
-                frame.dispose();
-                new GUI(2);
-            }
-        });
-        textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
-        textfeld2.setColumns(10);
-        sizepanel.add(textfeld2);
 
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
@@ -579,11 +567,6 @@ public class GUI {
             frame.dispose();
             new GUI(3);
         });
-
-        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
-        JSplitPane splitPane = new JSplitPane();
-        splitPane.setResizeWeight(0.75);
-        frame.getContentPane().add(splitPane);
 
         JPanel panelRight = new JPanel();
         splitPane.setRightComponent(panelRight);
@@ -604,14 +587,11 @@ public class GUI {
         panelRight.add(Box.createGlue());
         panelRight.add(Box.createVerticalStrut(50));
 
-        JPanel panelLeft = new JPanel();
         splitPane.setLeftComponent(panelLeft);
         panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
         panelLeft.add(mainlabel);
         panelLeft.add(portlabel);
         panelLeft.add(portpanel);
-        panelLeft.add(sizelabel);
-        panelLeft.add(size1label);
         panelLeft.add(sizepanel);
 
         frame.getContentPane().add(Box.createGlue());
@@ -774,12 +754,12 @@ public class GUI {
     private void spiel() {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
+            new Connection.inboundMessageLoop().execute();
             if (!savedSession) {
                 enemyBoard = new Board(userBoard.getSize(), "client");
             } else {
-               Connection.sendMessage(String.format("load %s", id));
+
             }
-            new Connection.inboundMessageLoop().execute();
         }
 
         Ship.calcAmount(userBoard.getSize());
@@ -826,38 +806,38 @@ public class GUI {
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
         buttonsEnemy = new JButton[enemyBoard.getSize()][enemyBoard.getSize()];
 
-            JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
-            splitPane.setLeftComponent(panelleft);
-            panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
-            for (int i = 0; i < enemyBoard.getSize(); i++) {
-                for (int j = 0; j < enemyBoard.getSize(); j++) {
-                    buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
-                    buttonsEnemy[i][j].setName(i + " " + j);
-                    buttonsEnemy[i][j].setEnabled(true);
-                    buttonsEnemy[i][j].addActionListener((e) -> {
-                        String[] s = ((JButton) e.getSource()).getName().split(" ");
-                        int x = Integer.parseInt(s[0]);
-                        int y = Integer.parseInt(s[1]);
-                        if (Connection.Multiplayer()) {
-                            Connection.sendMessage(x, y);
-                        } else {
-                            Controller.handleShotSP(x, y);
-                            buttonsEnemy[x][y].setEnabled(false);
-                        }
-                        if (hitCounter == 0) {
-                            frame.dispose();
-                            new GUI(8);
-                            return;
-                        }
-                        if (enemyHitCounter == 0) {
-                            frame.dispose();
-                            new GUI(9);
-                            return;
-                        }
-                    });
-                    panelleft.add(buttonsEnemy[i][j]);
-                }
+        JPanel panelleft = new JPanel(); //links ist das Gegnerfeld
+        splitPane.setLeftComponent(panelleft);
+        panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
+        for (int i = 0; i < enemyBoard.getSize(); i++) {
+            for (int j = 0; j < enemyBoard.getSize(); j++) {
+                buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
+                buttonsEnemy[i][j].setName(i + " " + j);
+                buttonsEnemy[i][j].setEnabled(true);
+                buttonsEnemy[i][j].addActionListener((e) -> {
+                    String[] s = ((JButton) e.getSource()).getName().split(" ");
+                    int x = Integer.parseInt(s[0]);
+                    int y = Integer.parseInt(s[1]);
+                    if (Connection.Multiplayer()) {
+                        Connection.sendMessage(x, y);
+                    } else {
+                        Controller.handleShotSP(x, y);
+                        buttonsEnemy[x][y].setEnabled(false);
+                    }
+                    if (hitCounter == 0) {
+                        frame.dispose();
+                        new GUI(8);
+                        return;
+                    }
+                    if (enemyHitCounter == 0) {
+                        frame.dispose();
+                        new GUI(9);
+                        return;
+                    }
+                });
+                panelleft.add(buttonsEnemy[i][j]);
             }
+        }
 
         JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
         splitPane.setRightComponent(panelright);

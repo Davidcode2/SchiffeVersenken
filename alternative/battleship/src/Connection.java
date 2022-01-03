@@ -134,7 +134,7 @@ public class Connection {
         // if turn == true -> Server
         if (isServer()) {
             try {
-                if (message.contains("save") || Server.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                if (message.contains("save") || message.contains("load") || Server.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
                     if (message.equals("ready")) {
                         readyCounter = 1;
                     }
@@ -212,6 +212,10 @@ public class Connection {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    }
+                    if (message.contains("load")) {
+                        long id = Long.valueOf(message.split(" ")[1]);
+//                            Controller.clientLoad(id);
                     }
                 }
             }, 0, 500);

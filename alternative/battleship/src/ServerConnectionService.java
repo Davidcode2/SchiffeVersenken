@@ -42,6 +42,7 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
             System.out.println("Client connected to socket!");
         } catch (Exception ignore) {
             System.out.println("error");
+            sc.cancel(true);
         }
         class StartCommunicationService extends SwingWorker<String, Object> {
             @Override
