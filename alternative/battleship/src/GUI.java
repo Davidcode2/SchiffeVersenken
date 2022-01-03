@@ -94,28 +94,6 @@ public class GUI {
             new GUI(3);
         });
 
-        JButton ButtonSpielLaden = new JButton("Spiel laden");
-        ButtonSpielLaden.setFocusable(false);
-        ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
-        ButtonSpielLaden.addActionListener((e) -> {
-            System.out.println("laden");
-            savedSession = true;
-            ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
-            Field[][][] myField = Controller.readBoard(fieldStringArray);
-            GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
-            if (myField.length == 2) {
-                Connection.setMultiplayer(false);
-                GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
-                System.out.println("created enemy board");
-                frame.dispose();
-                new GUI(7);
-            } else {
-                Connection.setMultiplayer(true);
-                GUI.id = Long.valueOf(fieldStringArray.get(0));
-                frame.dispose();
-                new GUI(11);
-            }
-        });
 
         frame.setContentPane(Box.createVerticalBox());
 
@@ -126,7 +104,6 @@ public class GUI {
 
         frame.getContentPane().add(ButtonSP);
         frame.getContentPane().add(ButtonMP);
-        frame.getContentPane().add(ButtonSpielLaden);
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
@@ -211,6 +188,29 @@ public class GUI {
             }
         });
 
+        JButton ButtonSpielLaden = new JButton("Spiel laden");
+        ButtonSpielLaden.setFocusable(false);
+        ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ButtonSpielLaden.addActionListener((e) -> {
+            System.out.println("laden");
+            savedSession = true;
+            ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
+            Field[][][] myField = Controller.readBoard(fieldStringArray);
+            GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
+            if (myField.length == 2) {
+                Connection.setMultiplayer(false);
+                GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
+                System.out.println("created enemy board");
+                frame.dispose();
+                new GUI(7);
+            } else {
+                Connection.setMultiplayer(true);
+                GUI.id = Long.valueOf(fieldStringArray.get(0));
+                frame.dispose();
+                new GUI(11);
+            }
+        });
+
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -221,12 +221,12 @@ public class GUI {
 
         panel.add(start);
         frame.getContentPane().add(panel);
+        frame.getContentPane().add(ButtonSpielLaden);
         frame.getContentPane().add(button2);
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
-
-    private void mehrspieler() {
+private void mehrspieler() {
 
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -247,8 +247,31 @@ public class GUI {
             new GUI(5);
         });
 
-        JButton buttonBack = new JButton("Zurück");
-        buttonBack.setFocusable(false);
+    JButton ButtonSpielLaden = new JButton("Spiel laden");
+    ButtonSpielLaden.setFocusable(false);
+    ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
+    ButtonSpielLaden.addActionListener((e) -> {
+        System.out.println("laden");
+        savedSession = true;
+        ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
+        Field[][][] myField = Controller.readBoard(fieldStringArray);
+        GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
+        if (myField.length == 2) {
+            Connection.setMultiplayer(false);
+            GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
+            System.out.println("created enemy board");
+            frame.dispose();
+            new GUI(7);
+        } else {
+            Connection.setMultiplayer(true);
+            GUI.id = Long.valueOf(fieldStringArray.get(0));
+            frame.dispose();
+            new GUI(11);
+        }
+    });
+
+    JButton buttonBack = new JButton("Zurück");
+    buttonBack.setFocusable(false);
         buttonBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonBack.addActionListener((e) -> {
             frame.dispose();
@@ -265,7 +288,7 @@ public class GUI {
         frame.getContentPane().add(button1);
 
         frame.getContentPane().add(button2);
-
+        frame.getContentPane().add(ButtonSpielLaden);
         frame.getContentPane().add(buttonBack);
 
         frame.getContentPane().add(Box.createGlue());
