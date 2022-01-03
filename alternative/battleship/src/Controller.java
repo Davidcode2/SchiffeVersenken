@@ -95,7 +95,12 @@ public class Controller {
         for (int n=0; n<boardCount;n++) {
             Field[] temp = new Field[(max * max)];
             int i = 1;
-            int end = (size / 2)+1;
+            int end = 0;
+            if (boardCount == 2) {
+                end = (size / 2)+1;
+            } else {
+                end = size+1;
+            }
             if (n == 1) {
                 i = (size / 2);
                 end = size+1;

@@ -510,10 +510,6 @@ public class GUI {
     }
 
     private void hostSaved() {
-        frame.setContentPane(Box.createVerticalBox());
-
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-        frame.getContentPane().add(Box.createGlue());
 
         JLabel mainlabel = new JLabel("Schiffe versenken");
         mainlabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -526,7 +522,6 @@ public class GUI {
         textfeld.addActionListener((e) -> {
             try{
                 port = Integer.parseInt(textfeld.getText());
-                new GUI(7);
             } catch(NumberFormatException ex) {
                 frame.dispose();
                 new GUI(4);
@@ -536,9 +531,46 @@ public class GUI {
         textfeld.setColumns(10);
         portpanel.add(textfeld);
 
-        (new ServerConnectionService(userBoard.getSize(), port)).execute();
-        Connection.setMultiplayer(true);
-        Connection.setServer(true);
+        JLabel sizelabel = new JLabel("Wie lang soll das Spielfeld sein?");
+        sizelabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel size1label = new JLabel("(Zahlen zwischen 5 und 30 sind möglich)");
+        size1label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel sizepanel = new JPanel();
+        JTextField textfeld2 = new JTextField();
+        textfeld2.addActionListener((e) -> {
+            try {
+                Integer.parseInt(textfeld2.getText());
+            }catch(NumberFormatException ex){
+                frame.dispose();
+                new GUI(4);
+            }
+            int boardSize = Integer.parseInt(textfeld2.getText());
+            if(boardSize>=5 && boardSize<=30) {
+                userBoard = new Board(boardSize, "server");
+                int fieldsize = userBoard.getSize();
+                Ship.calcAmount(fieldsize);
+                frame.dispose();
+                ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
+                ServerConnectionService.setService(scService);
+                scService.execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(true);
+                if (savedSession) {
+                    new GUI(7);
+                } else {
+                    new GUI(6);
+                }
+            }
+            else {
+                frame.dispose();
+                new GUI(2);
+            }
+        });
+        textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
+        textfeld2.setColumns(10);
+        sizepanel.add(textfeld2);
 
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
@@ -578,6 +610,9 @@ public class GUI {
         panelLeft.add(mainlabel);
         panelLeft.add(portlabel);
         panelLeft.add(portpanel);
+        panelLeft.add(sizelabel);
+        panelLeft.add(size1label);
+        panelLeft.add(sizepanel);
 
         frame.getContentPane().add(Box.createGlue());
 
@@ -585,11 +620,9 @@ public class GUI {
 
         panelLeft.add(Box.createVerticalStrut(50));
 
-
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-
-        frame.getContentPane().add(Box.createGlue());
-        frame.getContentPane().add(Box.createVerticalStrut(50));
+        // TODO:
+        // add submit button
+        // actions in textfields should only be executed when pressed
     }
 
     public void showAlert(String alert) {
