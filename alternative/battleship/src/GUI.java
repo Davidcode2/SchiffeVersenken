@@ -256,18 +256,10 @@ private void mehrspieler() {
         ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
         Field[][][] myField = Controller.readBoard(fieldStringArray);
         GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
-        if (myField.length == 2) {
-            Connection.setMultiplayer(false);
-            GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
-            System.out.println("created enemy board");
-            frame.dispose();
-            new GUI(7);
-        } else {
-            Connection.setMultiplayer(true);
-            GUI.id = Long.valueOf(fieldStringArray.get(0));
-            frame.dispose();
-            new GUI(11);
-        }
+        Connection.setMultiplayer(true);
+        GUI.id = Long.valueOf(fieldStringArray.get(0));
+        frame.dispose();
+        new GUI(11);
     });
 
     JButton buttonBack = new JButton("Zurück");
@@ -531,7 +523,7 @@ private void mehrspieler() {
         textfeld.addActionListener((e) -> {
             try{
                 port = Integer.parseInt(textfeld.getText());
-                ServerConnectionService scService = new ServerConnectionService(10, port);
+                ServerConnectionService scService = new ServerConnectionService(-99, port);
                 ServerConnectionService.setService(scService);
                 scService.execute();
                 Connection.setMultiplayer(true);
@@ -550,11 +542,9 @@ private void mehrspieler() {
                                     frame.dispose();
                                     new GUI(7);
                                 } else {
-//                                    JOptionPane.showMessageDialog(null, "Warte auf Mitspieler.");
                                     panelLeft.add(waitlabel);
                                 }
                             } catch (NullPointerException er) {
-//                                JOptionPane.showMessageDialog(null, "Warte auf Mitspieler.");
                                 panelLeft.add(waitlabel);
                             }
                         }
@@ -570,7 +560,6 @@ private void mehrspieler() {
         portpanel.add(textfeld);
 
         JPanel sizepanel = new JPanel();
-        JTextField textfeld2 = new JTextField();
 
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
@@ -767,11 +756,7 @@ private void mehrspieler() {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         if (Connection.Multiplayer()) {
             new Connection.inboundMessageLoop().execute();
-            if (!savedSession) {
-                enemyBoard = new Board(userBoard.getSize(), "client");
-            } else {
-
-            }
+            enemyBoard = new Board(userBoard.getSize(), "client");
         }
 
         Ship.calcAmount(userBoard.getSize());
