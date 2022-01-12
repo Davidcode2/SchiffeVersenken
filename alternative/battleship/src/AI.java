@@ -141,6 +141,7 @@ public class AI {
             	if(GUI.enemyHitCounter==0) {
             		return;
             	}
+            	colorWaterHorizontal(x,y);
             	flag="shipVertical";
                 nextHit("vertical");
             } else {
@@ -173,6 +174,7 @@ public class AI {
             	if(GUI.enemyHitCounter==0) {
             		return;
             	}
+            	colorWaterHorizontal(x,y);
             	flag="shipVertical";
                 nextHit("vertical");
             } else {
@@ -205,6 +207,7 @@ public class AI {
             	if(GUI.enemyHitCounter==0) {
             		return;
             	}
+            	colorWaterVertical(x,y);
             	flag="shipHorizontal";
                 nextHit("horizontal");
             } else {
@@ -231,6 +234,7 @@ public class AI {
             	if(GUI.enemyHitCounter==0) {
             		return;
             	}
+            	colorWaterVertical(x,y);
             	flag="shipHorizontal";
                 nextHit("horizontal");
             } else {
@@ -240,6 +244,48 @@ public class AI {
         } else {
         	flag="random";
         	randomShot();
+    	}
+    }
+    private static void colorWaterVertical(int x, int y) {
+    	if(x-1>=0) {
+    		if(flag.equals("firstHit")) {
+    			int tempx = firstHitx-1;
+    			System.out.println("AI erkennt Feld als Wasser: " + tempx + "/" + y);
+    			GUI.userBoard.shot(tempx,firstHity);
+    		}
+    		System.out.println("AI erkennt Feld als Wasser: " + x + "/" + y);
+    		GUI.userBoard.shot(--x,y);
+    		++x;
+    	}
+    	if(x+1<GUI.enemyBoard.getSize()) {
+    		if(flag.equals("firstHit")) {
+    			int tempx = firstHitx+1;
+    			System.out.println("AI erkennt Feld als Wasser: " + tempx + "/" + y);
+    			GUI.userBoard.shot(tempx,firstHity);
+    		}
+    		System.out.println("AI erkennt Feld als Wasser: " + x + "/" + y);
+    		GUI.userBoard.shot(++x,y);
+    	}
+    }
+    private static void colorWaterHorizontal(int x, int y) {
+    	if(y-1>=0) {
+    		if(flag.equals("firstHit")) {
+    			int tempy = firstHity-1;
+    			System.out.println("AI erkennt Feld als Wasser: " + x + "/" + tempy);
+    			GUI.userBoard.shot(firstHitx,tempy);
+    		}
+    		System.out.println("AI erkennt Feld als Wasser: " + x + "/" + y);
+    		GUI.userBoard.shot(x,--y);
+    		++y;
+    	}
+    	if(y+1<GUI.enemyBoard.getSize()) {
+    		if(flag.equals("firstHit")) {
+    			int tempy = firstHity+1;
+    			System.out.println("AI erkennt Feld als Wasser: " + x + "/" + tempy);
+    			GUI.userBoard.shot(firstHitx,tempy);
+    		}
+    		System.out.println("AI erkennt Feld als Wasser: " + x + "/" + y);
+    		GUI.userBoard.shot(x,++y);
     	}
     }
 }
