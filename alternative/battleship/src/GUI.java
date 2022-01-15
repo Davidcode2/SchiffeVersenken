@@ -226,7 +226,8 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
-private void mehrspieler() {
+    
+    private void mehrspieler() {
 
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -483,6 +484,7 @@ private void mehrspieler() {
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
     }
+    
     private void waitForServer() {
         frame.setContentPane(Box.createVerticalBox());
 
@@ -635,7 +637,7 @@ private void mehrspieler() {
                         }
                     } else if (Connection.isServer() == false) {
                         Connection.sendMessage("ready");
-                        if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
+                       if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
                             frame.dispose();
                             new GUI(7);
                         }
