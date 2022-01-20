@@ -892,7 +892,9 @@ public class GUI {
             for (int j = 0; j < enemyBoard.getSize(); j++) {
                 buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
                 buttonsEnemy[i][j].setName(i + " " + j);
-                buttonsEnemy[i][j].setEnabled(true);
+                if (kiMultiplayer) {
+                    buttonsEnemy[i][j].setEnabled(false);
+                }
                 buttonsEnemy[i][j].addActionListener((e) -> {
                     String[] s = ((JButton) e.getSource()).getName().split(" ");
                     int x = Integer.parseInt(s[0]);
