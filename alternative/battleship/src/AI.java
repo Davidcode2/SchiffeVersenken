@@ -314,7 +314,7 @@ public class AI {
     				System.out.println("AI erkennt Feld als Wasser: " + x + "/" + y);
     			}
     			x+=2;
-    			if(y<GUI.enemyBoard.getSize()) {
+    			if(x<GUI.enemyBoard.getSize()) {
 	    			GUI.userBoard.shot(x,y);
 	    			System.out.println("AI erkennt Feld als Wasser: " + x + "/" + y);
     			}
