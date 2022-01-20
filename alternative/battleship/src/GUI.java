@@ -776,6 +776,7 @@ private void mehrspieler() {
         beenden.addActionListener((e) -> {
             System.out.println("Beenden");
             if (Connection.Multiplayer()) {
+                Connection.setMultiplayer(false);
                 if (Connection.isServer()) {
                     try {
                         Server.stopServer(Connection.getS());
