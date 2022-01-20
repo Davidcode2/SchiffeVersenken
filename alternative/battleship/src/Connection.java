@@ -37,6 +37,7 @@ public class Connection {
     public static boolean Multiplayer() {
         return Multiplayer;
     }
+
     public static void setMultiplayer(boolean b) {
         Multiplayer = b;
     }
@@ -95,7 +96,7 @@ public class Connection {
         turn = b;
     }
 
-    public boolean getTurn() {
+    public static boolean getTurn() {
         return turn;
     }
 
@@ -121,6 +122,7 @@ public class Connection {
                     Client.getConnection().getOut().flush();
                     pushShot(x,y);
                     Client.getConnection().setTurn(false);
+                    turn = false;
                 } else {
                     System.out.println("wait for other players turn");
                 }
@@ -142,6 +144,7 @@ public class Connection {
                     Server.getConnection().getOut().flush();
                     System.out.println("outgoing>> " + message);
                     Server.getConnection().setTurn(false);
+                    turn = false;
                 } else {
                     System.out.println("wait for other players turn");
                 }
@@ -187,6 +190,7 @@ public class Connection {
                         if (shipState == 1 || shipState == 2) {
                             GUI.colorButtons("client", shot[0],shot[1], "Grey");
                             GUI.enemyBoard.getFieldArray()[x][y].isHit();
+                            GUI.hitCounter--;
                         } else {
                             GUI.colorButtons("client", shot[0],shot[1], "Red");
                             GUI.enemyBoard.getFieldArray()[x][y].isMiss();
@@ -199,6 +203,7 @@ public class Connection {
                         int y = Integer.parseInt(message.split(" ")[2]);
                         GUI.userBoard.shot(x, y);
                         if (GUI.userBoard.getFieldArray()[x][y].isHit()) {
+                            GUI.enemyHitCounter--;
                             if (GUI.userBoard.getFieldArray()[x][y].isSunk()) {
                                 Connection.sendMessage(String.format("answer %s", 2));
                             } else {

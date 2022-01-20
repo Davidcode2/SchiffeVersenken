@@ -296,14 +296,6 @@ public class GUI {
 
         JPanel portpanel = new JPanel();
         JTextField textfeld = new JTextField();
-        textfeld.addActionListener((e) -> {
-            try{
-                port = Integer.parseInt(textfeld.getText());
-            } catch(NumberFormatException ex) {
-                frame.dispose();
-                new GUI(4);
-            }
-        });
         textfeld.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld.setColumns(10);
         portpanel.add(textfeld);
@@ -320,6 +312,12 @@ public class GUI {
         JButton start = new JButton("Weiter");
         start.setFocusable(false);
         start.addActionListener((e) -> {
+            try{
+                port = Integer.parseInt(textfeld.getText());
+            } catch(NumberFormatException ex) {
+                frame.dispose();
+                new GUI(4);
+            }
             try {
                 Integer.parseInt(textfeld2.getText());
             } catch (NumberFormatException ex) {
@@ -347,9 +345,17 @@ public class GUI {
                 new GUI(3);
             }
         });
+        start.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JButton kiStart = new JButton("KI Spiel");
         kiStart.setFocusable(false);
         kiStart.addActionListener((e) -> {
+            try{
+                port = Integer.parseInt(textfeld.getText());
+            } catch(NumberFormatException ex) {
+                frame.dispose();
+                new GUI(4);
+            }
             try {
                 Integer.parseInt(textfeld2.getText());
             } catch (NumberFormatException ex) {
@@ -374,6 +380,7 @@ public class GUI {
                 new GUI(3);
             }
         });
+        kiStart.setAlignmentX(Component.CENTER_ALIGNMENT);
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld2.setColumns(10);
         sizepanel.add(textfeld2);
@@ -482,6 +489,7 @@ public class GUI {
                 new GUI(5);
             }
         });
+        start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton kiStart = new JButton("KI Spiel");
         kiStart.setFocusable(false);
@@ -507,6 +515,7 @@ public class GUI {
                 new GUI(5);
             }
         });
+        kiStart.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
@@ -921,6 +930,9 @@ public class GUI {
                 panelright.add(buttonsUser[i][j]);
             }
         }
+        userBoard.print();
+        enemyBoard.print();
+        frame.pack();
         if (!Connection.Multiplayer()) {
             Controller.startGame();
             if (!savedSession) {
@@ -932,11 +944,23 @@ public class GUI {
             }
         } else if (kiMultiplayer) {
             AI.start("server");
-//            kiMulti();
+            int counter = 0;
+            // TODO: GUI.enemyHitCounter + GUI.hitCounter
+            // also for normal multiplayer.
+            while (hitCounter != 0 && enemyHitCounter != 0) {
+                int x = (int) (Math.random() * GUI.buttonsUser.length);
+                int y = (int) (Math.random() * GUI.buttonsUser.length);
+                counter++;
+                if (Connection.getTurn()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Connection.sendMessage(x, y);
+                }
+            }
         }
-        userBoard.print();
-        enemyBoard.print();
-        frame.pack();
     }
 
     public static void colorButtons(String status, int x, int y, String color) {
