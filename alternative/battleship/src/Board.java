@@ -6,6 +6,7 @@ public class Board {
     private int size;
     private String status;
     private ArrayList<Ship> shipList = new ArrayList<Ship>();
+    private static boolean playersTurn=true;
 
     public Board(int size, String status) {
         this.size = size;
@@ -144,47 +145,141 @@ public class Board {
             fieldArray[x][y].setMiss(true);
         }
     }
+    
+    public void setPlayersTurn() {
+    	playersTurn=true;
+    }
 
     public void shot(int x, int y) {
+    	boolean flag;
         if (fieldArray[x][y].isShip()){
-
             fieldArray[x][y].setHit(true);
-            for (int i=0; i<shipList.size();i++){
-                if (shipList.get(i).getStartPoint()[0] == x && shipList.get(i).getStartPoint()[1] == y && checkSunk(x,y,shipList.get(i))){
-                    fieldArray[x][y].setSunk(true);
-                    //hier soll das wasser um gesunkene schiffe gesetzt werden
-                    shipList.remove(i);
-                    System.out.println("removed");
-                }
+            if(playersTurn) {
+	            for (int i=0; i<shipList.size(); i++){
+	            	if(shipList.get(i).getDirection().equals("horizontal")) {
+	            		flag = true;
+	            	}
+	            	else {
+	            		flag = false;
+	            	}
+	            	if(flag && shipList.get(i).getStartPoint()[0]==x &&
+	            	shipList.get(i).getStartPoint()[1]<=y && shipList.get(i).getStartPoint()[1]+shipList.get(i).getSize()>y
+	            	|| shipList.get(i).getStartPoint()[1]==y &&
+	            	shipList.get(i).getStartPoint()[0]<=x && shipList.get(i).getStartPoint()[0]+shipList.get(i).getSize()>x) {
+	            		shipList.get(i).reduceHitCounter();
+		                if (shipList.get(i).getHitCounter()==0){
+		                	int horizontal = shipList.get(i).getStartPoint()[1]; //y
+		                	int vertical = shipList.get(i).getStartPoint()[0]; //x
+		                	for(int j=0; j<shipList.get(i).getSize(); j++) {
+		                    	if(flag) {
+		                    		if(j==0) {
+		                    			if(horizontal-1>=0) {
+		                    				horizontal--;
+		                            		colorWater(vertical,horizontal);
+		                            		if(vertical-1>=0) {
+				                    			vertical--;
+				                    			colorWater(vertical,horizontal);
+				                    			vertical++;
+				                    		}
+		                            		if(vertical+1<size) {
+				                    			vertical++;
+				                    			colorWater(vertical,horizontal);
+				                    			vertical--;
+				                    		}
+		                            		horizontal++;
+		                    			}
+		                    		}
+		                    		if(vertical-1>=0) {
+		                    			vertical--;
+		                    			colorWater(vertical,horizontal);
+		                    			vertical++;
+		                    		}
+		                    		if(vertical+1<size) {
+		                    			vertical++;
+		                    			colorWater(vertical,horizontal);
+		                    			vertical--;
+		                    		}
+		                    		if(j==shipList.get(i).getSize()-1) {
+		                    			if(horizontal+1<size) {
+		                    				horizontal++;
+		                    				colorWater(vertical,horizontal);
+		                    				if(vertical-1>=0) {
+				                    			vertical--;
+				                    			colorWater(vertical,horizontal);
+				                    			vertical++;
+				                    		}
+		                            		if(vertical+1<size) {
+				                    			vertical++;
+				                    			colorWater(vertical,horizontal);
+				                    			vertical--;
+				                    		}
+		                    				horizontal--;
+		                    			}
+		                    		}
+		                    		
+		                    		horizontal++;
+		                    	}
+		                    	else {
+		                    		
+		                    		if(j==0) {
+		                    			if(vertical-1>=0) {
+		                    				vertical--;
+		                            		colorWater(vertical,horizontal);
+		                            		if(horizontal-1>=0) {
+				                    			horizontal--;
+				                    			colorWater(vertical,horizontal);
+				                    			horizontal++;
+				                    		}
+				                    		if(horizontal+1<size) {
+				                    			horizontal++;
+				                    			colorWater(vertical,horizontal);
+				                    			horizontal--;
+				                    		}
+		                            		vertical++;
+		                    			}
+		                    		}
+		                    		if(horizontal-1>=0) {
+		                    			horizontal--;
+		                    			colorWater(vertical,horizontal);
+		                    			horizontal++;
+		                    		}
+		                    		if(horizontal+1<size) {
+		                    			horizontal++;
+		                    			colorWater(vertical,horizontal);
+		                    			horizontal--;
+		                    		}
+		                    		if(j==shipList.get(i).getSize()-1) {
+		                    			if(vertical+1<size) {
+		                    				vertical++;
+		                    				colorWater(vertical,horizontal);
+		                    				if(horizontal-1>=0) {
+				                    			horizontal--;
+				                    			colorWater(vertical,horizontal);
+				                    			horizontal++;
+				                    		}
+				                    		if(horizontal+1<size) {
+				                    			horizontal++;
+				                    			colorWater(vertical,horizontal);
+				                    			horizontal--;
+				                    		}
+		                    				vertical--;
+		                    			}
+		                    		}
+		                    		
+		                    		vertical++;
+		                    	}
+			                }
+		                    shipList.remove(i);
+		                    System.out.println("removed");
+		                }
+	                }
+	            }
             }
         } else if (fieldArray[x][y].isWater()){
             fieldArray[x][y].setMiss(true);
+            playersTurn=!playersTurn;
         }
         print();
-    }
-
-    private boolean checkSunk(int x, int y, Ship ship) {
-        if (ship.getSize() == 1){
-            return true;
-        } else {
-            for (int i=0;i<ship.getSize();i++){
-                if (ship.getDirection() == "horizontal"){
-                    if (fieldArray[x][y+i].isHit()){
-                        ship.setSize(ship.getSize()-1);
-                    } else {
-                        ship.setStartPoint(new int[]{x,y+i});
-                    }
-                } else if (ship.getDirection() == "vertical"){
-                    if (fieldArray[x+i][y].isHit()){
-                        ship.setSize(ship.getSize()-1);
-
-                    } else {
-                        ship.setStartPoint(new int[]{x+i,y});
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public Field[][] getFieldArray() {

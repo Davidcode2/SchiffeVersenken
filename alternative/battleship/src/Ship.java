@@ -4,11 +4,13 @@ public class Ship {
     private int [] startPoint;
     private String direction;
     private static int[] amounts = new int[4];
+    private int hitCounter;
 
     public Ship(int size, int[] startPoint, String direction){
         this.size = size;
         this.startPoint = startPoint;
         this.direction = direction;
+        hitCounter=size;
     }
 
     public static void calcAmount(int size) {
@@ -62,7 +64,15 @@ public class Ship {
     public static int[] getAmounts() {
         return amounts;
     }
-
+    
+    public int getHitCounter() {
+    	return hitCounter;
+    }
+    
+    public void reduceHitCounter() {
+    	hitCounter--;
+    }
+    
     public int getSize() {
         return size;
     }
