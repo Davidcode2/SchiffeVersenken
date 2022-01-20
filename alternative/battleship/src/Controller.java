@@ -15,19 +15,10 @@ public class Controller {
 
         SwingUtilities.invokeLater(() -> {
             new GUI(1);
-
         });
     }
 
     public static void startGame() {
-    	/*
-        if (Math.random() < 0.5){
-            System.out.println("client beginnt");
-            clientTurn = true;
-            serverTurn = false;
-            AI.shot();
-        } else {
-        */
         System.out.println("server beginnt");
         clientTurn = false;
         serverTurn = true;
@@ -42,7 +33,7 @@ public class Controller {
             }
         } else if (serverTurn){
             GUI.enemyBoard.shot(x,y);
-            if(GUI.enemyBoard.getFieldArray()[x][y].isHit()) {
+            if(GUI.enemyBoard.getFieldArray()[x][y].isHit()){
             	GUI.hitCounter--;
             }
             if (GUI.enemyBoard.getFieldArray()[x][y].isMiss()){

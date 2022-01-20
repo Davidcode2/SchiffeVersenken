@@ -778,6 +778,7 @@ public class GUI {
                 }
             }
             frame.dispose();
+            new GUI(1);
         });
         menuBar.add(restartGame);
 
