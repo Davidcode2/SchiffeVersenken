@@ -69,6 +69,10 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         System.out.println(String.format("connection data %s %s", ip, port));
         Connection.sendMessage("done");
         Ship.calcAmount(board.getSize());
-        new GUI(6);
+        if (GUI.kiMultiplayer) {
+            new GUI(10);
+        } else {
+            new GUI(6);
+        }
     }
 }

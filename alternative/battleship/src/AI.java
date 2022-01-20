@@ -7,6 +7,7 @@ public class AI {
     private static String direction;
     private static String flag;
 
+	// place ships for AI
     public static boolean start(String status) {
     	flag="random";
         Ship.calcAmount(GUI.enemyBoard.getSize());
