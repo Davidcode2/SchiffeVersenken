@@ -318,35 +318,37 @@ public class GUI {
 
         JPanel sizepanel = new JPanel();
         JTextField textfeld2 = new JTextField();
-        textfeld2.addActionListener((e) -> {
-            try {
-                Integer.parseInt(textfeld2.getText());
-            }catch(NumberFormatException ex){
-                frame.dispose();
-                new GUI(4);
-            }
-            int boardSize = Integer.parseInt(textfeld2.getText());
-            if(boardSize>=5 && boardSize<=30) {
-                userBoard = new Board(boardSize, "server");
-                int fieldsize = userBoard.getSize();
-                Ship.calcAmount(fieldsize);
-                frame.dispose();
-                ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
-                ServerConnectionService.setService(scService);
-                scService.execute();
-                Connection.setMultiplayer(true);
-                Connection.setServer(true);
-                if (savedSession) {
-                    new GUI(7);
-                } else {
-                    new GUI(6);
-                }
-            }
-            else {
-                frame.dispose();
-                new GUI(2);
-            }
-        });
+
+        JButton start = new JButton("Weiter");
+        start.setFocusable(false);
+        start.addActionListener((e) -> {
+                    try {
+                        Integer.parseInt(textfeld2.getText());
+                    } catch (NumberFormatException ex) {
+                        frame.dispose();
+                        new GUI(4);
+                    }
+                    int boardSize = Integer.parseInt(textfeld2.getText());
+                    if (boardSize >= 5 && boardSize <= 30) {
+                        userBoard = new Board(boardSize, "server");
+                        int fieldsize = userBoard.getSize();
+                        Ship.calcAmount(fieldsize);
+                        frame.dispose();
+                        ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
+                        ServerConnectionService.setService(scService);
+                        scService.execute();
+                        Connection.setMultiplayer(true);
+                        Connection.setServer(true);
+                        if (savedSession) {
+                            new GUI(7);
+                        } else {
+                            new GUI(6);
+                        }
+                    } else {
+                        frame.dispose();
+                        new GUI(2);
+                    }
+                });
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld2.setColumns(10);
         sizepanel.add(textfeld2);
@@ -381,7 +383,6 @@ public class GUI {
         }
 
         panelRight.add(Box.createGlue());
-        panelRight.add(Box.createVerticalStrut(50));
 
         JPanel panelLeft = new JPanel();
         splitPane.setLeftComponent(panelLeft);
@@ -392,6 +393,7 @@ public class GUI {
         panelLeft.add(sizelabel);
         panelLeft.add(size1label);
         panelLeft.add(sizepanel);
+        panelLeft.add(start);
 
         frame.getContentPane().add(Box.createGlue());
 
