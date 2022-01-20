@@ -27,6 +27,7 @@ public class GUI {
     public static int hitCounter;
     public static int enemyHitCounter;
     public static boolean difficultAi;
+    public static boolean kiMultiplayer = false;
 
     public GUI(int window){
 
@@ -346,7 +347,34 @@ public class GUI {
                 }
             } else {
                 frame.dispose();
-                new GUI(2);
+                new GUI(3);
+            }
+        });
+        JButton kiStart = new JButton("KI Spiel");
+        kiStart.setFocusable(false);
+        kiStart.addActionListener((e) -> {
+            try {
+                Integer.parseInt(textfeld2.getText());
+            } catch (NumberFormatException ex) {
+                frame.dispose();
+                new GUI(4);
+            }
+            int boardSize = Integer.parseInt(textfeld2.getText());
+            if (boardSize >= 5 && boardSize <= 30) {
+                userBoard = new Board(boardSize, "server");
+                int fieldsize = userBoard.getSize();
+                Ship.calcAmount(fieldsize);
+                frame.dispose();
+                ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
+                ServerConnectionService.setService(scService);
+                scService.execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(true);
+                kiMultiplayer = true;
+                new GUI(10);
+            } else {
+                frame.dispose();
+                new GUI(3);
             }
         });
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -394,6 +422,7 @@ public class GUI {
         panelLeft.add(size1label);
         panelLeft.add(sizepanel);
         panelLeft.add(start);
+        panelLeft.add(kiStart);
 
         frame.getContentPane().add(Box.createGlue());
 
@@ -465,6 +494,31 @@ public class GUI {
             // tricky
         });
 
+        JButton kiStart = new JButton("KI Spiel");
+        kiStart.setFocusable(false);
+        kiStart.addActionListener((e) -> {
+            try{
+                port = Integer.parseInt(textfeld.getText());
+            }catch(NumberFormatException ex){
+                frame.dispose();
+                new GUI(5);
+            }
+            try {
+                String ip = promptIP.getText();
+                userBoard = new Board(0, "server");
+                ClientConnectionService ccService = new ClientConnectionService(userBoard, ip, port);
+                ClientConnectionService.setService(ccService);
+                ccService.execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(false);
+                frame.dispose();
+                kiMultiplayer = true;
+            } catch (NumberFormatException ex) {
+                frame.dispose();
+                new GUI(5);
+            }
+        });
+
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -479,6 +533,7 @@ public class GUI {
         frame.getContentPane().add(panel);
 
         frame.getContentPane().add(start);
+        frame.getContentPane().add(kiStart);
         frame.getContentPane().add(button2);
 
         frame.getContentPane().add(Box.createGlue());
@@ -500,6 +555,33 @@ public class GUI {
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
+        new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (Connection.Multiplayer()) {
+                    if (Connection.isServer()) {
+                        try {
+                            if (Connection.getMessage().equals("done") || Connection.getMessage().equals("ready")) {
+                                this.cancel();
+                                // wenn bereit, sende 'ready'
+                                Connection.sendMessage("ready");
+                                frame.dispose();
+                                new GUI(7);
+                            }
+                        } catch (NullPointerException er) {
+                        }
+                    } else if (Connection.isServer() == false) {
+                        Connection.sendMessage("ready");
+                        this.cancel();
+                        frame.dispose();
+                        new GUI(7);
+                    }
+                } else {
+                    this.cancel();
+                    frame.dispose();
+                }
+            }
+        }, 0, 1000);
     }
 
     private void hostSaved() {
@@ -778,6 +860,7 @@ public class GUI {
         JButton beenden = new JButton("Beenden");
         beenden.addActionListener((e) -> {
             System.out.println("Beenden");
+            kiMultiplayer = false;
             if (Connection.Multiplayer()) {
                 Connection.setMultiplayer(false);
                 if (Connection.isServer()) {
@@ -861,6 +944,9 @@ public class GUI {
                     wert = AI.start("client");
                 }
             }
+        } else if (kiMultiplayer) {
+            AI.start("server");
+            kiMulti();
         }
         userBoard.print();
         enemyBoard.print();
