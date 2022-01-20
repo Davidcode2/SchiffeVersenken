@@ -226,7 +226,7 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
-    
+
     private void mehrspieler() {
 
         JLabel label = new JLabel("Schiffe versenken");
@@ -248,23 +248,23 @@ public class GUI {
             new GUI(5);
         });
 
-    JButton ButtonSpielLaden = new JButton("Spiel laden");
-    ButtonSpielLaden.setFocusable(false);
-    ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
-    ButtonSpielLaden.addActionListener((e) -> {
-        System.out.println("laden");
-        savedSession = true;
-        ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
-        Field[][][] myField = Controller.readBoard(fieldStringArray);
-        GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
-        Connection.setMultiplayer(true);
-        GUI.id = Long.valueOf(fieldStringArray.get(0));
-        frame.dispose();
-        new GUI(11);
-    });
+        JButton ButtonSpielLaden = new JButton("Spiel laden");
+        ButtonSpielLaden.setFocusable(false);
+        ButtonSpielLaden.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ButtonSpielLaden.addActionListener((e) -> {
+            System.out.println("laden");
+            savedSession = true;
+            ArrayList<String> fieldStringArray = Controller.loadPrompt(frame);
+            Field[][][] myField = Controller.readBoard(fieldStringArray);
+            GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
+            Connection.setMultiplayer(true);
+            GUI.id = Long.valueOf(fieldStringArray.get(0));
+            frame.dispose();
+            new GUI(11);
+        });
 
-    JButton buttonBack = new JButton("Zurück");
-    buttonBack.setFocusable(false);
+        JButton buttonBack = new JButton("Zurück");
+        buttonBack.setFocusable(false);
         buttonBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonBack.addActionListener((e) -> {
             frame.dispose();
@@ -322,33 +322,33 @@ public class GUI {
         JButton start = new JButton("Weiter");
         start.setFocusable(false);
         start.addActionListener((e) -> {
-                    try {
-                        Integer.parseInt(textfeld2.getText());
-                    } catch (NumberFormatException ex) {
-                        frame.dispose();
-                        new GUI(4);
-                    }
-                    int boardSize = Integer.parseInt(textfeld2.getText());
-                    if (boardSize >= 5 && boardSize <= 30) {
-                        userBoard = new Board(boardSize, "server");
-                        int fieldsize = userBoard.getSize();
-                        Ship.calcAmount(fieldsize);
-                        frame.dispose();
-                        ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
-                        ServerConnectionService.setService(scService);
-                        scService.execute();
-                        Connection.setMultiplayer(true);
-                        Connection.setServer(true);
-                        if (savedSession) {
-                            new GUI(7);
-                        } else {
-                            new GUI(6);
-                        }
-                    } else {
-                        frame.dispose();
-                        new GUI(2);
-                    }
-                });
+            try {
+                Integer.parseInt(textfeld2.getText());
+            } catch (NumberFormatException ex) {
+                frame.dispose();
+                new GUI(4);
+            }
+            int boardSize = Integer.parseInt(textfeld2.getText());
+            if (boardSize >= 5 && boardSize <= 30) {
+                userBoard = new Board(boardSize, "server");
+                int fieldsize = userBoard.getSize();
+                Ship.calcAmount(fieldsize);
+                frame.dispose();
+                ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
+                ServerConnectionService.setService(scService);
+                scService.execute();
+                Connection.setMultiplayer(true);
+                Connection.setServer(true);
+                if (savedSession) {
+                    new GUI(7);
+                } else {
+                    new GUI(6);
+                }
+            } else {
+                frame.dispose();
+                new GUI(2);
+            }
+        });
         textfeld2.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld2.setColumns(10);
         sizepanel.add(textfeld2);
@@ -425,14 +425,6 @@ public class GUI {
 
         JPanel panel = new JPanel();
         JTextField textfeld = new JTextField();
-        textfeld.addActionListener((e) -> {
-            try{
-                port = Integer.parseInt(textfeld.getText());
-            }catch(NumberFormatException ex){
-                frame.dispose();
-                new GUI(5);
-            }
-        });
         textfeld.setHorizontalAlignment(SwingConstants.CENTER);
         textfeld.setColumns(10);
         panel.add(textfeld);
@@ -444,7 +436,16 @@ public class GUI {
 
         panel = new JPanel();
         JTextField promptIP = new JTextField();
-        promptIP.addActionListener((e) -> {
+
+        JButton start = new JButton("Weiter");
+        start.setFocusable(false);
+        start.addActionListener((e) -> {
+            try{
+                port = Integer.parseInt(textfeld.getText());
+            }catch(NumberFormatException ex){
+                frame.dispose();
+                new GUI(5);
+            }
             try {
                 String ip = promptIP.getText();
                 userBoard = new Board(0, "server");
@@ -464,9 +465,6 @@ public class GUI {
             // tricky
         });
 
-        // TODO:
-        // on submit
-
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -480,13 +478,14 @@ public class GUI {
         panel.add(promptIP);
         frame.getContentPane().add(panel);
 
+        frame.getContentPane().add(start);
         frame.getContentPane().add(button2);
 
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
     }
-    
+
     private void waitForServer() {
         frame.setContentPane(Box.createVerticalBox());
 
@@ -639,7 +638,7 @@ public class GUI {
                         }
                     } else if (Connection.isServer() == false) {
                         Connection.sendMessage("ready");
-                       if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
+                        if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
                             frame.dispose();
                             new GUI(7);
                         }
