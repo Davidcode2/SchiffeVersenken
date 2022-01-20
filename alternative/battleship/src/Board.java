@@ -140,6 +140,12 @@ public class Board {
 
 
     }
+    
+    public void colorWater(int x, int y) {
+    	if (fieldArray[x][y].isWater()){
+            fieldArray[x][y].setMiss(true);
+        }
+    }
 
     public void shot(int x, int y) {
         if (fieldArray[x][y].isShip()){
