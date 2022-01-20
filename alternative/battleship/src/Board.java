@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+import javax.swing.JOptionPane;
 
 public class Board {
     private Field[][] fieldArray;
@@ -66,10 +66,8 @@ public class Board {
             }
 
         } else {
-            // TODO: display banner saying:
             System.out.println("all Ships have been placed.");
-//            System.out.println("reset amounts");
-//            Ship.calcAmount(fieldArray.length);
+            JOptionPane.showMessageDialog(null, "Alle Schiffe wurden platziert.");
         }
     }
 
@@ -149,12 +147,12 @@ public class Board {
 
     public void shot(int x, int y) {
         if (fieldArray[x][y].isShip()){
-            //TODO: check ob Schiff gesunken (wenn gesunken, Schiff aus ArrayList löschen
 
             fieldArray[x][y].setHit(true);
             for (int i=0; i<shipList.size();i++){
                 if (shipList.get(i).getStartPoint()[0] == x && shipList.get(i).getStartPoint()[1] == y && checkSunk(x,y,shipList.get(i))){
                     fieldArray[x][y].setSunk(true);
+                    //hier soll das wasser um gesunkene schiffe gesetzt werden
                     shipList.remove(i);
                     System.out.println("removed");
                 }
@@ -166,8 +164,6 @@ public class Board {
     }
 
     private boolean checkSunk(int x, int y, Ship ship) {
-        //TODO: fix
-//        System.out.println(ship.getSize()); // auskommentiert für saubere Ausgabe
         if (ship.getSize() == 1){
             return true;
         } else {
