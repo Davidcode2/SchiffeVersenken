@@ -1,14 +1,10 @@
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.SocketException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
 import java.util.TimerTask;
 
 // TODO: Modus für Computer gegen Computer
@@ -82,6 +78,7 @@ public class GUI {
         ButtonSP.setFocusable(false);
         ButtonSP.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSP.addActionListener((e) -> {
+        	difficultAi = false;
             frame.dispose();
             new GUI(2);
         });
@@ -400,10 +397,6 @@ public class GUI {
         panelLeft.add(button2);
 
         panelLeft.add(Box.createVerticalStrut(50));
-
-        // TODO:
-        // add submit button
-        // actions in textfields should only be executed when pressed
     }
 
     private void client() {
@@ -458,15 +451,7 @@ public class GUI {
                 frame.dispose();
                 new GUI(5);
             }
-//                JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
-            // TODO: create "Waiting for Server" Screen
-            // continue waiting for server, if it isn't started
-            // tricky
         });
-
-        // TODO:
-        // on submit
-
         JButton button2 = new JButton("Zurück");
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -605,9 +590,6 @@ public class GUI {
 
         panelLeft.add(Box.createVerticalStrut(50));
 
-        // TODO:
-        // add submit button
-        // actions in textfields should only be executed when pressed
     }
 
     public void showAlert(String alert) {
@@ -673,14 +655,14 @@ public class GUI {
         });
         menuBar.add(restart);
 
-        JButton backButton = new JButton("Hauptmenü");
-        backButton.setFocusable(false);
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.addActionListener((e) -> {
+        JButton restartGame = new JButton("Spiel neu starten");
+        restartGame.setFocusable(false);
+        restartGame.setAlignmentX(Component.CENTER_ALIGNMENT);
+        restartGame.addActionListener((e) -> {
             frame.dispose();
             new GUI(1);
         });
-        menuBar.add(backButton);
+        menuBar.add(restartGame);
 
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         JSplitPane splitPane = new JSplitPane();
@@ -776,9 +758,9 @@ public class GUI {
         });
         menuBar.add(speichern);
 
-        JButton beenden = new JButton("Beenden");
-        beenden.addActionListener((e) -> {
-            System.out.println("Beenden");
+        JButton restartGame = new JButton("Spiel neu starten");
+        restartGame.addActionListener((e) -> {
+            System.out.println("Spiel neu starten");
             if (Connection.Multiplayer()) {
                 Connection.setMultiplayer(false);
                 if (Connection.isServer()) {
@@ -796,9 +778,8 @@ public class GUI {
                 }
             }
             frame.dispose();
-            new GUI(1);
         });
-        menuBar.add(beenden);
+        menuBar.add(restartGame);
 
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
         JSplitPane splitPane = new JSplitPane();
@@ -910,6 +891,13 @@ public class GUI {
             frame.dispose();
         });
         menuBar.add(endGame);
+        
+        JButton restartGame = new JButton("Spiel neu starten");
+        restartGame.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(1);
+        });
+        menuBar.add(restartGame);
 
         JLabel label = new JLabel("YOU WON");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -935,6 +923,13 @@ public class GUI {
             frame.dispose();
         });
         menuBar.add(endGame);
+        
+        JButton restartGame = new JButton("Spiel neu starten");
+        restartGame.addActionListener((e) -> {
+            frame.dispose();
+            new GUI(1);
+        });
+        menuBar.add(restartGame);
 
         JLabel label = new JLabel("YOU LOST");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);

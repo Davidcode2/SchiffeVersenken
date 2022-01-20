@@ -9,8 +9,6 @@ public class Ship {
         this.size = size;
         this.startPoint = startPoint;
         this.direction = direction;
-
-
     }
 
     public static void calcAmount(int size) {

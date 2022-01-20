@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class Board {
     private Field[][] fieldArray;
     private int size;
@@ -149,7 +148,6 @@ public class Board {
 
     public void shot(int x, int y) {
         if (fieldArray[x][y].isShip()){
-            //TODO: check ob Schiff gesunken (wenn gesunken, Schiff aus ArrayList löschen
 
             fieldArray[x][y].setHit(true);
             for (int i=0; i<shipList.size();i++){
@@ -166,8 +164,6 @@ public class Board {
     }
 
     private boolean checkSunk(int x, int y, Ship ship) {
-        //TODO: fix
-//        System.out.println(ship.getSize()); // auskommentiert für saubere Ausgabe
         if (ship.getSize() == 1){
             return true;
         } else {
