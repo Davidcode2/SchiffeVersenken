@@ -7,9 +7,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-// TODO: Modus für Computer gegen Computer
-// TODO: Felder die aufjedenfall Wasser sind markieren
-
 public class GUI {
 
     public static JFrame frame;
@@ -24,11 +21,14 @@ public class GUI {
     public static int enemyHitCounter;
     public static boolean difficultAi;
     public static boolean kiMultiplayer = false;
+    private static Dimension dim = new Dimension(1440, 810);
+    private static Point pos = new Point(1, 1);
 
     public GUI(int window){
-
+    	
         frame = new JFrame("Spiel");
-        frame.setSize(1440, 810);
+        frame.setSize(dim);
+        frame.setLocation(pos);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         switch (window) {
@@ -80,6 +80,8 @@ public class GUI {
         ButtonSP.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSP.addActionListener((e) -> {
         	difficultAi = false;
+        	pos=frame.getLocation();
+        	dim = frame.getSize();
             frame.dispose();
             new GUI(2);
         });
@@ -88,6 +90,8 @@ public class GUI {
         ButtonMP.setFocusable(false);
         ButtonMP.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonMP.addActionListener((e) -> {
+        	pos=frame.getLocation();
+        	dim = frame.getSize();
             frame.dispose();
             new GUI(3);
         });
@@ -169,6 +173,8 @@ public class GUI {
         start.addActionListener((e) -> {
             try{Integer. parseInt(textfield.getText());
             }catch(NumberFormatException ex){
+            	pos=frame.getLocation();
+            	dim = frame.getSize();
                 frame.dispose();
                 new GUI(2);
             }
@@ -177,10 +183,14 @@ public class GUI {
                 userBoard = new Board(boardSize, "server");
                 enemyBoard = new Board(boardSize, "client");
                 Ship.calcAmount(userBoard.getSize());
+                pos=frame.getLocation();
+                dim = frame.getSize();
                 frame.dispose();
                 new GUI(6);
             }
             else {
+            	pos=frame.getLocation();
+            	dim = frame.getSize();
                 frame.dispose();
                 new GUI(2);
             }
@@ -199,11 +209,15 @@ public class GUI {
                 Connection.setMultiplayer(false);
                 GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
                 System.out.println("created enemy board");
+                pos=frame.getLocation();
+                dim = frame.getSize();
                 frame.dispose();
                 new GUI(7);
             } else {
                 Connection.setMultiplayer(true);
                 GUI.id = Long.valueOf(fieldStringArray.get(0));
+                pos=frame.getLocation();
+                dim = frame.getSize();
                 frame.dispose();
                 new GUI(11);
             }
@@ -213,6 +227,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
+        	pos=frame.getLocation();
+        	dim = frame.getSize();
             frame.dispose();
             new GUI(1);
         });
@@ -234,6 +250,8 @@ public class GUI {
         button1.setFocusable(false);
         button1.setAlignmentX(Component.CENTER_ALIGNMENT);
         button1.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(4);
         });
@@ -242,6 +260,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(5);
         });
@@ -257,6 +277,8 @@ public class GUI {
             GUI.userBoard = new Board(myField[0], myField[0][0].length, "server");
             Connection.setMultiplayer(true);
             GUI.id = Long.valueOf(fieldStringArray.get(0));
+            dim = frame.getSize();
+            pos=frame.getLocation();
             frame.dispose();
             new GUI(11);
         });
@@ -265,6 +287,8 @@ public class GUI {
         buttonBack.setFocusable(false);
         buttonBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonBack.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -315,12 +339,16 @@ public class GUI {
             try{
                 port = Integer.parseInt(textfeld.getText());
             } catch(NumberFormatException ex) {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
             try {
                 Integer.parseInt(textfeld2.getText());
             } catch (NumberFormatException ex) {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
@@ -329,6 +357,8 @@ public class GUI {
                 userBoard = new Board(boardSize, "server");
                 int fieldsize = userBoard.getSize();
                 Ship.calcAmount(fieldsize);
+                dim = frame.getSize();
+                pos=frame.getLocation();
                 frame.dispose();
                 ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
                 ServerConnectionService.setService(scService);
@@ -341,6 +371,8 @@ public class GUI {
                     new GUI(6);
                 }
             } else {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(3);
             }
@@ -353,12 +385,16 @@ public class GUI {
             try{
                 port = Integer.parseInt(textfeld.getText());
             } catch(NumberFormatException ex) {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
             try {
                 Integer.parseInt(textfeld2.getText());
             } catch (NumberFormatException ex) {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
@@ -367,6 +403,8 @@ public class GUI {
                 userBoard = new Board(boardSize, "server");
                 int fieldsize = userBoard.getSize();
                 Ship.calcAmount(fieldsize);
+                dim = frame.getSize();
+                pos=frame.getLocation();
                 frame.dispose();
                 ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
                 ServerConnectionService.setService(scService);
@@ -376,6 +414,8 @@ public class GUI {
                 kiMultiplayer = true;
                 new GUI(10);
             } else {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(3);
             }
@@ -389,6 +429,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(3);
         });
@@ -472,6 +514,8 @@ public class GUI {
             try{
                 port = Integer.parseInt(textfeld.getText());
             }catch(NumberFormatException ex){
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(5);
             }
@@ -483,6 +527,8 @@ public class GUI {
                 ccService.execute();
                 Connection.setMultiplayer(true);
                 Connection.setServer(false);
+                dim = frame.getSize();
+                pos=frame.getLocation();
                 frame.dispose();
             } catch (NumberFormatException ex) {
                 frame.dispose();
@@ -497,6 +543,8 @@ public class GUI {
             try{
                 port = Integer.parseInt(textfeld.getText());
             }catch(NumberFormatException ex){
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(5);
             }
@@ -508,6 +556,8 @@ public class GUI {
                 ccService.execute();
                 Connection.setMultiplayer(true);
                 Connection.setServer(false);
+                dim = frame.getSize();
+                pos=frame.getLocation();
                 frame.dispose();
                 kiMultiplayer = true;
             } catch (NumberFormatException ex) {
@@ -521,6 +571,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(3);
         });
@@ -563,6 +615,8 @@ public class GUI {
                                 this.cancel();
                                 // wenn bereit, sende 'ready'
                                 Connection.sendMessage("ready");
+                                dim = frame.getSize();
+                                pos=frame.getLocation();
                                 frame.dispose();
                                 new GUI(7);
                             }
@@ -571,6 +625,8 @@ public class GUI {
                     } else if (Connection.isServer() == false) {
                         Connection.sendMessage("ready");
                         this.cancel();
+                        dim = frame.getSize();
+                        pos=frame.getLocation();
                         frame.dispose();
                         new GUI(7);
                     }
@@ -622,6 +678,8 @@ public class GUI {
                                     Connection.sendMessage("ready");
                                     Connection.sendMessage(String.format("load %s", id));
                                     this.cancel();
+                                    dim = frame.getSize();
+                                    pos=frame.getLocation();
                                     frame.dispose();
                                     new GUI(7);
                                 } else {
@@ -634,6 +692,8 @@ public class GUI {
                     },0,500);
                 }
             } catch(NumberFormatException ex) {
+            	dim = frame.getSize();
+            	pos=frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
@@ -648,6 +708,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(3);
         });
@@ -691,6 +753,9 @@ public class GUI {
     }
 
     private void schiffeplatzieren() {
+    	
+    	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
+    	
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
@@ -705,6 +770,8 @@ public class GUI {
                             if (Connection.getMessage().equals("done") || Connection.getMessage().equals("ready")) {
                                 // wenn bereit, sende 'ready'
                                 Connection.sendMessage("ready");
+                                dim = frame.getSize();
+                                pos=frame.getLocation();
                                 frame.dispose();
                                 new GUI(7);
                             } else {
@@ -716,11 +783,15 @@ public class GUI {
                     } else if (Connection.isServer() == false) {
                         Connection.sendMessage("ready");
                         if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
+                        	dim = frame.getSize();
+                        	pos=frame.getLocation();
                             frame.dispose();
                             new GUI(7);
                         }
                     }
                 } else {
+                	dim = frame.getSize();
+                	pos=frame.getLocation();
                     frame.dispose();
                     new GUI(7);
                 }
@@ -731,6 +802,8 @@ public class GUI {
                         // wenn bereit, sende 'ready'
                         Connection.sendMessage("ready");
                     }
+                    dim = frame.getSize();
+                    pos=frame.getLocation();
                     frame.dispose();
                     new GUI(7);
                 }
@@ -743,9 +816,9 @@ public class GUI {
         placeAutomatic.addActionListener((e) -> {
             userBoard = new Board(userBoard.getSize(), "server");
             Ship.calcAmount(userBoard.getSize());
-            
             AI.start("server");
-            
+            dim = frame.getSize();
+            pos=frame.getLocation();
             frame.dispose();
             new GUI(7);
 
@@ -756,6 +829,8 @@ public class GUI {
         restart.addActionListener((e) -> {
             userBoard = new Board(userBoard.getSize(), "server");
             Ship.calcAmount(userBoard.getSize());
+            dim = frame.getSize();
+            pos=frame.getLocation();
             frame.dispose();
             new GUI(6);
 
@@ -766,6 +841,8 @@ public class GUI {
         restartGame.setFocusable(false);
         restartGame.setAlignmentX(Component.CENTER_ALIGNMENT);
         restartGame.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -847,6 +924,7 @@ public class GUI {
 
     private void spiel() {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
+        frame.setMaximumSize(new Dimension(1920, 1080));
         if (Connection.Multiplayer()) {
             new Connection.inboundMessageLoop().execute();
             enemyBoard = new Board(userBoard.getSize(), "client");
@@ -885,6 +963,8 @@ public class GUI {
                     }
                 }
             }
+            dim = frame.getSize();
+            pos=frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -919,11 +999,15 @@ public class GUI {
                         buttonsEnemy[x][y].setEnabled(false);
                     }
                     if (hitCounter == 0) {
+                    	dim = frame.getSize();
+                    	pos=frame.getLocation();
                         frame.dispose();
                         new GUI(8);
                         return;
                     }
                     if (enemyHitCounter == 0) {
+                    	dim = frame.getSize();
+                    	pos=frame.getLocation();
                         frame.dispose();
                         new GUI(9);
                         return;
@@ -933,7 +1017,7 @@ public class GUI {
             }
         }
 
-        JPanel panelright = new JPanel(); //rechts ist unser Feld hier werden bisher nur die von uns platzierten schiffe angezeigt
+        JPanel panelright = new JPanel();
         splitPane.setRightComponent(panelright);
         panelright.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
 
@@ -1023,6 +1107,8 @@ public class GUI {
         
         JButton restartGame = new JButton("Spiel neu starten");
         restartGame.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -1055,6 +1141,8 @@ public class GUI {
         
         JButton restartGame = new JButton("Spiel neu starten");
         restartGame.addActionListener((e) -> {
+        	dim = frame.getSize();
+        	pos=frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
