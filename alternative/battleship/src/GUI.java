@@ -738,6 +738,19 @@ public class GUI {
         });
 
         menuBar.add(beginnen);
+        
+        JButton placeAutomatic = new JButton("Schiffe automatisch setzen");
+        placeAutomatic.addActionListener((e) -> {
+            userBoard = new Board(userBoard.getSize(), "server");
+            Ship.calcAmount(userBoard.getSize());
+            
+            AI.start("server");
+            
+            frame.dispose();
+            new GUI(7);
+
+        });
+        menuBar.add(placeAutomatic);
 
         JButton restart = new JButton("Schiffe neu setzen");
         restart.addActionListener((e) -> {
