@@ -20,7 +20,15 @@ public class Board {
         }
     }
 
-    // overloaded constructor for loading session
+    //
+
+    /**
+     * overloaded constructor for loading session
+     * the additional parameter <strong>fieldArray</strong> is needed for the loading function
+     * @param fieldArray
+     * @param size
+     * @param status
+     */
     public Board(Field[][] fieldArray, int size, String status) {
         this.fieldArray = fieldArray;
         this.size = size;

@@ -49,6 +49,12 @@ public class Controller {
         serverTurn = !serverTurn;
     }
 
+    /**
+     * allows user to navigate to text file containing saved game session
+     * and writes contents of file to variable
+     * @param frame frame to anchor the FileChooser Dialog to
+     * @return Contents of save file in String Array
+     */
     public static ArrayList loadPrompt(Frame frame) {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
         ArrayList<String> fieldStringArray = new ArrayList();
@@ -69,6 +75,12 @@ public class Controller {
         return fieldStringArray;
     }
 
+    /**
+     * parse content of saved text file containing game status
+     * and write it into a Field Object
+     * @param stringArrayL contents of saved session in String array (provided by loadPrompt())
+     * @return Array of Fields to account for both the user (position 0) and the enemy board (position 1)
+     */
     public static Field[][][] readBoard(ArrayList<String> stringArrayL) {
         int boardCount = 1;
         int max = 0;
@@ -135,6 +147,13 @@ public class Controller {
         return arrFieldArray;
     }
 
+    /**
+     * save current game status in a text file at a destination specified by the user
+     * via FileChooser
+     * @param frame frame for anchoring FileChooser Dialog
+     * @param userBoard Board of the user
+     * @param enemyBoard Board of the opponent
+     */
     public static void saveSession(JFrame frame, Board userBoard, Board enemyBoard) {
 
         System.out.println("Speichern");
@@ -179,6 +198,16 @@ public class Controller {
         }
     }
 
+
+    /**
+     * save current game status in a text file at a destination specified by the user
+     * via FileChooser
+     * invoked by saving party of a multiplayer game
+     * @param userBoard Board of the user
+     * @param enemyBoard Board of the opponent
+     * @param id id constructed of date and time. Serves as a file name.
+     * @throws IOException
+     */
     public static void saveSession(Board userBoard, Board enemyBoard, long id) throws IOException {
 
         System.out.println("Speichern");

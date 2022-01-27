@@ -625,7 +625,7 @@ public class GUI {
     }
     
     /**
-     * 
+     * display wait for server message
      */
     private void waitForServer() {
         frame.setContentPane(Box.createVerticalBox());
@@ -679,9 +679,10 @@ public class GUI {
             }
         }, 0, 1000);
     }
-    
+
     /**
-     * 
+     * screen for saved session
+     * no longer requires input of board size
      */
     private void hostSaved() {
 
