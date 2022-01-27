@@ -5,6 +5,8 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.TimerTask;
 
 public class GUI {
@@ -838,11 +840,12 @@ public class GUI {
             userBoard = new Board(userBoard.getSize(), "server");
             Ship.calcAmount(userBoard.getSize());
             AI.start("server");
-            dim = frame.getSize();
-            pos=frame.getLocation();
-            frame.dispose();
-            new GUI(7);
-
+            if (!Connection.Multiplayer()) {
+                dim = frame.getSize();
+                pos = frame.getLocation();
+                frame.dispose();
+                new GUI(7);
+            }
         });
         menuBar.add(placeAutomatic);
 
@@ -1064,19 +1067,19 @@ public class GUI {
             }
         } else if (kiMultiplayer) {
             AI.start("server");
-            int counter = 0;
             ArrayList shotList = new ArrayList<>();
-            // TODO: GUI.enemyHitCounter + GUI.hitCounter
-            // also for normal multiplayer.
             while (hitCounter != 0 && enemyHitCounter != 0) {
+                int[] shot = new int[2];
                 int x = (int) (Math.random() * GUI.buttonsUser.length);
                 int y = (int) (Math.random() * GUI.buttonsUser.length);
-                shotList.add(x,y);
-
-                counter++;
+                shot[0] = x; shot[1] = y;
+                if (!GUI.enemyBoard.getFieldArray()[x][y].isWater()) {
+                    continue;
+                }
+                shotList.add(shot);
                 if (Connection.getTurn()) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

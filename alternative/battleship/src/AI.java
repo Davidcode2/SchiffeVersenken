@@ -10,7 +10,7 @@ public class AI {
 	// place ships for AI
     public static boolean start(String status) {
     	flag="random";
-        Ship.calcAmount(GUI.enemyBoard.getSize());
+        Ship.calcAmount(GUI.userBoard.getSize());
         int timer = 0;
         if(status == "client"){
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
