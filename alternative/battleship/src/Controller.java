@@ -32,6 +32,7 @@ public class Controller {
             	AI.shot();
             }
         } else if (serverTurn){
+        	GUI.enemyBoard.setEnemyBoard();
             GUI.enemyBoard.shot(x,y);
             if(GUI.enemyBoard.getFieldArray()[x][y].isHit()){
             	GUI.hitCounter--;
