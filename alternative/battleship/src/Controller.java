@@ -11,7 +11,7 @@ public class Controller {
     public static boolean clientTurn;
     public static boolean serverTurn;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
             new GUI(1);
@@ -24,22 +24,22 @@ public class Controller {
         serverTurn = true;
     }
 
-    public static void handleShotSP(int x, int y){
-        if (clientTurn){
-            if(GUI.difficultAi) {
-            	AI.shotHard();
-            }else {
-            	AI.shot();
+    public static void handleShotSP(int x, int y) {
+        if (clientTurn) {
+            if (GUI.difficultAi) {
+                AI.shotHard();
+            } else {
+                AI.shot();
             }
-        } else if (serverTurn){
-        	GUI.enemyBoard.setEnemyBoard();
-            GUI.enemyBoard.shot(x,y);
-            if(GUI.enemyBoard.getFieldArray()[x][y].isHit()){
-            	GUI.hitCounter--;
+        } else if (serverTurn) {
+            GUI.enemyBoard.setEnemyBoard();
+            GUI.enemyBoard.shot(x, y);
+            if (GUI.enemyBoard.getFieldArray()[x][y].isHit()) {
+                GUI.hitCounter--;
             }
-            if (GUI.enemyBoard.getFieldArray()[x][y].isMiss()){
+            if (GUI.enemyBoard.getFieldArray()[x][y].isMiss()) {
                 switchTurn();
-                handleShotSP(x,y);
+                handleShotSP(x, y);
             }
         }
     }
@@ -48,7 +48,7 @@ public class Controller {
         clientTurn = !clientTurn;
         serverTurn = !serverTurn;
     }
-    
+
     public static ArrayList loadPrompt(Frame frame) {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt");
         ArrayList<String> fieldStringArray = new ArrayList();
@@ -68,8 +68,8 @@ public class Controller {
         }
         return fieldStringArray;
     }
-    
-	public static Field[][][] readBoard(ArrayList<String> stringArrayL) {
+
+    public static Field[][][] readBoard(ArrayList<String> stringArrayL) {
         int boardCount = 1;
         int max = 0;
         // get size of Board
@@ -81,22 +81,22 @@ public class Controller {
         }
         int size = stringArrayL.size() - 1;
         max += 1;
-        if (size > max*max) {
+        if (size > max * max) {
             boardCount++;
         }
         Field[][][] arrFieldArray = new Field[boardCount][max][max];
-        for (int n=0; n<boardCount;n++) {
+        for (int n = 0; n < boardCount; n++) {
             Field[] temp = new Field[(max * max)];
             int i = 1;
             int end = 0;
             if (boardCount == 2) {
-                end = (size / 2)+1;
+                end = (size / 2) + 1;
             } else {
-                end = size+1;
+                end = size + 1;
             }
             if (n == 1) {
                 i = (size / 2);
-                end = size+1;
+                end = size + 1;
             }
             for (; i < end; i++) {
                 String[] splitArr = stringArrayL.get(i).split(" ");
@@ -107,19 +107,19 @@ public class Controller {
                     boolArr[j] = Boolean.parseBoolean(splitArr[j + 2]);
                 }
                 Field tempField = new Field(x, y, boolArr[0], boolArr[1], boolArr[2], boolArr[3], boolArr[4], boolArr[5]);
-                System.out.println(tempField.toString());
-                if (i >= max*max+1) {
-                    temp[i-(max*max)-1] = tempField;
+                System.out.println(tempField);
+                if (i >= max * max + 1) {
+                    temp[i - (max * max) - 1] = tempField;
                 } else {
-                    temp[i-1] = tempField;
+                    temp[i - 1] = tempField;
                 }
             }
             Field[][] fieldArray = new Field[max][max];
             boolean breakFlag = false;
             int counter = 0;
-            for (int s=0; s<max; s++) {
-                for (int j=0; j<max; j++) {
-                    if (counter==max*max) {
+            for (int s = 0; s < max; s++) {
+                for (int j = 0; j < max; j++) {
+                    if (counter == max * max) {
                         breakFlag = true;
                         break;
                     }
@@ -154,19 +154,19 @@ public class Controller {
                 long saveId = date.getTime();
                 String saveIdStr = String.valueOf(saveId);
                 pwriter.println(saveIdStr);
-                for (int i=0; i<userBoard.getFieldArray().length; i++) {
+                for (int i = 0; i < userBoard.getFieldArray().length; i++) {
                     for (int j = 0; j < userBoard.getFieldArray().length; j++) {
                         System.out.println(userBoard.getFieldArray()[i][j].toString());
                         pwriter.println(userBoard.getFieldArray()[i][j].toString());
                     }
                 }
 //                if (!Connection.Multiplayer()) {
-                    for (int i=0; i<enemyBoard.getFieldArray().length; i++) {
-                        for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
-                            System.out.println(enemyBoard.getFieldArray()[i][j].toString());
-                            pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
-                        }
+                for (int i = 0; i < enemyBoard.getFieldArray().length; i++) {
+                    for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
+                        System.out.println(enemyBoard.getFieldArray()[i][j].toString());
+                        pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
                     }
+                }
 //                } else {
                 if (Connection.Multiplayer()) {
                     Connection.sendMessage(String.format("save %s", saveIdStr));
@@ -178,35 +178,35 @@ public class Controller {
             }
         }
     }
-    
+
     public static void saveSession(Board userBoard, Board enemyBoard, long id) throws IOException {
 
         System.out.println("Speichern");
-        File fileToSave = new File(System.getProperty("user.home"), Long.toString(id) + ".txt");
+        File fileToSave = new File(System.getProperty("user.home"), id + ".txt");
 
         System.out.print("save file as: " + fileToSave.getAbsolutePath());
-            PrintWriter pwriter = null;
-            try {
-                pwriter = new PrintWriter(new FileWriter(fileToSave));
-                pwriter.println(id);
-                for (int i = 0; i < userBoard.getFieldArray().length; i++) {
-                    for (int j = 0; j < userBoard.getFieldArray().length; j++) {
-                        System.out.println(userBoard.getFieldArray()[i][j].toString());
-                        pwriter.println(userBoard.getFieldArray()[i][j].toString());
-                    }
+        PrintWriter pwriter = null;
+        try {
+            pwriter = new PrintWriter(new FileWriter(fileToSave));
+            pwriter.println(id);
+            for (int i = 0; i < userBoard.getFieldArray().length; i++) {
+                for (int j = 0; j < userBoard.getFieldArray().length; j++) {
+                    System.out.println(userBoard.getFieldArray()[i][j].toString());
+                    pwriter.println(userBoard.getFieldArray()[i][j].toString());
                 }
-//                if (!Connection.Multiplayer()) {
-                    for (int i = 0; i < enemyBoard.getFieldArray().length; i++) {
-                        for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
-                            System.out.println(enemyBoard.getFieldArray()[i][j].toString());
-                            pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
-                        }
-                    }
-//                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                pwriter.close();
             }
+//                if (!Connection.Multiplayer()) {
+            for (int i = 0; i < enemyBoard.getFieldArray().length; i++) {
+                for (int j = 0; j < enemyBoard.getFieldArray().length; j++) {
+                    System.out.println(enemyBoard.getFieldArray()[i][j].toString());
+                    pwriter.println(enemyBoard.getFieldArray()[i][j].toString());
+                }
+            }
+//                }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            pwriter.close();
         }
+    }
 }

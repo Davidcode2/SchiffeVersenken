@@ -1,91 +1,93 @@
-import java.net.*;
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 public class Client {
 
-	private static Connection connection;
+    private static Connection connection;
 
-	private static boolean clientLoopReady;
+    private static boolean clientLoopReady;
+    private static boolean clientConnected = false;
 
-	public static Connection getConnection() {
-		return connection;
-	}
-	private static boolean clientConnected = false;
-	public static boolean getClientConnected() {
-		return clientConnected;
-	}
+    public static Connection getConnection() {
+        return connection;
+    }
 
-	public boolean getClientLoopReady() {
-		return clientLoopReady;
-	}
+    public void setConnection(Connection connection) {
+        Client.connection = connection;
+    }
 
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
+    public static boolean getClientConnected() {
+        return clientConnected;
+    }
 
-	// Client-Seite eines sehr einfachen Chat-Programms mit Sockets.
-	// (Anstelle von "throws IOException" sollte man Ausnahmen besser
-	// gezielt mit try-catch auffangen.)
-	// Verwendete Portnummer (vgl. Server).
-	public Socket startConnection(String ip, int port) throws IOException {
+    public static void stopConnection(Socket s) throws IOException {
+        // EOF ins Socket "schreiben".
+        s.close();
+        s.shutdownOutput();
+        ClientConnectionService.getInstance().cancel(true);
+        Connection.getTimer().cancel();
+        System.out.println("Connection closed.");
+    }
 
-		InetSocketAddress inSocket = new InetSocketAddress(ip, port);
-		// Als Resultat erhält man ein Socket.
-		Socket s = new Socket();
-		s.connect(inSocket, 10000);
-		clientConnected = true;
-		System.out.println(String.format("is Server: %s", connection.isServer()));
-		System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
-		System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
-		return s;
-	}
+    public boolean getClientLoopReady() {
+        return clientLoopReady;
+    }
 
-	public void createConnection(Socket s) throws IOException {
+    // Client-Seite eines sehr einfachen Chat-Programms mit Sockets.
+    // (Anstelle von "throws IOException" sollte man Ausnahmen besser
+    // gezielt mit try-catch auffangen.)
+    // Verwendete Portnummer (vgl. Server).
+    public Socket startConnection(String ip, int port) throws IOException {
 
-		BufferedReader in =
-				new BufferedReader(new InputStreamReader(s.getInputStream()));
-		Writer out = new OutputStreamWriter(s.getOutputStream());
+        InetSocketAddress inSocket = new InetSocketAddress(ip, port);
+        // Als Resultat erhält man ein Socket.
+        Socket s = new Socket();
+        s.connect(inSocket, 10000);
+        clientConnected = true;
+        System.out.println(String.format("is Server: %s", Connection.isServer()));
+        System.out.println(String.format("Connection established on %s ", s.getLocalAddress()));
+        System.out.println(String.format("Inet Connection: %s ", s.getInetAddress()));
+        return s;
+    }
 
-		// Standardausgabestrom ebenfalls als BufferedWriter verpacken.
-		BufferedWriter usr =
-				new BufferedWriter(new OutputStreamWriter(System.out));
+    // Abwechselnd vom Benutzer lesen und ins Socket schreiben
+    // bzw. vom Socket lesen und auf den Bildschirm schreiben.
+    // Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
 
-		connection = new Connection(in, out, usr);
-		Connection.setMultiplayer(true);
-		setConnection(connection);
-	}
+    public void createConnection(Socket s) throws IOException {
 
-	// Abwechselnd vom Benutzer lesen und ins Socket schreiben
-	// bzw. vom Socket lesen und auf den Bildschirm schreiben.
-	// Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
+        BufferedReader in =
+                new BufferedReader(new InputStreamReader(s.getInputStream()));
+        Writer out = new OutputStreamWriter(s.getOutputStream());
 
-	public void startCommunicationLoop() {
+        // Standardausgabestrom ebenfalls als BufferedWriter verpacken.
+        BufferedWriter usr =
+                new BufferedWriter(new OutputStreamWriter(System.out));
 
-		try {
-			connection.setTurn(false);
+        connection = new Connection(in, out, usr);
+        Connection.setMultiplayer(true);
+        setConnection(connection);
+    }
 
-			while (true) {
-				// incoming messages
-				clientLoopReady = true;
-				connection.setMessage(Connection.getIn().readLine());
-				connection.setTurn(true);
-				if (connection.getMessage() == null) break;
-				System.out.println("<<< " + connection.getMessage());
+    public void startCommunicationLoop() {
 
-				// outgoing messages
-				connection.getUsr().write(String.format("%s%n", connection.getOut()));
-			}
-		} catch (IOException e) {
-			System.out.println(e.getStackTrace());
-		}
-	}
+        try {
+            connection.setTurn(false);
 
-	public static void stopConnection(Socket s) throws IOException {
-		// EOF ins Socket "schreiben".
-		s.close();
-		s.shutdownOutput();
-		ClientConnectionService.getInstance().cancel(true);
-		Connection.getTimer().cancel();
-		System.out.println("Connection closed.");
-	}
+            while (true) {
+                // incoming messages
+                clientLoopReady = true;
+                connection.setMessage(Connection.getIn().readLine());
+                connection.setTurn(true);
+                if (Connection.getMessage() == null) break;
+                System.out.println("<<< " + Connection.getMessage());
+
+                // outgoing messages
+                Connection.getUsr().write(String.format("%s%n", Connection.getOut()));
+            }
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
 }

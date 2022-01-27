@@ -1,5 +1,5 @@
 public class Field {
-    private int[] pos = new int[2];
+    private final int[] pos = new int[2];
     private boolean isOccupied = false;
     private boolean isShip = false;
     private boolean isWater = true;
@@ -17,8 +17,7 @@ public class Field {
             int x, int y,
             boolean isOccupied, boolean isShip, boolean isWater,
             boolean isHit, boolean isMiss, boolean isSunk
-            )
-    {
+    ) {
         this.pos[0] = x;
         this.pos[1] = y;
         this.isOccupied = isOccupied;
@@ -31,7 +30,7 @@ public class Field {
 
     @Override
     public String toString() {
-        return "" + this.pos[0] + " " + this.pos[1] +  " " + this.isOccupied + " " + this.isShip + " " + this.isWater + " " + this.isHit + " " + this.isMiss + " " + this.isSunk;
+        return "" + this.pos[0] + " " + this.pos[1] + " " + this.isOccupied + " " + this.isShip + " " + this.isWater + " " + this.isHit + " " + this.isMiss + " " + this.isSunk;
     }
 
     public int[] getPos() {
@@ -58,16 +57,16 @@ public class Field {
         return isWater;
     }
 
+    public void setWater(boolean water) {
+        isWater = water;
+    }
+
     public boolean isHit() {
         return isHit;
     }
 
     public void setHit(boolean hit) {
         isHit = hit;
-    }
-
-    public void setWater(boolean water) {
-        isWater = water;
     }
 
     public boolean isOccupied() {
