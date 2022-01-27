@@ -5,8 +5,6 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.TimerTask;
 
 public class GUI {
@@ -25,7 +23,11 @@ public class GUI {
     public static boolean kiMultiplayer = false;
     private static Dimension dim = new Dimension(1440, 810);
     private static Point pos = new Point(1, 1);
-
+    
+    /**
+     * Konstruktor der GUI baut den Frame auf und wählt das Fenster(die Methode) aus.
+     * @param window Zahl zur Auswahl des Fensters
+     */
     public GUI(int window){
     	
         frame = new JFrame("Spiel");
@@ -35,13 +37,13 @@ public class GUI {
         frame.setVisible(true);
         switch (window) {
             case 1:
-                hauptmenue();
+                meinMenu();
                 break;
             case 2:
-                einzelspieler();
+                singlePlayer();
                 break;
             case 3:
-                mehrspieler();
+                multiPlayer();
                 break;
             case 4:
                 host();
@@ -50,16 +52,16 @@ public class GUI {
                 client();
                 break;
             case 6:
-                schiffeplatzieren();
+                placeShips();
                 break;
             case 7:
-                spiel();
+                game();
                 break;
             case 8:
-                winningScreen();
+                endScreen(true);
                 break;
             case 9:
-                losingScreen();
+                endScreen(false);
                 break;
             case 10:
                 waitForServer();
@@ -71,8 +73,11 @@ public class GUI {
                 System.out.println("Programm startet nicht.");
         }
     }
-
-    private void hauptmenue() {
+    
+    /**
+     * Hauptmenü-Fenster, erster Bildschirm nach dem Start des Spiels und mit der Auswahl von Einzelspieler und Mehrspieler.
+     */
+    private void meinMenu() {
 
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -113,8 +118,11 @@ public class GUI {
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
     }
-
-    private void einzelspieler() {
+    
+    /**
+     * Einzelspieler-Fenster, mit der Auswahl der AI Schwierigkeit, der Spielgröße und der Option Spiel laden.
+     */
+    private void singlePlayer() {
 
         frame.setContentPane(Box.createVerticalBox());
 
@@ -242,8 +250,11 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
-
-    private void mehrspieler() {
+    
+    /**
+     * Mehrspieler-Fenster, mit den Optionen Host, Client und Spiel laden.
+     */
+    private void multiPlayer() {
 
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -311,7 +322,10 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
-
+    
+    /**
+     * Host-Fenster, mit der Auswahl des Ports, der Spielfeldgröße und der Option eines KI-Spiels.
+     */
     private void host() {
 
         JLabel mainlabel = new JLabel("Schiffe versenken");
@@ -493,7 +507,10 @@ public class GUI {
 
         panelLeft.add(Box.createVerticalStrut(50));
     }
-
+    
+    /**
+     * Client-Fenster, mit der Auswahl des Ports, der IP und der Option eines KI-Spiels.
+     */
     private void client() {
 
         frame.setContentPane(Box.createVerticalBox());
@@ -607,7 +624,10 @@ public class GUI {
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
     }
-
+    
+    /**
+     * 
+     */
     private void waitForServer() {
         frame.setContentPane(Box.createVerticalBox());
 
@@ -660,7 +680,10 @@ public class GUI {
             }
         }, 0, 1000);
     }
-
+    
+    /**
+     * 
+     */
     private void hostSaved() {
 
         JLabel mainlabel = new JLabel("Schiffe versenken");
@@ -770,12 +793,21 @@ public class GUI {
         panelLeft.add(Box.createVerticalStrut(50));
 
     }
-
+    
+    /**
+     * 
+     * @param alert
+     */
     public void showAlert(String alert) {
         JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
     }
-
-    private void schiffeplatzieren() {
+    
+    /**
+     * Fenster um die Schiffe zu platzieren mit den Optionen die Schiffe automatisch setzen lassen, die Schiffe neu setzen,
+     * das Spiel neu starten oder das Spiel beginnen, wenn alle Schiffe platziert wurden.
+     * Im rechten Teil wird erklärt, wie man die Schiffe setzt und welche Schiffe man noch setzen kann.
+     */
+    private void placeShips() {
     	
     	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
     	
@@ -945,8 +977,13 @@ public class GUI {
             }
         }
     }
-
-    private void spiel() {
+    
+    /**
+     * Fenster, des eigentlichen Spiels, mit dem Spielfeld des Gegners (auf welches geschossen wird) auf der linken Seite und
+     * mit dem eigenen Spielfeld auf der rechten Seite.
+     * Man hat oben links noch die Optionen Spiel speichern oder Spiel neu starten.
+     */
+    private void game() {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         frame.setMaximumSize(new Dimension(1920, 1080));
         if (Connection.Multiplayer()) {
@@ -969,7 +1006,6 @@ public class GUI {
 
         JButton restartGame = new JButton("Spiel neu starten");
         restartGame.addActionListener((e) -> {
-            System.out.println("Spiel neu starten");
             kiMultiplayer = false;
             if (Connection.Multiplayer()) {
                 Connection.setMultiplayer(false);
@@ -1088,7 +1124,14 @@ public class GUI {
             }
         }
     }
-
+    
+    /**
+     * Färbt die Felder(festgelegt durch die Koordinaten) auf dem Spielfeld(durch den status bestimmt) in der richtigen Farbe(color) ein.
+     * @param status auf welchem Spielfeld die Felder gefärbt werden sollten
+     * @param x Koordinate des Feldes
+     * @param y Koordinate des Feldes
+     * @param color ausgewählte Farbe
+     */
     public static void colorButtons(String status, int x, int y, String color) {
         if (status == "server"){
             if (color == "Green") {
@@ -1120,42 +1163,12 @@ public class GUI {
             }
         }
     }
-
-    private void winningScreen() {
-
-        JMenuBar menuBar = new JMenuBar();
-        frame.setJMenuBar(menuBar);
-
-        JButton endGame = new JButton("Spiel schließen");
-        endGame.addActionListener((e) -> {
-            frame.dispose();
-        });
-        menuBar.add(endGame);
-        
-        JButton restartGame = new JButton("Spiel neu starten");
-        restartGame.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
-            frame.dispose();
-            new GUI(1);
-        });
-        menuBar.add(restartGame);
-
-        JLabel label = new JLabel("YOU WON");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        frame.setContentPane(Box.createVerticalBox());
-
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-        frame.getContentPane().add(Box.createGlue());
-
-        frame.getContentPane().add(label);
-
-        frame.getContentPane().add(Box.createGlue());
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-    }
-
-    private void losingScreen() {
+    
+    /**
+     * Fenster am Ende des Spiels, mit der Nachricht über Sieg oder Niederlage und den Optionen Spiel schließen oder Spiel neu starten.
+     * @param winner boolean zur Felstlegung des Labels auf dem Bildschirm
+     */
+    private void endScreen(boolean winner) {
 
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
@@ -1174,17 +1187,23 @@ public class GUI {
             new GUI(1);
         });
         menuBar.add(restartGame);
-
-        JLabel label = new JLabel("YOU LOST");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
         frame.getContentPane().add(Box.createGlue());
 
-        frame.getContentPane().add(label);
-
+        if(winner) {
+        	JLabel label = new JLabel("YOU WON");
+        	label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        	frame.getContentPane().add(label);
+        }
+        else {
+        	JLabel label = new JLabel("YOU LOST");
+        	label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        	frame.getContentPane().add(label);
+        }
+        
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }

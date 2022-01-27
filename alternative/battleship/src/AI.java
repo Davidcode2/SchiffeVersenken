@@ -7,15 +7,19 @@ public class AI {
     private static String direction;
     private static String flag;
 
-	// place ships for AI
+	/**
+	 * Alle Schiffe werden random auf dem jeweiligen Board platziert.
+	 * @param status auf welchem Spielfeld die Schiffe platziert werden sollten
+	 * @return boolean ob die AI die Schiffe setzen konnte
+	 */
     public static boolean start(String status) {
     	flag="random";
         Ship.calcAmount(GUI.userBoard.getSize());
         int timer = 0;
-        if(status == "client"){
+        if(status.equals("client")){
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
             	timer++;
-				if(timer>1000) {
+				if(timer>1000) {//falls die AI nicht alle Schiffe korrekt platzieren kann
 					return false;
 				}
                 x = (int) (Math.random() * GUI.buttonsEnemy.length);
@@ -27,10 +31,10 @@ public class AI {
                 }
                 GUI.enemyBoard.place(x, y, direction);
             }
-        } else if (status == "server"){
+        } else if (status.equals("server")){
             while (Ship.getAmounts()[0]+Ship.getAmounts()[1]+Ship.getAmounts()[2]+Ship.getAmounts()[3] != 0){
             	timer++;
-				if(timer>1000) {
+				if(timer>1000) {//falls die AI nicht alle Schiffe korrekt platzieren kann
 					return false;
 				}
                 x = (int) (Math.random() * GUI.buttonsUser.length);
@@ -45,7 +49,10 @@ public class AI {
         }
         return true;
     }
-
+    
+    /**
+     * Zufälliges Schießen der einfachen AI.
+     */
     public static void shot() {
         x = (int) (Math.random() * GUI.buttonsUser.length);
         y = (int) (Math.random() * GUI.buttonsUser.length);
@@ -66,6 +73,9 @@ public class AI {
         }
     }
     
+    /**
+     * Ermitteln, wie sich die schwere AI verhalten soll.
+     */
     public static void shotHard() {
     	switch (flag) {
     		case "random":
@@ -85,6 +95,9 @@ public class AI {
     	}
     }
     
+    /**
+     * Zufälliger Schuss der AI.
+     */
     private static void randomShot() {
     	x = (int) (Math.random() * GUI.buttonsUser.length);
         y = (int) (Math.random() * GUI.buttonsUser.length);
@@ -108,8 +121,13 @@ public class AI {
         }
     }
     
-    private static void nextHit(String ship) {
-    	if(ship.equals("vertical")) {
+    /**
+     * Anhand der Richtung des Schiffs und der Position des Treffers, wird der nächste Schuss ausgewählt.
+     * 
+     * @param position Richtung des Schiffs
+     */
+    private static void nextHit(String position) {
+    	if(position.equals("vertical")) {
     		if(firstHitx<x) {
     			shootBelow();
     		}
@@ -127,6 +145,9 @@ public class AI {
     	}
     }
     
+    /**
+     * Schuss auf das Feld überhalb des letzen Treffers.
+     */
     private static void shootAbove() {
     	if(x-1<0) {
     		x=firstHitx;
@@ -156,6 +177,9 @@ public class AI {
     	}
     }
     
+    /**
+     * Schuss auf das Feld unterhalb des letzen Treffers.
+     */
     private static void shootBelow() {
     	if(x+1==GUI.userBoard.getSize()) {
     		if(flag.equals("firstHit")) {
@@ -197,6 +221,9 @@ public class AI {
     	}
     }
     
+    /**
+     * Schuss auf das Feld links neben den letzen Treffer.
+     */
     private static void shootLeft() {
     	if(y-1<0) {
     		y=firstHity;
@@ -226,6 +253,9 @@ public class AI {
     	}
     }
     
+    /**
+     * Schuss auf das Feld rechts neben den letzen Treffer.
+     */
     private static void shootRight() {
     	if(y+1==GUI.userBoard.getSize()) {
     		flag="random";
@@ -255,6 +285,12 @@ public class AI {
     	}
     }
     
+    /**
+     * AI erkennt die Felder überhalb und unterhalb des Schiffs als Wasser.
+     * 
+     * @param x Koordinate des Treffers
+     * @param y Koordinate des Treffers
+     */
     private static void colorWaterVertical(int x, int y) {
     	if(x-1>=0) {
     		if(flag.equals("firstHit")) {
@@ -277,6 +313,12 @@ public class AI {
     	}
     }
     
+    /**
+     * AI erkennt die Felder rechts und links des Schiffs als Wasser.
+     * 
+     * @param x Koordinate des Treffers
+     * @param y Koordinate des Treffers
+     */
     private static void colorWaterHorizontal(int x, int y) {
     	if(y-1>=0) {
     		if(flag.equals("firstHit")) {
@@ -299,6 +341,13 @@ public class AI {
     	}
     }
     
+   /**
+    * AI erkennt die Eckfelder um das Schiff herum als Wasser.
+    * 
+    * @param x Koordinate des Treffers
+    * @param y Koordinate des Treffers
+    * @param position Lage/Richtung des Schiffs
+    */
     private static void colorWaterEdges(int x, int y, String position) {
     	switch(position) {
     		case "horizontal":
