@@ -9,29 +9,37 @@ import java.util.TimerTask;
 
 public class Connection {
 
+    private static final Stack shotLog = new Stack();
     private static BufferedReader in;
     private static BufferedWriter usr;
     private static Writer out;
-
     private static boolean isServer;
     private static String message;
     private static boolean turn = true;
     private static int readyCounter = 0;
     private static Socket so;
-
+    private static java.util.Timer timer;
     private static boolean Multiplayer = false;
 
+    /**
+     * Constructor for Connection
+     *
+     * @param in  Buffered Reader which carries the input
+     * @param out Writer which carries the output
+     * @param usr Buffered Writer which
+     */
     public Connection(BufferedReader in, Writer out, BufferedWriter usr) {
-        this.in = in;
-        this.out = out;
-        this.usr = usr;
+        Connection.in = in;
+        Connection.out = out;
+        Connection.usr = usr;
+    }
+
+    public static boolean isServer() {
+        return isServer;
     }
 
     public static void setServer(boolean bool) {
         isServer = bool;
-    }
-    public static boolean isServer() {
-        return isServer;
     }
 
     public static boolean Multiplayer() {
@@ -50,25 +58,31 @@ public class Connection {
         return out;
     }
 
+    public static java.util.Timer getTimer() {
+        return timer;
+    }
+
     public static BufferedWriter getUsr() {
         return usr;
     }
-    private static Stack shotLog = new Stack();
+
+    /**
+     * @param x x-coordinate
+     * @param y y-coordinate
+     *          push x and y Coordinates onto stack
+     */
     public static void pushShot(int x, int y) {
         int[] xy = new int[2];
         xy[0] = x;
         xy[1] = y;
         shotLog.push(xy);
     }
-    public static int[] popShot() {
-        if (shotLog.empty()) {
-            return null;
-        }
-        int[] shot = (int[]) shotLog.pop();
-        System.out.println(shot);
-        System.out.println(shot.toString());
-        return shot;
-    }
+
+    /**
+     * Get current shot coordinates
+     *
+     * @return int array containing x and y coordinates
+     */
     public static int[] peekShot() {
         if (shotLog.empty()) {
             return null;
@@ -81,33 +95,33 @@ public class Connection {
         return message;
     }
 
-    public static void setS(Socket s) {
-       so = s;
+    public void setMessage(String message) {
+        Connection.message = message;
     }
-    public void setSocket(Socket s) {so = s;}
+
     public static Socket getS() {
         return so;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setTurn(boolean b) {
-        turn = b;
+    public static void setS(Socket s) {
+        so = s;
     }
 
     public static boolean getTurn() {
         return turn;
     }
 
+    public void setTurn(boolean b) {
+        turn = b;
+    }
+
     public static void sendMessage(int x, int y) {
         if (isServer()) {
             try {
-                if (Server.getConnection().getTurn()) {
-                    Server.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
-                    Server.getConnection().getOut().flush();
-                    pushShot(x,y);
+                if (getTurn()) {
+                    getOut().write(String.format("shot %s %s%n", x, y));
+                    getOut().flush();
+                    pushShot(x, y);
                     Server.getConnection().setTurn(false);
                 } else {
                     System.out.println("wait for other players turn");
@@ -118,10 +132,10 @@ public class Connection {
             }
         } else {
             try {
-                if (Client.getConnection().getTurn()) {
-                    Client.getConnection().getOut().write(String.format("shot %s %s%n", x,y));
-                    Client.getConnection().getOut().flush();
-                    pushShot(x,y);
+                if (getTurn()) {
+                    getOut().write(String.format("shot %s %s%n", x, y));
+                    getOut().flush();
+                    pushShot(x, y);
                     Client.getConnection().setTurn(false);
                     turn = false;
                 } else {
@@ -133,16 +147,17 @@ public class Connection {
             }
         }
     }
+
     public static void sendMessage(String message) {
         // if turn == true -> Server
         if (isServer()) {
             try {
-                if (message.contains("save") || message.contains("load") || Server.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                if (message.contains("save") || message.contains("load") || getTurn() || (message.equals("ready") && readyCounter == 0)) {
                     if (message.equals("ready")) {
                         readyCounter = 1;
                     }
-                    Server.getConnection().getOut().write(String.format("%s%n", message));
-                    Server.getConnection().getOut().flush();
+                    getOut().write(String.format("%s%n", message));
+                    getOut().flush();
                     System.out.println("outgoing>> " + message);
                     Server.getConnection().setTurn(false);
                     turn = false;
@@ -155,12 +170,12 @@ public class Connection {
             }
         } else {
             try {
-                if (message.contains("save") || Client.getConnection().getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                if (message.contains("save") || getTurn() || (message.equals("ready") && readyCounter == 0)) {
                     if (message.equals("ready")) {
                         readyCounter = 1;
                     }
-                    Client.getConnection().getOut().write(String.format("%s%n", message));
-                    Client.getConnection().getOut().flush();
+                    getOut().write(String.format("%s%n", message));
+                    getOut().flush();
                     System.out.println("outgoing>> " + message);
                     Client.getConnection().setTurn(false);
                 } else {
@@ -174,11 +189,19 @@ public class Connection {
 
     }
 
+    public void setSocket(Socket s) {
+        so = s;
+    }
+
     static class inboundMessageLoop extends SwingWorker<Object, Object> {
         String previousMessage = "";
+
         @Override
-        protected Object doInBackground() throws Exception {
-            new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+        protected java.util.Timer doInBackground() throws Exception {
+            timer = new java.util.Timer();
+            TimerTask timerTask = new TimerTask() {
+                final boolean newTurn = true;
+
                 @Override
                 public void run() {
                     String message = Connection.getMessage();
@@ -189,11 +212,13 @@ public class Connection {
                         int x = shot[0];
                         int y = shot[1];
                         if (shipState == 1 || shipState == 2) {
-                            GUI.colorButtons("client", shot[0],shot[1], "Grey");
+                            GUI.colorButtons("client", shot[0], shot[1], "Grey");
                             GUI.enemyBoard.getFieldArray()[x][y].isHit();
-                            GUI.hitCounter--;
+                            if (previousMessage != message) {
+                                GUI.hitCounter--;
+                            }
                         } else {
-                            GUI.colorButtons("client", shot[0],shot[1], "Red");
+                            GUI.colorButtons("client", shot[0], shot[1], "Red");
                             GUI.enemyBoard.getFieldArray()[x][y].isMiss();
                             Connection.sendMessage("pass");
                         }
@@ -204,7 +229,9 @@ public class Connection {
                         int y = Integer.parseInt(message.split(" ")[2]);
                         GUI.userBoard.shot(x, y);
                         if (GUI.userBoard.getFieldArray()[x][y].isHit()) {
-                            GUI.enemyHitCounter--;
+                            if (previousMessage != message) {
+                                GUI.enemyHitCounter--;
+                            }
                             if (GUI.userBoard.getFieldArray()[x][y].isSunk()) {
                                 Connection.sendMessage(String.format("answer %s", 2));
                             } else {
@@ -228,8 +255,11 @@ public class Connection {
 //                            Controller.clientLoad(id);
                     }
                 }
-            }, 0, 500);
-            return null;
+
+            };
+
+            timer.scheduleAtFixedRate(timerTask, 0, 500);
+            return timer;
         }
     }
 }

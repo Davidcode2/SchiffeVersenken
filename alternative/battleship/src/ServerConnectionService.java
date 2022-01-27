@@ -5,11 +5,11 @@ import java.net.Socket;
 
 // Worker thread waiting for connection in background
 public class ServerConnectionService extends SwingWorker<Socket, Object> {
+    private static ServerConnectionService sc;
     Server server = new Server();
     private Socket socketS;
-    private int fieldsize;
-    private int port;
-    private static ServerConnectionService sc;
+    private final int fieldsize;
+    private final int port;
 
     public ServerConnectionService(int fieldsize, int port) {
         this.fieldsize = fieldsize;
@@ -19,6 +19,7 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
     public static void setService(ServerConnectionService scService) {
         sc = scService;
     }
+
     public static ServerConnectionService getInstance() {
         return sc;
     }
@@ -60,7 +61,4 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
         Connection.sendMessage(x);
     }
 
-    void closeSocket() {
-        
-    }
 }

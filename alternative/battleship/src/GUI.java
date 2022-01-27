@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
@@ -15,14 +15,15 @@ public class GUI {
     public static JButton[][] buttonsUser;
     public static JButton[][] buttonsEnemy;
     public static boolean savedSession = false;
-    private static int port;
-    static long id;
     public static int hitCounter;
     public static int enemyHitCounter;
     public static boolean difficultAi;
     public static boolean kiMultiplayer = false;
+    static long id;
+    private static int port;
     private static Dimension dim = new Dimension(1440, 810);
     private static Point pos = new Point(1, 1);
+<<<<<<< HEAD
     
     /**
      * Konstruktor der GUI baut den Frame auf und wählt das Fenster(die Methode) aus.
@@ -30,6 +31,11 @@ public class GUI {
      */
     public GUI(int window){
     	
+=======
+
+    public GUI(int window) {
+
+>>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         frame = new JFrame("Spiel");
         frame.setSize(dim);
         frame.setLocation(pos);
@@ -73,11 +79,48 @@ public class GUI {
                 System.out.println("Programm startet nicht.");
         }
     }
+<<<<<<< HEAD
     
     /**
      * Hauptmenü-Fenster, erster Bildschirm nach dem Start des Spiels und mit der Auswahl von Einzelspieler und Mehrspieler.
      */
     private void meinMenu() {
+=======
+
+    public static void colorButtons(String status, int x, int y, String color) {
+        if (status == "server") {
+            if (color == "Green") {
+                buttonsUser[x][y].setBackground(new Color(102, 255, 102));
+            } else if (color == "Blue") {
+                buttonsUser[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "DarkBlue") {
+                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
+            } else if (color == "Red") {
+                buttonsUser[x][y].setBackground(new Color(255, 102, 102));
+            } else if (color == "Grey") {
+                buttonsUser[x][y].setBackground(new Color(100, 100, 100));
+            } else if (color == "LightGrey") {
+                buttonsUser[x][y].setBackground(new Color(192, 192, 192));
+            }
+        } else if (status == "client") {
+            if (color == "Green") {
+                buttonsEnemy[x][y].setBackground(new Color(102, 255, 102));
+            } else if (color == "Blue") {
+                buttonsEnemy[x][y].setBackground(new Color(102, 178, 255));
+            } else if (color == "DarkBlue") {
+                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
+            } else if (color == "Red") {
+                buttonsEnemy[x][y].setBackground(new Color(255, 102, 102));
+            } else if (color == "Grey") {
+                buttonsEnemy[x][y].setBackground(new Color(100, 100, 100));
+            } else if (color == "LightGrey") {
+                buttonsEnemy[x][y].setBackground(new Color(192, 192, 192));
+            }
+        }
+    }
+
+    private void hauptmenue() {
+>>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
 
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -86,9 +129,9 @@ public class GUI {
         ButtonSP.setFocusable(false);
         ButtonSP.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonSP.addActionListener((e) -> {
-        	difficultAi = false;
-        	pos=frame.getLocation();
-        	dim = frame.getSize();
+            difficultAi = false;
+            pos = frame.getLocation();
+            dim = frame.getSize();
             frame.dispose();
             new GUI(2);
         });
@@ -97,8 +140,8 @@ public class GUI {
         ButtonMP.setFocusable(false);
         ButtonMP.setAlignmentX(Component.CENTER_ALIGNMENT);
         ButtonMP.addActionListener((e) -> {
-        	pos=frame.getLocation();
-        	dim = frame.getSize();
+            pos = frame.getLocation();
+            dim = frame.getSize();
             frame.dispose();
             new GUI(3);
         });
@@ -181,26 +224,26 @@ public class GUI {
         JButton start = new JButton("Weiter");
         start.setFocusable(false);
         start.addActionListener((e) -> {
-            try{Integer. parseInt(textfield.getText());
-            }catch(NumberFormatException ex){
-            	pos=frame.getLocation();
-            	dim = frame.getSize();
+            try {
+                Integer.parseInt(textfield.getText());
+            } catch (NumberFormatException ex) {
+                pos = frame.getLocation();
+                dim = frame.getSize();
                 frame.dispose();
                 new GUI(2);
             }
             int boardSize = Integer.parseInt(textfield.getText());
-            if(boardSize>=5 && boardSize<=30) {
+            if (boardSize >= 5 && boardSize <= 30) {
                 userBoard = new Board(boardSize, "server");
                 enemyBoard = new Board(boardSize, "client");
                 Ship.calcAmount(userBoard.getSize());
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 dim = frame.getSize();
                 frame.dispose();
                 new GUI(6);
-            }
-            else {
-            	pos=frame.getLocation();
-            	dim = frame.getSize();
+            } else {
+                pos = frame.getLocation();
+                dim = frame.getSize();
                 frame.dispose();
                 new GUI(2);
             }
@@ -219,14 +262,14 @@ public class GUI {
                 Connection.setMultiplayer(false);
                 GUI.enemyBoard = new Board(myField[1], myField[0][0].length, "client");
                 System.out.println("created enemy board");
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 dim = frame.getSize();
                 frame.dispose();
                 new GUI(7);
             } else {
                 Connection.setMultiplayer(true);
                 GUI.id = Long.valueOf(fieldStringArray.get(0));
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 dim = frame.getSize();
                 frame.dispose();
                 new GUI(11);
@@ -237,8 +280,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
-        	pos=frame.getLocation();
-        	dim = frame.getSize();
+            pos = frame.getLocation();
+            dim = frame.getSize();
             frame.dispose();
             new GUI(1);
         });
@@ -263,8 +306,8 @@ public class GUI {
         button1.setFocusable(false);
         button1.setAlignmentX(Component.CENTER_ALIGNMENT);
         button1.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(4);
         });
@@ -273,8 +316,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(5);
         });
@@ -291,7 +334,7 @@ public class GUI {
             Connection.setMultiplayer(true);
             GUI.id = Long.valueOf(fieldStringArray.get(0));
             dim = frame.getSize();
-            pos=frame.getLocation();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(11);
         });
@@ -300,8 +343,8 @@ public class GUI {
         buttonBack.setFocusable(false);
         buttonBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttonBack.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -352,19 +395,19 @@ public class GUI {
         JButton start = new JButton("Weiter");
         start.setFocusable(false);
         start.addActionListener((e) -> {
-            try{
+            try {
                 port = Integer.parseInt(textfeld.getText());
-            } catch(NumberFormatException ex) {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+            } catch (NumberFormatException ex) {
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
             try {
                 Integer.parseInt(textfeld2.getText());
             } catch (NumberFormatException ex) {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
@@ -374,7 +417,7 @@ public class GUI {
                 int fieldsize = userBoard.getSize();
                 Ship.calcAmount(fieldsize);
                 dim = frame.getSize();
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 frame.dispose();
                 ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
                 ServerConnectionService.setService(scService);
@@ -387,8 +430,8 @@ public class GUI {
                     new GUI(6);
                 }
             } else {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(3);
             }
@@ -398,19 +441,19 @@ public class GUI {
         JButton kiStart = new JButton("KI Spiel");
         kiStart.setFocusable(false);
         kiStart.addActionListener((e) -> {
-            try{
+            try {
                 port = Integer.parseInt(textfeld.getText());
-            } catch(NumberFormatException ex) {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+            } catch (NumberFormatException ex) {
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
             try {
                 Integer.parseInt(textfeld2.getText());
             } catch (NumberFormatException ex) {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
@@ -420,7 +463,7 @@ public class GUI {
                 int fieldsize = userBoard.getSize();
                 Ship.calcAmount(fieldsize);
                 dim = frame.getSize();
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 frame.dispose();
                 ServerConnectionService scService = new ServerConnectionService(fieldsize, port);
                 ServerConnectionService.setService(scService);
@@ -430,8 +473,8 @@ public class GUI {
                 kiMultiplayer = true;
                 new GUI(10);
             } else {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(3);
             }
@@ -445,8 +488,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(3);
         });
@@ -545,11 +588,11 @@ public class GUI {
         JButton start = new JButton("Weiter");
         start.setFocusable(false);
         start.addActionListener((e) -> {
-            try{
+            try {
                 port = Integer.parseInt(textfeld.getText());
-            }catch(NumberFormatException ex){
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+            } catch (NumberFormatException ex) {
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(5);
             }
@@ -562,7 +605,7 @@ public class GUI {
                 Connection.setMultiplayer(true);
                 Connection.setServer(false);
                 dim = frame.getSize();
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 frame.dispose();
             } catch (NumberFormatException ex) {
                 frame.dispose();
@@ -574,11 +617,11 @@ public class GUI {
         JButton kiStart = new JButton("KI Spiel");
         kiStart.setFocusable(false);
         kiStart.addActionListener((e) -> {
-            try{
+            try {
                 port = Integer.parseInt(textfeld.getText());
-            }catch(NumberFormatException ex){
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+            } catch (NumberFormatException ex) {
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(5);
             }
@@ -591,7 +634,7 @@ public class GUI {
                 Connection.setMultiplayer(true);
                 Connection.setServer(false);
                 dim = frame.getSize();
-                pos=frame.getLocation();
+                pos = frame.getLocation();
                 frame.dispose();
                 kiMultiplayer = true;
             } catch (NumberFormatException ex) {
@@ -605,8 +648,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(3);
         });
@@ -659,7 +702,7 @@ public class GUI {
                                 // wenn bereit, sende 'ready'
                                 Connection.sendMessage("ready");
                                 dim = frame.getSize();
-                                pos=frame.getLocation();
+                                pos = frame.getLocation();
                                 frame.dispose();
                                 new GUI(7);
                             }
@@ -669,7 +712,7 @@ public class GUI {
                         Connection.sendMessage("ready");
                         this.cancel();
                         dim = frame.getSize();
-                        pos=frame.getLocation();
+                        pos = frame.getLocation();
                         frame.dispose();
                         new GUI(7);
                     }
@@ -706,7 +749,7 @@ public class GUI {
         JPanel portpanel = new JPanel();
         JTextField textfeld = new JTextField();
         textfeld.addActionListener((e) -> {
-            try{
+            try {
                 port = Integer.parseInt(textfeld.getText());
                 ServerConnectionService scService = new ServerConnectionService(-99, port);
                 ServerConnectionService.setService(scService);
@@ -725,7 +768,7 @@ public class GUI {
                                     Connection.sendMessage(String.format("load %s", id));
                                     this.cancel();
                                     dim = frame.getSize();
-                                    pos=frame.getLocation();
+                                    pos = frame.getLocation();
                                     frame.dispose();
                                     new GUI(7);
                                 } else {
@@ -735,11 +778,11 @@ public class GUI {
                                 panelLeft.add(waitlabel);
                             }
                         }
-                    },0,500);
+                    }, 0, 500);
                 }
-            } catch(NumberFormatException ex) {
-            	dim = frame.getSize();
-            	pos=frame.getLocation();
+            } catch (NumberFormatException ex) {
+                dim = frame.getSize();
+                pos = frame.getLocation();
                 frame.dispose();
                 new GUI(4);
             }
@@ -754,8 +797,8 @@ public class GUI {
         button2.setFocusable(false);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(3);
         });
@@ -801,6 +844,7 @@ public class GUI {
     public void showAlert(String alert) {
         JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
     }
+<<<<<<< HEAD
     
     /**
      * Fenster um die Schiffe zu platzieren mit den Optionen die Schiffe automatisch setzen lassen, die Schiffe neu setzen,
@@ -811,6 +855,13 @@ public class GUI {
     	
     	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
     	
+=======
+
+    private void schiffeplatzieren() {
+
+        frame.setMinimumSize(new Dimension(1920 / 2, 1080 / 2));
+
+>>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
@@ -826,7 +877,7 @@ public class GUI {
                                 // wenn bereit, sende 'ready'
                                 Connection.sendMessage("ready");
                                 dim = frame.getSize();
-                                pos=frame.getLocation();
+                                pos = frame.getLocation();
                                 frame.dispose();
                                 new GUI(7);
                             } else {
@@ -838,15 +889,15 @@ public class GUI {
                     } else if (Connection.isServer() == false) {
                         Connection.sendMessage("ready");
                         if (Ship.getAmounts()[0] + Ship.getAmounts()[1] + Ship.getAmounts()[2] + Ship.getAmounts()[3] == 0) {
-                        	dim = frame.getSize();
-                        	pos=frame.getLocation();
+                            dim = frame.getSize();
+                            pos = frame.getLocation();
                             frame.dispose();
                             new GUI(7);
                         }
                     }
                 } else {
-                	dim = frame.getSize();
-                	pos=frame.getLocation();
+                    dim = frame.getSize();
+                    pos = frame.getLocation();
                     frame.dispose();
                     new GUI(7);
                 }
@@ -858,7 +909,7 @@ public class GUI {
                         Connection.sendMessage("ready");
                     }
                     dim = frame.getSize();
-                    pos=frame.getLocation();
+                    pos = frame.getLocation();
                     frame.dispose();
                     new GUI(7);
                 }
@@ -866,7 +917,7 @@ public class GUI {
         });
 
         menuBar.add(beginnen);
-        
+
         JButton placeAutomatic = new JButton("Schiffe automatisch setzen");
         placeAutomatic.addActionListener((e) -> {
             userBoard = new Board(userBoard.getSize(), "server");
@@ -886,7 +937,7 @@ public class GUI {
             userBoard = new Board(userBoard.getSize(), "server");
             Ship.calcAmount(userBoard.getSize());
             dim = frame.getSize();
-            pos=frame.getLocation();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(6);
 
@@ -897,8 +948,8 @@ public class GUI {
         restartGame.setFocusable(false);
         restartGame.setAlignmentX(Component.CENTER_ALIGNMENT);
         restartGame.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -924,19 +975,19 @@ public class GUI {
         infoRight.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelRight.add(infoRight);
 
-        JLabel ships5x = new JLabel("	"+Ship.getAmounts()[3]+" 5er Schiffe");
+        JLabel ships5x = new JLabel("	" + Ship.getAmounts()[3] + " 5er Schiffe");
         ships5x.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelRight.add(ships5x);
 
-        JLabel ships4x = new JLabel("	"+Ship.getAmounts()[2]+" 4er Schiffe");
+        JLabel ships4x = new JLabel("	" + Ship.getAmounts()[2] + " 4er Schiffe");
         ships4x.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelRight.add(ships4x);
 
-        JLabel ships3x = new JLabel("	"+Ship.getAmounts()[1]+" 3er Schiffe");
+        JLabel ships3x = new JLabel("	" + Ship.getAmounts()[1] + " 3er Schiffe");
         ships3x.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelRight.add(ships3x);
 
-        JLabel ships2x = new JLabel("	"+Ship.getAmounts()[0]+" 2er Schiffe");
+        JLabel ships2x = new JLabel("	" + Ship.getAmounts()[0] + " 2er Schiffe");
         ships2x.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelRight.add(ships2x);
 
@@ -950,33 +1001,33 @@ public class GUI {
         buttonsUser = new JButton[userBoard.getSize()][userBoard.getSize()];
 
         for (int i = 0; i < userBoard.getSize(); i++) {
-            for(int j = 0; j < userBoard.getSize(); j++) {
+            for (int j = 0; j < userBoard.getSize(); j++) {
 
                 buttonsUser[i][j] = new JButton("");
-                buttonsUser[i][j].setName(i+" "+j);
-                colorButtons("server",i,j,"Blue");
-                buttonsUser[i][j].addMouseListener(new MouseAdapter(){
-                    public void mouseClicked(MouseEvent event){
-                        String[] s = ((JButton)event.getSource()).getName().split(" ");
+                buttonsUser[i][j].setName(i + " " + j);
+                colorButtons("server", i, j, "Blue");
+                buttonsUser[i][j].addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent event) {
+                        String[] s = ((JButton) event.getSource()).getName().split(" ");
                         int x = Integer.parseInt(s[0]);
                         int y = Integer.parseInt(s[1]);
 
-                        if(SwingUtilities.isRightMouseButton(event)){
-                            userBoard.place(x,y,"horizontal");
+                        if (SwingUtilities.isRightMouseButton(event)) {
+                            userBoard.place(x, y, "horizontal");
+                        } else {
+                            userBoard.place(x, y, "vertical");
                         }
-                        else {
-                            userBoard.place(x,y,"vertical");
-                        }
-                        ships5x.setText("	"+Ship.getAmounts()[3]+" 5er Schiffe");
-                        ships4x.setText("	"+Ship.getAmounts()[2]+" 4er Schiffe");
-                        ships3x.setText("	"+Ship.getAmounts()[1]+" 3er Schiffe");
-                        ships2x.setText("	"+Ship.getAmounts()[0]+" 2er Schiffe");
+                        ships5x.setText("	" + Ship.getAmounts()[3] + " 5er Schiffe");
+                        ships4x.setText("	" + Ship.getAmounts()[2] + " 4er Schiffe");
+                        ships3x.setText("	" + Ship.getAmounts()[1] + " 3er Schiffe");
+                        ships2x.setText("	" + Ship.getAmounts()[0] + " 2er Schiffe");
                     }
                 });
                 panelLeft.add(buttonsUser[i][j]);
             }
         }
     }
+<<<<<<< HEAD
     
     /**
      * Fenster, des eigentlichen Spiels, mit dem Spielfeld des Gegners (auf welches geschossen wird) auf der linken Seite und
@@ -985,15 +1036,22 @@ public class GUI {
      */
     private void game() {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
+=======
+
+    private void spiel() {
+        frame.setMinimumSize(new Dimension(1920 / 2, 1080 / 2));
+>>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         frame.setMaximumSize(new Dimension(1920, 1080));
         if (Connection.Multiplayer()) {
-            new Connection.inboundMessageLoop().execute();
+            Connection.inboundMessageLoop imL = new Connection.inboundMessageLoop();
+            imL.execute();
+
             enemyBoard = new Board(userBoard.getSize(), "client");
         }
 
         Ship.calcAmount(userBoard.getSize());
-        hitCounter = 5*Ship.getAmounts()[3]+4*Ship.getAmounts()[2]+3*Ship.getAmounts()[1]+2*Ship.getAmounts()[0];
-        enemyHitCounter=hitCounter;
+        hitCounter = 5 * Ship.getAmounts()[3] + 4 * Ship.getAmounts()[2] + 3 * Ship.getAmounts()[1] + 2 * Ship.getAmounts()[0];
+        enemyHitCounter = hitCounter;
 
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
@@ -1024,7 +1082,7 @@ public class GUI {
                 }
             }
             dim = frame.getSize();
-            pos=frame.getLocation();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
@@ -1059,15 +1117,15 @@ public class GUI {
                         buttonsEnemy[x][y].setEnabled(false);
                     }
                     if (hitCounter == 0) {
-                    	dim = frame.getSize();
-                    	pos=frame.getLocation();
+                        dim = frame.getSize();
+                        pos = frame.getLocation();
                         frame.dispose();
                         new GUI(8);
                         return;
                     }
                     if (enemyHitCounter == 0) {
-                    	dim = frame.getSize();
-                    	pos=frame.getLocation();
+                        dim = frame.getSize();
+                        pos = frame.getLocation();
                         frame.dispose();
                         new GUI(9);
                         return;
@@ -1082,9 +1140,9 @@ public class GUI {
         panelright.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
 
         for (int i = 0; i < userBoard.getSize(); i++) {
-            for(int j = 0; j < userBoard.getSize(); j++) {
+            for (int j = 0; j < userBoard.getSize(); j++) {
                 buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
-                buttonsUser[i][j].setName(i+" "+j);
+                buttonsUser[i][j].setName(i + " " + j);
                 buttonsUser[i][j].setEnabled(false);
                 panelright.add(buttonsUser[i][j]);
             }
@@ -1108,7 +1166,8 @@ public class GUI {
                 int[] shot = new int[2];
                 int x = (int) (Math.random() * GUI.buttonsUser.length);
                 int y = (int) (Math.random() * GUI.buttonsUser.length);
-                shot[0] = x; shot[1] = y;
+                shot[0] = x;
+                shot[1] = y;
                 if (!GUI.enemyBoard.getFieldArray()[x][y].isWater()) {
                     continue;
                 }
@@ -1124,6 +1183,7 @@ public class GUI {
             }
         }
     }
+<<<<<<< HEAD
     
     /**
      * Färbt die Felder(festgelegt durch die Koordinaten) auf dem Spielfeld(durch den status bestimmt) in der richtigen Farbe(color) ein.
@@ -1169,6 +1229,10 @@ public class GUI {
      * @param winner boolean zur Felstlegung des Labels auf dem Bildschirm
      */
     private void endScreen(boolean winner) {
+=======
+
+    private void winningScreen() {
+>>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
 
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
@@ -1178,16 +1242,57 @@ public class GUI {
             frame.dispose();
         });
         menuBar.add(endGame);
-        
+
         JButton restartGame = new JButton("Spiel neu starten");
         restartGame.addActionListener((e) -> {
-        	dim = frame.getSize();
-        	pos=frame.getLocation();
+            dim = frame.getSize();
+            pos = frame.getLocation();
             frame.dispose();
             new GUI(1);
         });
         menuBar.add(restartGame);
+<<<<<<< HEAD
         
+=======
+
+        JLabel label = new JLabel("YOU WON");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        frame.setContentPane(Box.createVerticalBox());
+
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+        frame.getContentPane().add(Box.createGlue());
+
+        frame.getContentPane().add(label);
+
+        frame.getContentPane().add(Box.createGlue());
+        frame.getContentPane().add(Box.createVerticalStrut(50));
+    }
+
+    private void losingScreen() {
+
+        JMenuBar menuBar = new JMenuBar();
+        frame.setJMenuBar(menuBar);
+
+        JButton endGame = new JButton("Spiel schließen");
+        endGame.addActionListener((e) -> {
+            frame.dispose();
+        });
+        menuBar.add(endGame);
+
+        JButton restartGame = new JButton("Spiel neu starten");
+        restartGame.addActionListener((e) -> {
+            dim = frame.getSize();
+            pos = frame.getLocation();
+            frame.dispose();
+            new GUI(1);
+        });
+        menuBar.add(restartGame);
+
+        JLabel label = new JLabel("YOU LOST");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+>>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));

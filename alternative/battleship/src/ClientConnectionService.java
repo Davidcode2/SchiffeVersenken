@@ -1,16 +1,15 @@
 import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Timer;
 
 public class ClientConnectionService extends SwingWorker<Socket, Object> {
+    private static ClientConnectionService cs;
     Client client = new Client();
     private Socket socketS;
-    private Board board;
-    private String ip;
-    private int port;
+    private final Board board;
+    private final String ip;
+    private final int port;
     private boolean boardSizeReceived = false;
-    private static ClientConnectionService cs;
 
     public ClientConnectionService(Board userBoard, String ip, int port) {
         this.board = userBoard;
@@ -18,9 +17,10 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         this.port = port;
     }
 
-    public static void setService (ClientConnectionService cService) {
+    public static void setService(ClientConnectionService cService) {
         cs = cService;
     }
+
     public static ClientConnectionService getInstance() {
         return cs;
     }
@@ -34,6 +34,7 @@ public class ClientConnectionService extends SwingWorker<Socket, Object> {
         }
         return socketS;
     }
+
     @Override
     protected void done() {
         try {
