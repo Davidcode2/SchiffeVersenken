@@ -23,19 +23,12 @@ public class GUI {
     private static int port;
     private static Dimension dim = new Dimension(1440, 810);
     private static Point pos = new Point(1, 1);
-<<<<<<< HEAD
     
     /**
      * Konstruktor der GUI baut den Frame auf und wählt das Fenster(die Methode) aus.
      * @param window Zahl zur Auswahl des Fensters
      */
     public GUI(int window){
-    	
-=======
-
-    public GUI(int window) {
-
->>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         frame = new JFrame("Spiel");
         frame.setSize(dim);
         frame.setLocation(pos);
@@ -79,48 +72,11 @@ public class GUI {
                 System.out.println("Programm startet nicht.");
         }
     }
-<<<<<<< HEAD
     
     /**
      * Hauptmenü-Fenster, erster Bildschirm nach dem Start des Spiels und mit der Auswahl von Einzelspieler und Mehrspieler.
      */
     private void meinMenu() {
-=======
-
-    public static void colorButtons(String status, int x, int y, String color) {
-        if (status == "server") {
-            if (color == "Green") {
-                buttonsUser[x][y].setBackground(new Color(102, 255, 102));
-            } else if (color == "Blue") {
-                buttonsUser[x][y].setBackground(new Color(102, 178, 255));
-            } else if (color == "DarkBlue") {
-                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
-            } else if (color == "Red") {
-                buttonsUser[x][y].setBackground(new Color(255, 102, 102));
-            } else if (color == "Grey") {
-                buttonsUser[x][y].setBackground(new Color(100, 100, 100));
-            } else if (color == "LightGrey") {
-                buttonsUser[x][y].setBackground(new Color(192, 192, 192));
-            }
-        } else if (status == "client") {
-            if (color == "Green") {
-                buttonsEnemy[x][y].setBackground(new Color(102, 255, 102));
-            } else if (color == "Blue") {
-                buttonsEnemy[x][y].setBackground(new Color(102, 178, 255));
-            } else if (color == "DarkBlue") {
-                buttonsUser[x][y].setBackground(new Color(50, 95, 255));
-            } else if (color == "Red") {
-                buttonsEnemy[x][y].setBackground(new Color(255, 102, 102));
-            } else if (color == "Grey") {
-                buttonsEnemy[x][y].setBackground(new Color(100, 100, 100));
-            } else if (color == "LightGrey") {
-                buttonsEnemy[x][y].setBackground(new Color(192, 192, 192));
-            }
-        }
-    }
-
-    private void hauptmenue() {
->>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
 
         JLabel label = new JLabel("Schiffe versenken");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -844,7 +800,6 @@ public class GUI {
     public void showAlert(String alert) {
         JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
     }
-<<<<<<< HEAD
     
     /**
      * Fenster um die Schiffe zu platzieren mit den Optionen die Schiffe automatisch setzen lassen, die Schiffe neu setzen,
@@ -852,16 +807,8 @@ public class GUI {
      * Im rechten Teil wird erklärt, wie man die Schiffe setzt und welche Schiffe man noch setzen kann.
      */
     private void placeShips() {
-    	
-    	frame.setMinimumSize(new Dimension(1920/2, 1080/2));
-    	
-=======
-
-    private void schiffeplatzieren() {
 
         frame.setMinimumSize(new Dimension(1920 / 2, 1080 / 2));
-
->>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
@@ -1027,7 +974,6 @@ public class GUI {
             }
         }
     }
-<<<<<<< HEAD
     
     /**
      * Fenster, des eigentlichen Spiels, mit dem Spielfeld des Gegners (auf welches geschossen wird) auf der linken Seite und
@@ -1035,12 +981,7 @@ public class GUI {
      * Man hat oben links noch die Optionen Spiel speichern oder Spiel neu starten.
      */
     private void game() {
-        frame.setMinimumSize(new Dimension(1920/2, 1080/2));
-=======
-
-    private void spiel() {
         frame.setMinimumSize(new Dimension(1920 / 2, 1080 / 2));
->>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
         frame.setMaximumSize(new Dimension(1920, 1080));
         if (Connection.Multiplayer()) {
             Connection.inboundMessageLoop imL = new Connection.inboundMessageLoop();
@@ -1183,7 +1124,6 @@ public class GUI {
             }
         }
     }
-<<<<<<< HEAD
     
     /**
      * Färbt die Felder(festgelegt durch die Koordinaten) auf dem Spielfeld(durch den status bestimmt) in der richtigen Farbe(color) ein.
@@ -1229,10 +1169,6 @@ public class GUI {
      * @param winner boolean zur Felstlegung des Labels auf dem Bildschirm
      */
     private void endScreen(boolean winner) {
-=======
-
-    private void winningScreen() {
->>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
 
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
@@ -1251,64 +1187,23 @@ public class GUI {
             new GUI(1);
         });
         menuBar.add(restartGame);
-<<<<<<< HEAD
         
-=======
-
-        JLabel label = new JLabel("YOU WON");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         frame.setContentPane(Box.createVerticalBox());
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
         frame.getContentPane().add(Box.createGlue());
-
-        frame.getContentPane().add(label);
-
-        frame.getContentPane().add(Box.createGlue());
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-    }
-
-    private void losingScreen() {
-
-        JMenuBar menuBar = new JMenuBar();
-        frame.setJMenuBar(menuBar);
-
-        JButton endGame = new JButton("Spiel schließen");
-        endGame.addActionListener((e) -> {
-            frame.dispose();
-        });
-        menuBar.add(endGame);
-
-        JButton restartGame = new JButton("Spiel neu starten");
-        restartGame.addActionListener((e) -> {
-            dim = frame.getSize();
-            pos = frame.getLocation();
-            frame.dispose();
-            new GUI(1);
-        });
-        menuBar.add(restartGame);
-
-        JLabel label = new JLabel("YOU LOST");
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
->>>>>>> eb7ec4f3ee3e4d25099cf91e44b1e891f056cab1
-        frame.setContentPane(Box.createVerticalBox());
-
-        frame.getContentPane().add(Box.createVerticalStrut(50));
-        frame.getContentPane().add(Box.createGlue());
-
+        
         if(winner) {
-        	JLabel label = new JLabel("YOU WON");
-        	label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        	frame.getContentPane().add(label);
+	        JLabel label = new JLabel("YOU WON");
+	        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+	        frame.getContentPane().add(label);
         }
         else {
         	JLabel label = new JLabel("YOU LOST");
-        	label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        	frame.getContentPane().add(label);
+	        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+	        frame.getContentPane().add(label);
         }
-        
+
         frame.getContentPane().add(Box.createGlue());
         frame.getContentPane().add(Box.createVerticalStrut(50));
     }
