@@ -59,4 +59,8 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
         String x = String.valueOf(fieldsize);
         Connection.sendMessage(x);
     }
+
+    void closeSocket() {
+        
+    }
 }

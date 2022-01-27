@@ -101,6 +101,7 @@ public class Server {
 
 	public static void stopServer(Socket s) throws IOException {
 		// EOF ins Socket "schreiben".
+		Connection.getS().close();
 		connection.getS().shutdownOutput();
 		ServerConnectionService.getInstance().cancel(true);
 		System.out.println("Connection closed.");

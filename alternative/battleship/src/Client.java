@@ -82,6 +82,7 @@ public class Client {
 
 	public static void stopConnection(Socket s) throws IOException {
 		// EOF ins Socket "schreiben".
+		s.close();
 		s.shutdownOutput();
 		ClientConnectionService.getInstance().cancel(true);
 		System.out.println("Connection closed.");

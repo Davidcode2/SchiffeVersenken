@@ -84,6 +84,7 @@ public class Connection {
     public static void setS(Socket s) {
        so = s;
     }
+    public void setSocket(Socket s) {so = s;}
     public static Socket getS() {
         return so;
     }

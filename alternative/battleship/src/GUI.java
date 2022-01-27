@@ -1065,11 +1065,14 @@ public class GUI {
         } else if (kiMultiplayer) {
             AI.start("server");
             int counter = 0;
+            ArrayList shotList = new ArrayList<>();
             // TODO: GUI.enemyHitCounter + GUI.hitCounter
             // also for normal multiplayer.
             while (hitCounter != 0 && enemyHitCounter != 0) {
                 int x = (int) (Math.random() * GUI.buttonsUser.length);
                 int y = (int) (Math.random() * GUI.buttonsUser.length);
+                shotList.add(x,y);
+
                 counter++;
                 if (Connection.getTurn()) {
                     try {
