@@ -444,6 +444,14 @@ public class GUI {
         splitPane.setRightComponent(panelRight);
         panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
 
+        panelRight.add(Box.createVerticalStrut(50));
+        panelRight.add(Box.createGlue());
+
+        JLabel ipInstructionLabel = new JLabel("teile deinem Mitspieler eine davon mit:\n");
+        ipInstructionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panelRight.add(ipInstructionLabel);
+
         String[] inetAdr = null;
         try {
             inetAdr = Server.ipAdresses();
@@ -461,6 +469,10 @@ public class GUI {
         JPanel panelLeft = new JPanel();
         splitPane.setLeftComponent(panelLeft);
         panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
+
+        panelLeft.add(Box.createVerticalStrut(50));
+        panelLeft.add(Box.createGlue());
+
         panelLeft.add(mainlabel);
         panelLeft.add(portlabel);
         panelLeft.add(portpanel);
@@ -473,6 +485,9 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
 
         panelLeft.add(button2);
+
+        panelLeft.add(Box.createVerticalStrut(50));
+        panelLeft.add(Box.createGlue());
 
         panelLeft.add(Box.createVerticalStrut(50));
     }
@@ -598,8 +613,14 @@ public class GUI {
         frame.getContentPane().add(Box.createGlue());
 
         JLabel label = new JLabel("Warte auf Server");
+        JLabel labelClient = new JLabel("Warte auf Client");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        frame.getContentPane().add(label);
+        labelClient.setAlignmentX(Component.CENTER_ALIGNMENT);
+        if (Connection.isServer()) {
+            frame.getContentPane().add(labelClient);
+        } else {
+            frame.getContentPane().add(label);
+        }
 
         frame.getContentPane().add(Box.createVerticalStrut(50));
 
