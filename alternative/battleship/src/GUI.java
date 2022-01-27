@@ -25,8 +25,8 @@ public class GUI {
     private static Point pos = new Point(1, 1);
     
     /**
-     * Konstruktor der GUI baut den Frame auf und wählt das Fenster(die Methode) aus.
-     * @param window Zahl zur Auswahl des Fensters
+     * Constructor of the GUI builds the frame and selects the windows (methods).
+     * @param window Number to select the window
      */
     public GUI(int window){
         frame = new JFrame("Spiel");
@@ -74,7 +74,7 @@ public class GUI {
     }
     
     /**
-     * Hauptmenü-Fenster, erster Bildschirm nach dem Start des Spiels und mit der Auswahl von Einzelspieler und Mehrspieler.
+     * Main menu window, first screen after starting the game and with the choice of single player and multiplayer.
      */
     private void meinMenu() {
 
@@ -119,7 +119,7 @@ public class GUI {
     }
     
     /**
-     * Einzelspieler-Fenster, mit der Auswahl der AI Schwierigkeit, der Spielgröße und der Option Spiel laden.
+     * Single player window with the options AI difficulty and load game.
      */
     private void singlePlayer() {
 
@@ -251,7 +251,7 @@ public class GUI {
     }
     
     /**
-     * Mehrspieler-Fenster, mit den Optionen Host, Client und Spiel laden.
+     * Multiplayer window, with Host, Client and Game Load options.
      */
     private void multiPlayer() {
 
@@ -323,7 +323,7 @@ public class GUI {
     }
     
     /**
-     * Host-Fenster, mit der Auswahl des Ports, der Spielfeldgröße und der Option eines KI-Spiels.
+     * Host window, with the choice of port, playing field size and the option of an AI game.
      */
     private void host() {
 
@@ -508,7 +508,7 @@ public class GUI {
     }
     
     /**
-     * Client-Fenster, mit der Auswahl des Ports, der IP und der Option eines KI-Spiels.
+     * Client window, with the choice of port, IP and the option of an AI game.
      */
     private void client() {
 
@@ -802,9 +802,9 @@ public class GUI {
     }
     
     /**
-     * Fenster um die Schiffe zu platzieren mit den Optionen die Schiffe automatisch setzen lassen, die Schiffe neu setzen,
-     * das Spiel neu starten oder das Spiel beginnen, wenn alle Schiffe platziert wurden.
-     * Im rechten Teil wird erklärt, wie man die Schiffe setzt und welche Schiffe man noch setzen kann.
+     * Places your ships with left- and rigtclick and options for automatic ship placing, restart ship placement,
+     * restart the game and start the game, if all ships are placed.
+     * The label on the right side shows the remaining ships.
      */
     private void placeShips() {
 
@@ -976,9 +976,7 @@ public class GUI {
     }
     
     /**
-     * Fenster, des eigentlichen Spiels, mit dem Spielfeld des Gegners (auf welches geschossen wird) auf der linken Seite und
-     * mit dem eigenen Spielfeld auf der rechten Seite.
-     * Man hat oben links noch die Optionen Spiel speichern oder Spiel neu starten.
+     * The game with the enemy board on the left, your board on the right and options for saving and restarting the game.
      */
     private void game() {
         frame.setMinimumSize(new Dimension(1920 / 2, 1080 / 2));
@@ -1042,7 +1040,7 @@ public class GUI {
         panelleft.setLayout(new GridLayout(userBoard.getSize(), userBoard.getSize(), 1, 1));
         for (int i = 0; i < enemyBoard.getSize(); i++) {
             for (int j = 0; j < enemyBoard.getSize(); j++) {
-                buttonsEnemy[i][j] = new JButton(""); //1 + j + i * enemyBoard.getSize() + "");
+                buttonsEnemy[i][j] = new JButton("");
                 buttonsEnemy[i][j].setName(i + " " + j);
                 if (kiMultiplayer) {
                     buttonsEnemy[i][j].setEnabled(false);
@@ -1082,7 +1080,7 @@ public class GUI {
 
         for (int i = 0; i < userBoard.getSize(); i++) {
             for (int j = 0; j < userBoard.getSize(); j++) {
-                buttonsUser[i][j] = new JButton(""); //1+j+i*userBoard.getSize()+"");
+                buttonsUser[i][j] = new JButton("");
                 buttonsUser[i][j].setName(i + " " + j);
                 buttonsUser[i][j].setEnabled(false);
                 panelright.add(buttonsUser[i][j]);
@@ -1126,11 +1124,11 @@ public class GUI {
     }
     
     /**
-     * Färbt die Felder(festgelegt durch die Koordinaten) auf dem Spielfeld(durch den status bestimmt) in der richtigen Farbe(color) ein.
-     * @param status auf welchem Spielfeld die Felder gefärbt werden sollten
-     * @param x Koordinate des Feldes
-     * @param y Koordinate des Feldes
-     * @param color ausgewählte Farbe
+     * Colors the buttons at x and y on the playing field of status.
+     * @param status decides the playing field
+     * @param x coordinate of the Button
+     * @param y coordinate of the Button
+     * @param color to which the button changes
      */
     public static void colorButtons(String status, int x, int y, String color) {
         if (status == "server"){
@@ -1165,8 +1163,8 @@ public class GUI {
     }
     
     /**
-     * Fenster am Ende des Spiels, mit der Nachricht über Sieg oder Niederlage und den Optionen Spiel schließen oder Spiel neu starten.
-     * @param winner boolean zur Felstlegung des Labels auf dem Bildschirm
+     * Last window of the game with a message about winning or losing and the option of closing or restarting the game.
+     * @param winner decides about the label on the screen
      */
     private void endScreen(boolean winner) {
 
