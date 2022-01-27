@@ -3,7 +3,9 @@ import java.io.IOException;
 import java.net.Socket;
 
 
-// Worker thread waiting for connection in background
+/**
+ * Class for handling Server side communication in a background thread
+ */
 public class ServerConnectionService extends SwingWorker<Socket, Object> {
     private static ServerConnectionService sc;
     Server server = new Server();
@@ -24,6 +26,9 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
         return sc;
     }
 
+    /**
+     * Worker thread waiting for connection in background
+     */
     @Override
     public Socket doInBackground() {
         socketS = server.startConnection(port);
@@ -35,6 +40,11 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
         return socketS;
     }
 
+    /**
+     * once the connection is established,
+     * start the communicationLoop (Server.java) in the background
+     * and send the board size to the client
+     */
     @Override
     protected void done() {
         try {
