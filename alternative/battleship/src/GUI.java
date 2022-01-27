@@ -950,7 +950,9 @@ public class GUI {
         frame.setMinimumSize(new Dimension(1920/2, 1080/2));
         frame.setMaximumSize(new Dimension(1920, 1080));
         if (Connection.Multiplayer()) {
-            new Connection.inboundMessageLoop().execute();
+            Connection.inboundMessageLoop imL = new Connection.inboundMessageLoop();
+            imL.execute();
+
             enemyBoard = new Board(userBoard.getSize(), "client");
         }
 

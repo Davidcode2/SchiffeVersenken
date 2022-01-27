@@ -104,6 +104,7 @@ public class Server {
 		Connection.getS().close();
 		connection.getS().shutdownOutput();
 		ServerConnectionService.getInstance().cancel(true);
+		Connection.getTimer().cancel();
 		System.out.println("Connection closed.");
 	}
 }

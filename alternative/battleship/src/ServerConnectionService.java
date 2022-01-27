@@ -60,7 +60,4 @@ public class ServerConnectionService extends SwingWorker<Socket, Object> {
         Connection.sendMessage(x);
     }
 
-    void closeSocket() {
-        
-    }
 }

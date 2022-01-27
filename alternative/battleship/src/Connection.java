@@ -18,6 +18,7 @@ public class Connection {
     private static boolean turn = true;
     private static int readyCounter = 0;
     private static Socket so;
+    private static java.util.Timer timer;
 
     private static boolean Multiplayer = false;
 
@@ -48,6 +49,10 @@ public class Connection {
 
     public static Writer getOut() {
         return out;
+    }
+
+    public static java.util.Timer getTimer() {
+        return timer;
     }
 
     public static BufferedWriter getUsr() {
@@ -177,8 +182,10 @@ public class Connection {
     static class inboundMessageLoop extends SwingWorker<Object, Object> {
         String previousMessage = "";
         @Override
-        protected Object doInBackground() throws Exception {
-            new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+        protected java.util.Timer doInBackground() throws Exception {
+            timer = new java.util.Timer();
+            TimerTask timerTask = new TimerTask() {
+                boolean newTurn = true;
                 @Override
                 public void run() {
                     String message = Connection.getMessage();
@@ -191,7 +198,9 @@ public class Connection {
                         if (shipState == 1 || shipState == 2) {
                             GUI.colorButtons("client", shot[0],shot[1], "Grey");
                             GUI.enemyBoard.getFieldArray()[x][y].isHit();
-                            GUI.hitCounter--;
+                            if (previousMessage != message) {
+                                GUI.hitCounter--;
+                            }
                         } else {
                             GUI.colorButtons("client", shot[0],shot[1], "Red");
                             GUI.enemyBoard.getFieldArray()[x][y].isMiss();
@@ -204,7 +213,9 @@ public class Connection {
                         int y = Integer.parseInt(message.split(" ")[2]);
                         GUI.userBoard.shot(x, y);
                         if (GUI.userBoard.getFieldArray()[x][y].isHit()) {
-                            GUI.enemyHitCounter--;
+                            if (previousMessage != message) {
+                                GUI.enemyHitCounter--;
+                            }
                             if (GUI.userBoard.getFieldArray()[x][y].isSunk()) {
                                 Connection.sendMessage(String.format("answer %s", 2));
                             } else {
@@ -227,9 +238,11 @@ public class Connection {
                         long id = Long.valueOf(message.split(" ")[1]);
 //                            Controller.clientLoad(id);
                     }
-                }
-            }, 0, 500);
-            return null;
+                };
+            };
+
+            timer.scheduleAtFixedRate(timerTask,0, 500);
+            return timer;
         }
     }
 }

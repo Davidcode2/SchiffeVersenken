@@ -85,6 +85,7 @@ public class Client {
 		s.close();
 		s.shutdownOutput();
 		ClientConnectionService.getInstance().cancel(true);
+		Connection.getTimer().cancel();
 		System.out.println("Connection closed.");
 	}
 }
