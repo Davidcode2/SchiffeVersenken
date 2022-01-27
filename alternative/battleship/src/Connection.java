@@ -26,7 +26,7 @@ public class Connection {
      *
      * @param in  Buffered Reader which carries the input
      * @param out Writer which carries the output
-     * @param usr Buffered Writer which
+     * @param usr Buffered Writer which allows line-wise operation
      */
     public Connection(BufferedReader in, Writer out, BufferedWriter usr) {
         Connection.in = in;
@@ -115,84 +115,73 @@ public class Connection {
         turn = b;
     }
 
+    /**
+     * sends message with coordinates x and y over Socket connection
+     * if it's the players turn
+     * @param x x-coordinate of shot
+     * @param y y-coordinate of shot
+     */
     public static void sendMessage(int x, int y) {
-        if (isServer()) {
-            try {
-                if (getTurn()) {
-                    getOut().write(String.format("shot %s %s%n", x, y));
-                    getOut().flush();
-                    pushShot(x, y);
+        try {
+            if (getTurn()) {
+                getOut().write(String.format("shot %s %s%n", x, y));
+                getOut().flush();
+                pushShot(x, y);
+                if (isServer()) {
                     Server.getConnection().setTurn(false);
                 } else {
-                    System.out.println("wait for other players turn");
-                }
-            } catch (IOException e) {
-                System.out.println("write to socket failed");
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                if (getTurn()) {
-                    getOut().write(String.format("shot %s %s%n", x, y));
-                    getOut().flush();
-                    pushShot(x, y);
                     Client.getConnection().setTurn(false);
-                    turn = false;
-                } else {
-                    System.out.println("wait for other players turn");
                 }
-            } catch (IOException e) {
-                System.out.println("write to socket failed");
-                e.printStackTrace();
+                turn = false;
+            } else {
+                System.out.println("wait for other players turn");
             }
+        } catch (IOException e) {
+            System.out.println("write to socket failed");
+            e.printStackTrace();
         }
     }
 
+    /**
+     * sends messages other than coordinates
+     * these messages will be sent, even if its not the players turn
+     * @param message string containing either "save", "load" or "ready"
+     */
     public static void sendMessage(String message) {
         // if turn == true -> Server
-        if (isServer()) {
-            try {
-                if (message.contains("save") || message.contains("load") || getTurn() || (message.equals("ready") && readyCounter == 0)) {
-                    if (message.equals("ready")) {
-                        readyCounter = 1;
-                    }
-                    getOut().write(String.format("%s%n", message));
-                    getOut().flush();
-                    System.out.println("outgoing>> " + message);
+        try {
+            if (message.contains("save") || message.contains("load") || getTurn() || (message.equals("ready") && readyCounter == 0)) {
+                if (message.equals("ready")) {
+                    readyCounter = 1;
+                }
+                getOut().write(String.format("%s%n", message));
+                getOut().flush();
+                System.out.println("outgoing>> " + message);
+                if (isServer) {
                     Server.getConnection().setTurn(false);
-                    turn = false;
                 } else {
-                    System.out.println("wait for other players turn");
-                }
-            } catch (IOException e) {
-                System.out.println("write to socket failed");
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                if (message.contains("save") || getTurn() || (message.equals("ready") && readyCounter == 0)) {
-                    if (message.equals("ready")) {
-                        readyCounter = 1;
-                    }
-                    getOut().write(String.format("%s%n", message));
-                    getOut().flush();
-                    System.out.println("outgoing>> " + message);
                     Client.getConnection().setTurn(false);
-                } else {
-                    System.out.println("wait for other players turn");
                 }
-            } catch (IOException e) {
-                System.out.println("write to socket failed");
-                e.printStackTrace();
+                turn = false;
+            } else {
+                System.out.println("wait for other players turn");
             }
+        } catch (IOException e) {
+            System.out.println("write to socket failed");
+            e.printStackTrace();
         }
-
     }
 
     public void setSocket(Socket s) {
         so = s;
     }
 
+    /**
+     * starts a background thread and reacts to incoming messages
+     * handles the following messages:
+     * "shot", "answer", "save", "load"
+     * checks for new messages every 0.5 seconds
+     */
     static class inboundMessageLoop extends SwingWorker<Object, Object> {
         String previousMessage = "";
 
@@ -200,7 +189,6 @@ public class Connection {
         protected java.util.Timer doInBackground() throws Exception {
             timer = new java.util.Timer();
             TimerTask timerTask = new TimerTask() {
-                final boolean newTurn = true;
 
                 @Override
                 public void run() {
@@ -255,7 +243,6 @@ public class Connection {
 //                            Controller.clientLoad(id);
                     }
                 }
-
             };
 
             timer.scheduleAtFixedRate(timerTask, 0, 500);
