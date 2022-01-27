@@ -21,6 +21,11 @@ public class Client {
         return clientConnected;
     }
 
+    /**
+     * cancel Client Connection
+     * @param s Socket to terminate
+     * @throws IOException
+     */
     public static void stopConnection(Socket s) throws IOException {
         // EOF ins Socket "schreiben".
         s.close();
@@ -30,14 +35,14 @@ public class Client {
         System.out.println("Connection closed.");
     }
 
-    public boolean getClientLoopReady() {
-        return clientLoopReady;
-    }
-
-    // Client-Seite eines sehr einfachen Chat-Programms mit Sockets.
-    // (Anstelle von "throws IOException" sollte man Ausnahmen besser
-    // gezielt mit try-catch auffangen.)
-    // Verwendete Portnummer (vgl. Server).
+    /**
+     * connect to the socket which was previously opened by the Server
+     * with the specified connection values
+     * @param ip ip adress to connect to
+     * @param port port to connect to
+     * @return Socket
+     * @throws IOException
+     */
     public Socket startConnection(String ip, int port) throws IOException {
 
         InetSocketAddress inSocket = new InetSocketAddress(ip, port);
@@ -51,10 +56,12 @@ public class Client {
         return s;
     }
 
-    // Abwechselnd vom Benutzer lesen und ins Socket schreiben
-    // bzw. vom Socket lesen und auf den Bildschirm schreiben.
-    // Abbruch bei EOF oder Leerzeile vom Benutzer bzw. bei EOF vom Socket.
 
+    /**
+     * Create a new Connection Object with the necessary Readers and Writers
+     * @param s Socket for which a connection will be created
+     * @throws IOException
+     */
     public void createConnection(Socket s) throws IOException {
 
         BufferedReader in =
@@ -70,11 +77,13 @@ public class Client {
         setConnection(connection);
     }
 
+    /**
+     * infinte loop to continuously listen for incoming messages
+     * as well as write messages to the output stream
+     */
     public void startCommunicationLoop() {
-
         try {
             connection.setTurn(false);
-
             while (true) {
                 // incoming messages
                 clientLoopReady = true;

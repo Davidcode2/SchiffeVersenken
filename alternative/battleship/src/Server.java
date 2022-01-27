@@ -15,6 +15,11 @@ public class Server {
         Server.connection = connection;
     }
 
+    /**
+     * get list of IPv4 Adresses
+     * @return String Array containing local IPv4 Adresses
+     * @throws SocketException
+     */
     public static String[] ipAdresses() throws SocketException {
         ArrayList<String> inetAddr = new ArrayList<String>();
         Enumeration<NetworkInterface> nis =
@@ -36,6 +41,11 @@ public class Server {
         return inetAddrArray;
     }
 
+    /**
+     * cancel Server Socket
+     * @param s Socket to terminate
+     * @throws IOException
+     */
     public static void stopServer(Socket s) throws IOException {
         // EOF ins Socket "schreiben".
         Connection.getS().close();
@@ -45,6 +55,11 @@ public class Server {
         System.out.println("Connection closed.");
     }
 
+    /**
+     * create a server socket and wait for connection from client
+     * @param port port to connect to
+     * @return Socket
+     */
     public Socket startConnection(int port) {
         // Verwendete Portnummer.
 
@@ -66,6 +81,11 @@ public class Server {
         }
     }
 
+    /**
+     * Create a new Connection Object with the necessary Readers and Writers
+     * @param s Socket for which a connection will be created
+     * @throws IOException
+     */
     public void createConnection(Socket s) throws IOException {
 
         // Ein- und Ausgabestrom des Sockets ermitteln
@@ -84,10 +104,12 @@ public class Server {
         setConnection(connection);
     }
 
+    /**
+     * infinte loop to continuously listen for incoming messages
+     * as well as write messages to the output stream
+     */
     public void startCommunicationLoop() {
-
         try {
-
 //		 Abwechselnd vom Socket lesen und auf den Bildschirm schreiben
 //		 bzw. vom Benutzer lesen und ins Socket schreiben.
 //		 Abbruch bei EOF vom Socket bzw. bei EOF oder Leerzeile vom Benutzer.
