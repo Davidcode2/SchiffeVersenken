@@ -7,6 +7,7 @@ public class Board {
     private String status;
     private ArrayList<Ship> shipList = new ArrayList<Ship>();
     private static boolean playersTurn=true;
+    private static boolean enemyBoard=false;
 
     public Board(int size, String status) {
         this.size = size;
@@ -140,21 +141,21 @@ public class Board {
 
     }
     
+    public void setEnemyBoard() {
+    	enemyBoard=true;
+    }
+    
     public void colorWater(int x, int y) {
     	if (fieldArray[x][y].isWater()){
             fieldArray[x][y].setMiss(true);
         }
     }
     
-    public void setPlayersTurn() {
-    	playersTurn=true;
-    }
-
     public void shot(int x, int y) {
     	boolean flag;
         if (fieldArray[x][y].isShip()){
             fieldArray[x][y].setHit(true);
-            if(playersTurn) {
+            if(playersTurn && enemyBoard) {
 	            for (int i=0; i<shipList.size(); i++){
 	            	if(shipList.get(i).getDirection().equals("horizontal")) {
 	            		flag = true;
