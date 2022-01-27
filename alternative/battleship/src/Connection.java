@@ -22,6 +22,12 @@ public class Connection {
 
     private static boolean Multiplayer = false;
 
+    /**
+     * Constructor for Connection
+     * @param in Buffered Reader which carries the input
+     * @param out Writer which carries the output
+     * @param usr Buffered Writer which
+     */
     public Connection(BufferedReader in, Writer out, BufferedWriter usr) {
         this.in = in;
         this.out = out;
@@ -31,6 +37,7 @@ public class Connection {
     public static void setServer(boolean bool) {
         isServer = bool;
     }
+
     public static boolean isServer() {
         return isServer;
     }
@@ -59,21 +66,23 @@ public class Connection {
         return usr;
     }
     private static Stack shotLog = new Stack();
+
+    /**
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * push x and y Coordinates onto stack
+     */
     public static void pushShot(int x, int y) {
         int[] xy = new int[2];
         xy[0] = x;
         xy[1] = y;
         shotLog.push(xy);
     }
-    public static int[] popShot() {
-        if (shotLog.empty()) {
-            return null;
-        }
-        int[] shot = (int[]) shotLog.pop();
-        System.out.println(shot);
-        System.out.println(shot.toString());
-        return shot;
-    }
+
+    /**
+     * Get current shot coordinates
+     * @return int array containing x and y coordinates
+     */
     public static int[] peekShot() {
         if (shotLog.empty()) {
             return null;
@@ -89,7 +98,9 @@ public class Connection {
     public static void setS(Socket s) {
        so = s;
     }
+
     public void setSocket(Socket s) {so = s;}
+
     public static Socket getS() {
         return so;
     }
