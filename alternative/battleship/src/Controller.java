@@ -6,24 +6,39 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Controller class:
+ * manages communication and logic of the program
+ */
 public class Controller {
 
     public static boolean clientTurn;
     public static boolean serverTurn;
-
+    
+    /**
+     * Main - starts program
+     */
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
             new GUI(1);
         });
     }
-
+    
+    /**
+     * starts game - server starts by definition
+     */
     public static void startGame() {
         System.out.println("server beginnt");
         clientTurn = false;
         serverTurn = true;
     }
-
+    
+    /**
+     * handles shots for client, server and AI
+     * @param x Shot-x-coordinate of the board
+     * @param y Shot-y-coordinate of the board
+     */
     public static void handleShotSP(int x, int y) {
         if (clientTurn) {
             if (GUI.difficultAi) {
@@ -43,7 +58,10 @@ public class Controller {
             }
         }
     }
-
+    
+    /**
+     * switches between client and serverTurn
+     */
     public static void switchTurn() {
         clientTurn = !clientTurn;
         serverTurn = !serverTurn;

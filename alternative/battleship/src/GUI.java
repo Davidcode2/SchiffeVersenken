@@ -793,15 +793,7 @@ public class GUI {
         panelLeft.add(Box.createVerticalStrut(50));
 
     }
-    
-    /**
-     * 
-     * @param alert
-     */
-    public void showAlert(String alert) {
-        JOptionPane.showMessageDialog(null, "Server nicht verfügbar.");
-    }
-    
+
     /**
      * Places your ships with left- and rigtclick and options for automatic ship placing, restart ship placement,
      * restart the game and start the game, if all ships are placed.

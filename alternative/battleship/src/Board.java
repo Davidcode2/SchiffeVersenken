@@ -8,7 +8,12 @@ public class Board {
     private int size;
     private final String status;
     private final ArrayList<Ship> shipList = new ArrayList<Ship>();
-
+    
+    /**
+     * constructor of the Boards (server board and client board)
+     * @param size boardsize (5-30)
+     * @param status boardstatus - shows if the board belongs to server or client
+     */
     public Board(int size, String status) {
         this.size = size;
         this.status = status;
@@ -34,7 +39,13 @@ public class Board {
         this.size = size;
         this.status = status;
     }
-
+    
+    /**
+     * places all type of ships on the board
+     * @param x x-coordinate of the board
+     * @param y y-coordinate of the board
+     * @param direction shows alignment of the ship (vertical or horizontal)
+     */
     public void place(int x, int y, String direction) {
         if (Ship.getAmounts()[3] != 0) {
             if (checkCollision(x, y, 5, direction)) {
@@ -81,7 +92,15 @@ public class Board {
             JOptionPane.showMessageDialog(null, "Alle Schiffe wurden platziert.");
         }
     }
-
+    
+    /**
+     * checks collisions of a ship with another ship or wall
+     * @param x x-coordinate of the board
+     * @param y y-coordinate of the board
+     * @param shipSize size of the ship (2-5)
+     * @param direction alignment of the ship (vertical or horizontal)
+     * @return
+     */
     private boolean checkCollision(int x, int y, int shipSize, String direction) {
         if (direction == "horizontal") {
             if (shipSize + y > size) {
@@ -106,7 +125,10 @@ public class Board {
         }
         return true;
     }
-
+    
+    /**
+     * prints the board by colouring the fields/buttons in the GUI
+     */
     public void print() {
         if (status == "server") {
             for (int i = 0; i < fieldArray.length; i++) {
@@ -148,17 +170,27 @@ public class Board {
 
 
     }
-
+   
     public void setEnemyBoard() {
         enemyBoard = true;
     }
-
+    
+    /**
+     * makes the field as water
+     * @param x coordinate of the field
+     * @param y coordinate of the field
+     */
     public void colorWater(int x, int y) {
         if (fieldArray[x][y].isWater()) {
             fieldArray[x][y].setMiss(true);
         }
     }
-
+    
+    /**
+     * shot on the field of the enemy board
+     * @param x coordinate of the field
+     * @param y coordinate of the field
+     */
     public void shot(int x, int y) {
         boolean flag;
         if (fieldArray[x][y].isShip()) {

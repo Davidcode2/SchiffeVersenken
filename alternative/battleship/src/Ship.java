@@ -5,14 +5,24 @@ public class Ship {
     private int[] startPoint;
     private final String direction;
     private int hitCounter;
-
+    
+    /**
+     * constructor for ships
+     * @param size size of the ship (2-5)
+     * @param startPoint startpoint of the ship - 1D Array with x and y coordinate
+     * @param direction
+     */
     public Ship(int size, int[] startPoint, String direction) {
         this.size = size;
         this.startPoint = startPoint;
         this.direction = direction;
         hitCounter = size;
     }
-
+    
+    /**
+     * calculates amount of needed ships in relation of selected boardsize
+     * @param size selected boardsize
+     */
     public static void calcAmount(int size) {
         for (int i = 0; i < amounts.length; i++) {
             amounts[i] = 0;
